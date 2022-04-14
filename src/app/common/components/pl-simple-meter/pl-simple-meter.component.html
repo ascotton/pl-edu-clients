@@ -1,0 +1,16 @@
+<div class="pl-simple-meter" [ngClass]="{'debug-show-div': util.showDivs(_state)}" *ngIf="_state?.initialized">
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <div class="container">
+    <div class="label" *ngIf="label">{{label}}</div>
+    <div class="outer-container" [ngClass]="{'corners': shape === 'corners', 'full-width': isFullWidth}">
+      <div class="meter-container" [ngStyle]="getMeterStyles()">
+        <div class="progress-container" [ngStyle]="getProgressStyles()" [@slideInLeftOnEnter] [@.disabled]="!animate">&nbsp;</div>
+        <span class="text-container">{{text}}</span>
+      </div>
+    </div>
+  </div>
+
+</div>

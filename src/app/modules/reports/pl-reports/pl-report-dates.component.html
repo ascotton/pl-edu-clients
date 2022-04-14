@@ -1,0 +1,9 @@
+<div class="pl-report-dates">
+      <div class="inline-block">
+          <pl-input-select class="report-start x-qa-report-start-month" [(model)]="startMonthIndex" [options]="monthOptions.start" (onChange)="onChangeMonth()"></pl-input-select>
+          <pl-input-select class="report-start x-qa-report-start-year" [(model)]="startYear" [options]="yearOptions" (onChange)="onChangeYear()"></pl-input-select>
+          <b class="margin-lr">- To -</b>
+          <pl-input-select class="report-end x-qa-report-end-month" [(model)]="endMonthIndex" [options]="monthOptions.end" (onChange)="onChangeMonth()"></pl-input-select>
+          <pl-input-select class="report-end x-qa-report-end-year" [(model)]="endYear" [options]="yearOptions" (onChange)="onChangeYear()"></pl-input-select>
+      </div>
+</div>

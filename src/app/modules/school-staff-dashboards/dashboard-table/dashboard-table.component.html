@@ -1,0 +1,180 @@
+<div class="pl-table-container mat-elevation-z1 margin-t">
+  <mat-table [dataSource]="data" multiTemplateDataRows 
+    matSort matSortActive="last_name" matSortDirection="asc">
+    <ng-container matColumnDef="expand-arrow">
+      <mat-header-cell *matHeaderCellDef class="expandable-arrow"></mat-header-cell>
+      <mat-cell *matCellDef="let element" class="expandable-arrow">
+        <mat-icon>
+          {{ element.uuid === expandedItem?.data?.uuid ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="last_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        <strong>
+          Last Name
+        </strong>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.last_name }} 
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="first_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        <strong>
+          First Name
+        </strong>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.first_name }} 
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="occupation">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        <strong>
+          Occupation
+        </strong>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.occupation }} 
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="last_login">
+      <mat-header-cell *matHeaderCellDef>
+        <strong>
+          Last Login
+        </strong>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.last_login | date: 'M/dd/yyyy' }}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef [ngSwitch]="view">
+        <strong *ngSwitchCase="'active'">
+          Activated On
+        </strong>
+        <strong *ngSwitchCase="'deactivated'">
+          Deactivated On
+        </strong>
+        <strong *ngSwitchDefault>
+          Status
+        </strong>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <ng-container *ngIf="view === 'filter'">
+          {{ element.is_active ? 'Active' : 'Inactive' }} as of
+        </ng-container>
+        {{ (element.is_active ? element.created : element.modified) | date: 'MM/dd/yyyy' }}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef class="action-cell end-xs">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element" class="action-cell end-xs">
+        <button mat-stroked-button [matMenuTriggerFor]="menu" (click)="selectAction($event, element, menu)">
+          Select an action
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <div *ngIf="!element.is_active" class="padding-lr font-h6">
+            To perform any actions for this user, you must activate this user by assigning a license through the Add User Button.
+          </div>
+          <button mat-menu-item *ngIf="isSS && element.is_active" 
+            (click)="emitAction('activate', element)">
+            <span>
+              Deactivate
+            </span>
+          </button>
+          <button mat-menu-item *ngIf="element.is_active" (click)="emitAction('resend', element)">
+            <span>
+              Resend Setup Email
+            </span>
+          </button>
+        </mat-menu>
+      </mat-cell>
+    </ng-container>
+    <!-- Expanded Column -->
+    <ng-container matColumnDef="expandedRow">
+      <mat-cell *matCellDef="let element" 
+        [@detailExpanded]="element.uuid == expandedItem?.data?.uuid &&
+          element.license == expandedItem?.data?.license ? 
+          'expanded' : 'collapsed'">
+        <div [style.width.%]="100" style.padding="0 48px" class="row margin-large-b">
+          <div class="loader col-xs-12">
+            <mat-progress-bar *ngIf="element.uuid == expandedItem?.data?.uuid && expandedItem?.loading"
+              color="accent" mode="indeterminate"></mat-progress-bar>
+          </div>
+          <div class="col-xs col-md-7 col-lg-6">
+            <div class="row margin-tb">
+              <div class="col-xs-12 col-md-4">
+                <strong> Username </strong>
+              </div>
+              <div class="col-xs-12 col-md-8">
+                {{ expandedItem?.data?.username }}
+              </div>
+            </div>
+            <div class="row margin-tb">
+              <div class="col-xs-12 col-md-4">
+                <strong> Room URL </strong>
+              </div>
+              <div class="col-xs-12 col-md-8">
+                <a target="_blank" href="{{ roomUrl }}/{{ expandedItem?.data?.username }}">
+                  {{ roomUrl }}/{{ expandedItem?.data?.username }}
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs col-md-5 col-lg-6">
+            <div class="row margin-tb">
+              <div class="col-xs-12 col-md-4">
+                <strong> Email Address </strong>
+              </div>
+              <div class="col-xs-12 col-md-8">
+                <a target="_blank" href="mailto:{{expandedItem?.data?.email}}"> 
+                  {{ expandedItem?.data?.email }} 
+                </a>
+              </div>
+            </div>
+            <div class="row margin-tb">
+              <div class="col-xs-12 col-md-4">
+                <strong> License Type </strong>
+              </div>
+              <div class="col-xs-12 col-md-8">
+                {{ expandedItem?.data?.license }}
+              </div>
+            </div>
+            <div class="row margin-tb" *ngIf="expandedItem?.data?.is_admin === 'True'">
+              <div class="col-xs-12 col-md-4">
+                <strong> Admin Access </strong>
+              </div>
+              <div class="col-xs-12 col-md-8">
+                Yes
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="loader">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-progress-bar *ngIf="loading" 
+            color="accent" mode="indeterminate"></mat-progress-bar>
+      </mat-header-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="columnsDefinition"></mat-header-row>
+    <mat-header-row class="loader" *matHeaderRowDef="['loader']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnsDefinition;" class="no-border pointer"
+      [class.expanded]="expandedItem?.data?.uuid === row.uuid"
+      (click)="toggleExpand(row)">
+    </mat-row>
+    <mat-row *matRowDef="let row; columns: ['expandedRow']" class="expandable">
+    </mat-row>
+  </mat-table>
+  <mat-paginator 
+    [length]="count" 
+    [pageSize]="plDesign.settings.paginator.size"
+    [pageSizeOptions]="plDesign.components.paginator.sizeOptions" 
+    (page)="plDesign.setTablePageSize($event.pageSize)">
+  </mat-paginator>
+</div>

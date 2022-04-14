@@ -1,0 +1,19 @@
+<div class="pl-client-direct-service-status-edit">
+    <pl-modal-header-wrapper [headerText]="modalHeaderText">
+        <div class="introduction">{{introductionText}}</div>
+        <h3>{{definitionHeaderText}}</h3>
+        <div class="definitions">
+            <div *ngFor="let status of statuses">
+                <div class="definition">
+                    <div class="dot-name">
+                        <div *ngIf="status.shape!=='clock'" class="{{status.shape}} dot"></div>
+                        <pl-icon *ngIf="status.shape ==='clock'" class="dot" [svg]="'alarm-clock'"
+                            [width]="12" [height]="12"></pl-icon>
+                        <div>{{status.label}}</div>
+                    </div>
+                    <div class="description">{{status.description}}</div>
+                </div>
+            </div>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

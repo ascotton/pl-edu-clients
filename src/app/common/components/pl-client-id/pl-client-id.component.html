@@ -1,0 +1,5 @@
+<div class="pl-client-id" [ngSwitch]="mode">
+    <a [routerLink]="['/client/'+internalId+'/details', 'edit', 'externalId']" target="linkTarget" *ngSwitchCase="'needs_update'">Please Update</a>
+    <span *ngSwitchCase="'empty'">No ID</span>
+    <span *ngSwitchDefault>{{externalId}}</span>
+</div>

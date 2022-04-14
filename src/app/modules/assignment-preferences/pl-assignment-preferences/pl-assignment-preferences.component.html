@@ -1,0 +1,15 @@
+<div class="padding-large pl-assignment-preferences">
+    <h1 class="margin-b">Organization Assignment Preferences</h1>
+    <div class="margin-large-b">Reflecting on the current year, if you could have the same or similar assignments, how do you feel about being matched to these organizations again?</div>
+    <div *ngFor="let assignment of assignments; let index = index" class="margin-large-b forms">
+        <div class="form-input"><label class="label">Organization</label> {{ assignment.xOrgName }}</div>
+        <pl-input-select class="form-input" [label]="'Preference'" [(model)]="assignment.xFormVals.preference" [placeholder]="'Select Preference'" [options]="selectOptsPreference" [required]="true" (onChange)="checkFormValid($event, assignment)"></pl-input-select>
+        <pl-input-textarea [(model)]="assignment.xFormVals.comments" [label]="'Comments (Optional)'"></pl-input-textarea>
+        <button pl-button class="pl-button primary" [disabled]="assignment.xFormInvalid" (click)="saveAssignment(assignment, index)">Save Response</button>
+        <!-- <div *ngIf="assignment.xFormInvalid" class="red">Please fill out all fields (select a preference).</div> -->
+    </div>
+    <div *ngIf="assignments.length < 1 && !loading">
+        <div class="complete padding-large margin-large-b">Great - that wasn't so hard. We'll take your preferences into account when making matches next year.</div>
+        <button pl-button class="pl-button primary" (click)="toDashboard()">Go to Dashboard</button>
+    </div>
+</div>

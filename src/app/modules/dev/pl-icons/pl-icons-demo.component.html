@@ -1,0 +1,49 @@
+<div class="pl-icons-demo">
+    <h2>Icons</h2>
+
+    <div class="icons">
+        <pl-icon class="icon-activities" [svg]="'activities'"></pl-icon>
+        <pl-icon class="icon-lock blue"></pl-icon>
+        <pl-icon class="icon-check green" [svg]="'check'"></pl-icon>
+        <pl-icon [svg]="'chevron-down'" [inline]="false"></pl-icon>
+        <div class="icons-row">
+            <pl-icon [svg]="'chevron-up'" [width]="50"></pl-icon>
+            <pl-icon [svg]="'pencil'" [width]="50" [height]="50"></pl-icon>
+            <pl-icon [svg]="'pencil'" [scale]="2"></pl-icon>
+            <pl-icon [svg]="'cross'" [height]="30"></pl-icon>
+            <pl-icon class="icon-pencil yellow" [svg]="'pencil'" [scale]="3"></pl-icon>
+            <pl-icon [svg]="'plus'" [scale]="0.5"></pl-icon>
+            <pl-icon [svg]="'chevron-down'"></pl-icon>
+            <pl-icon [svg]="'chevron-left'"></pl-icon>
+            <pl-icon [svg]="'chevron-right'"></pl-icon>
+        </div>
+    </div>
+
+    <h4>Inline</h4>
+    <div class="flexbox unsigned">
+        <div class="flex1">flex1</div>
+        <div>
+            <pl-icon class="icon-unsigned red" [svg]="'blocked'"></pl-icon>
+            <span>Unsigned</span>
+        </div>
+    </div>
+
+    <h4>Button</h4>
+    <div>
+        <button>
+            <pl-icon [svg]="'plus'"></pl-icon> New Event
+        </button>
+    </div>
+
+    <h4>Button Group</h4>
+    <div>
+        <div class="button-group">
+            <button class="button">
+                <pl-icon [svg]="'chevron-left'"></pl-icon>
+            </button>
+            <button class="button">
+                <pl-icon [svg]="'chevron-right'"></pl-icon>
+            </button>
+        </div>
+    </div>
+</div>

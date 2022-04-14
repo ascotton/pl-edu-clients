@@ -1,0 +1,46 @@
+<div class="pl-private-practice-modal">
+    <pl-modal-header-wrapper [headerText]="'Therapy Essentials'">
+        <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+
+        <div class="introduction">
+            <div *ngIf="!loading && notEligible">
+                Sorry, you are not eligible for a Private Practice account.<br />
+                <br />
+                If you need further assistance, please <a href="mailto:asksupport@presencelearning.com">contact our support team</a>.
+            </div>
+
+            <div *ngIf="!loading && alreadyExists">
+                Thanks for your interest in Therapy Essentials! You are already taking advantage of a Therapy Essentials account for your own practice at <b>{{ email }}</b>.<br />
+                <br />
+                If you need assistance, or would like to upgrade to Therapy Essentials Plus (our remote assessment subscription package), please <a href="mailto:asksupport@presencelearning.com">contact our support team</a>.
+            </div>
+
+            <div *ngIf="!loading && signUpComplete">
+                You're all set! Please check your <b>{{ email }}</b> email to get started.<br />
+                <br />
+                If you need assistance, or would like to upgrade to Therapy Essentials Plus (our remote assessment subscription package), please <a href="mailto:asksupport@presencelearning.com">contact our support team</a>.
+            </div>
+
+            <div *ngIf="!loading && canSignup">
+                <b>FREE!</b><br />
+                As a member of the PresenceLearning network, you qualify for a free Therapy Essentials account to use for your own practice.  Therapy Essentials is our same great platform and includes:<br />
+                <ul style="margin:16px;"><li>Dedicated therapy room URL</li><li>Tools and content to customize your therapy</li><li>Ability to upload materials to create a personal library</li></ul>
+                A new Therapy Essentials platform account, for personal use, will be created for <b>{{ email }}</b>.<br />
+                <br />
+                By clicking below to sign up, you agree to the <a href="https://www.presencelearning.com/therapy-essentials-in-network-terms-conditions/" target="_blank">Terms and Conditions</a>.<br />
+                <button pl-button (click)="onClickFreeSignup()" style="margin-left:0px;">Sign me up!</button><br />
+                <br />
+                <div *ngIf="isPaidAvailable">
+                    <hr /><br />
+                    <b>Upgrade to Therapy Essentials Plus!</b><br />
+                    Want the ability to conduct remote assessments? Assessment packages are now available for purchase.<br /><br />
+                    A new Therapy Essentials Plus monthly subscription will be created for <b>{{ email }}</b>.<br />
+                    <button pl-button (click)="onClickPaidSignup()" style="margin-left:0px;">Collect my payment info!</button><br />
+                    <br />
+                </div>
+                <hr /><br />
+                If <b>{{ email }}</b> is not the email address you would like to use for your Therapy Essentials platform account, please <a href="mailto:providersuccess@presencelearning.com">contact the Provider Success team</a> to change the personal email we have on file.<br />
+            </div>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

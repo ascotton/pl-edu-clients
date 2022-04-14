@@ -1,0 +1,143 @@
+<section class="pl-clients-summary" *ngIf="_state.initialized" [ngClass]="{'debug-show-div': util.showDivs(_state)}">
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+    <div class="student-charts">
+        <div class="chart-header">
+            <b>Annual Goal Progress</b>
+            <span class="tooltip" placement="top" show-delay="100" theme="light" animation-duration="400"
+                tooltip="<div class='pl-tooltip'>The status of each IEP goal is collected at the end of the annual IEP period. The status of each RTI goal is collected at the end of the therapy period.</div>">
+                <pl-icon [svg]="'info'"
+                    [height]="15"
+                    [width]="15"
+                    [class]="'inline-block blue-medium margin-small-l cursor-hand'"
+                    [verticalAlign]="'-4px'"
+                ></pl-icon>
+            </span>
+        </div>
+        <div class="chart-header">
+            <b>Student Status</b>
+            <span class="tooltip student-status" placement="top" show-delay="100" theme="light" animation-duration="400" tooltip="<div class='pl-tooltip'>Click for status definitions.</div>">
+                <pl-icon [svg]="'info'"
+                    [height]="15"
+                    [width]="15"
+                    [class]="'inline-block blue-medium margin-small-l cursor-hand'"
+                    [verticalAlign]="'-4px'"
+                    (click)="onClickStudentStatusInfoIcon()">
+                </pl-icon>
+            </span>
+        </div>
+        <div *ngIf="_state.mayViewAbsences" class="margin-large-b absence-header"><b>Attendance</b></div>
+
+        <div class="chart-canvas padding-large grid-column" *ngIf="_state.iepStatusChartData">
+            <canvas baseChart
+                [chartType]="'bar'"
+                [datasets]="_state.iepStatusChartData.datasets"
+                [labels]="_state.iepStatusChartData.labels"
+                [colors]="_state.iepStatusChartData.colors"
+                [options]="_state.iepStatusChartData.options"
+            ></canvas>
+            <div class="separator margin-large-tb"></div>
+            <div class="status-legend  margin-xlarge-t">
+                <div class="status-row">
+                    <div class="status-indicator">
+                        <div class="color-block achieved"></div>
+                    </div>
+                    <div class="status-label">Achieved </div>
+                    <div class="status-count achieved">{{getIepStatusCount('ACHIEVED', _state)}}</div>
+                </div>
+                <div class="status-row">
+                    <div class="status-indicator">
+                        <div class="color-block partially-achieved"></div>
+                    </div>
+                    <div class="status-label">Partially Achieved </div>
+                    <div class="status-count partially-achieved">{{getIepStatusCount('PARTIALLY_ACHIEVED', _state)}}</div>
+                </div>
+                <div class="status-row">
+                    <div class="status-indicator">
+                        <div class="color-block discontinued"></div>
+                    </div>
+                    <div class="status-label">Discontinued </div>
+                    <div class="status-count discontinued">{{getIepStatusCount('DISCONTINUED', _state)}}</div>
+                </div>
+                <div class="status-row">
+                    <div class="status-indicator">
+                        <div class="color-block not-addressed"></div>
+                    </div>
+                    <div class="status-label">Not Addressed </div>
+                    <div class="status-count not-addressed">{{getIepStatusCount('NOT_ADDRESSED', _state)}}</div>
+                </div>
+                <div class="services-exited margin-large-t gray-darker">
+                    <div class="col left"><b>Services Exited &nbsp;</b></div>
+                    <div class="col right">
+                        <b>{{getIepServiceExitedCount('SLT', _state)}}</b> SLT /
+                        <b>{{getIepServiceExitedCount('BMH', _state)}}</b> BMH /
+                        <b>{{getIepServiceExitedCount('OT', _state)}}</b> OT</div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-canvas padding-large grid-column">
+            <pl-account-student-status-chart 
+                [studentStats]="_state.studentStatusChartData"
+            ></pl-account-student-status-chart>
+        </div>
+        <div *ngIf="_state.mayViewAbsences" class="absence-content grid-column">
+            <div class="client-absences-summary-cards">
+                <!-- <a class="priority-1 summary-card link-none" [routerLink]="'/clients/absences'"
+                    [queryParams]="{ cadf_consecutiveAbsenceStreak_Gt: 2 }"> -->
+                <div class="priority-1 summary-card link-none">
+                    <div class="summary-number">{{ _state.model.data.summaryData.priority3 }}</div>
+                    <div class="info">
+                        Students with<br />
+                        <em>4 or more</em> absences
+                    </div>
+                </div>
+                <!-- </a> -->
+                <!-- <a class="priority-2 summary-card link-none" [routerLink]="'/clients/absences'"
+                    [queryParams]="{ cadf_consecutiveAbsenceStreak_Gt: 1, cadf_consecutiveAbsenceStreak_Lt: 3 }"> -->
+                <div class="priority-2 summary-card link-none">
+                    <div class="summary-number">{{ _state.model.data.summaryData.priority2 }}</div>
+                    <div class="info">
+                        Students with<br />
+                        <em>2 or 3</em> absences
+                    </div>
+                </div>
+                <!-- </a> -->
+                <!-- <a class="priority-3 summary-card link-none" [routerLink]="'/clients/absences'"
+                    [queryParams]="{ cadf_ytdAbsenceCount_Gt: 0, cadf_ytdAbsenceCount_Lt: 2, cadf_absencesType: 'ytd' }"> -->
+                <div class="priority-3 summary-card link-none">
+                    <div class="summary-number">{{ _state.model.data.summaryData.priority1 }}</div>
+                    <div class="info">
+                        Students with<br/>
+                        <em>1</em> absence
+                    </div>
+                </div>
+                <!-- </a> -->
+            </div>
+
+            <div *ngIf="_state.mayViewAbsences" class="center absence-footer">
+                <a [routerLink]="'/clients/absences'" [queryParams]="{ cadf_absencesType: 'ytd', cadf_ytdAbsenceCount_Gt: -1 }">View All Absences</a>
+            </div>
+        </div>
+    </div>
+    <div class="add-referrals padding-large-t">
+        <pl-isa-go-to-view-button></pl-isa-go-to-view-button>
+        
+        <div *ngIf="_state.mayAddSingleReferral || _state.mayAddReferrals">
+            <div>Add Referrals</div>
+                <button pl-button class="gray-outline"
+                    *ngIf="_state.mayAddSingleReferral" 
+                    (click)="routeTo('/client-referral-save')">
+                    Single Referral
+                </button>
+                <button pl-button class="gray-outline"
+                    *ngIf="_state.mayAddReferrals"
+                    (click)="routeTo('/add-referrals')">
+                    Upload Referrals
+                </button>
+            <a *ngIf="_state.mayAddReferrals" href="https://cdn.presencelearning.com/statics/PL-Referrals-Template.xlsx">
+                <pl-icon [svg]="'download'" class="gray-darkest"></pl-icon> Download PresenceLearning Referral template
+            </a>
+        </div>
+    </div>
+</section>

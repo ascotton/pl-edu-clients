@@ -1,0 +1,14 @@
+<div class="pl-clients-list">
+    <div *ngIf="currentUser && currentUser.xGlobalPermissions" class='tabs-container'>
+        <pl-tabs [tabs]="tabs" [updatePageTabTitleBasedOnActiveLink]="true"></pl-tabs>
+    </div>
+    <div class="padding-large">
+        <a *ngIf="userCanMerge" [routerLink]="['/client-merge']">
+            <button type="button" pl-button class="merge-button">
+                <pl-icon [svg]="'merge'" [scale]="1.0"></pl-icon>
+                Merge Clients
+            </button>
+        </a>
+        <router-outlet></router-outlet>
+    </div>
+</div>

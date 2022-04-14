@@ -1,0 +1,29 @@
+@import 'core/colors.less';
+
+.pl-isa-table {
+    .checkbox-cell {
+        max-width: 50px;
+        box-sizing: border-box;
+    }
+
+    .sticky-table-header {
+        top: 184.3px;
+        z-index: 100;
+        position: sticky;
+        padding-top: 5px;
+        background-color: @white;
+        
+        &.read-only {
+            top: 179.3px;
+            padding-top: 0px;
+        }
+        &.removal-modal {
+            top: 0px;
+            padding-top: 0px;
+        }
+    }
+
+    .unsign-reason-cell {
+        width: 11em;    
+    }
+}

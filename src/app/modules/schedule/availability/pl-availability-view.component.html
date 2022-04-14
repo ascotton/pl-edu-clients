@@ -1,0 +1,152 @@
+<div class="pl-availability-view" [ngClass]="classesWrapper">
+  <div class="margin-small-b" [class.maximized]="state.maximized" *ngIf="state.pageInitialized && fullPage && showTabs">
+    <pl-tabs [tabs]="tabs"></pl-tabs>
+  </div>
+
+  <div [class.container]="!isCAMView" [class.maximized]="state.maximized" *ngIf="state.pageInitialized">
+
+    <div class="col col1">
+      <div class="top" [class.max-off]="state.maximized" *ngIf="!isCAMView">
+        <h3 class="margin-b">Availability</h3>
+        <p class="heading-text">
+            Indicate the times you are available each week <b>to work directly with students</b> during the school day. If you are not available on a certain day leave that day blank. This information will be used to assign and schedule your students.
+        </p>
+        <p class="heading-text">
+            <b>DO NOT</b> include time you are available for attending IEP meetings, maintaining communication with school sites and PresenceLearning, and completing all district and PL documentation.
+        </p>
+        <p class="heading-text">
+            <b>DO NOT</b> remove hours once you are assigned to a district. To indicate that you do not want additional assignments, please set your max hours to the number of hours you are assigned.
+        </p>
+      </div>
+
+      <button *ngIf="!hasAgreed && !isCAMView" pl-button (click)="onClickAgree()" class="primary">OK, let's do it!</button>
+
+      <div [hidden]="!hasAgreed && !isCAMView">
+        <div class="expand-calendar" [class.max-off]="state.maximized" *ngIf="isDevDebug('SHOW_ZOOM')">
+            <button pl-button class="link" (click)="onClickMaximizeView()">
+            <pl-icon [svg]="'new-tab'" [height]="18" [width]="18"></pl-icon>
+            <span>Expand Calendar</span>
+            </button>
+        </div>
+
+        <div *ngIf="state.maximized" class="zoom-scale" id="zoomScale">
+            <span class="label">SCALE:</span>
+            <span [class.active]="state.scale === 'xsmall'" (click)="onClickZoomScale('xsmall')">extra small</span> |
+            <span [class.active]="state.scale === 'small'" (click)="onClickZoomScale('small')">small</span> |
+            <span [class.active]="state.scale === 'medium'" (click)="onClickZoomScale('medium')">medium</span> |
+            <span [class.active]="state.scale === 'large'" (click)="onClickZoomScale('large')">large</span> |
+            <span [class.active]="state.scale === 'xlarge'" (click)="onClickZoomScale('xlarge')">extra large</span>
+        </div>
+        <div class="close-maximized-view" *ngIf="state.maximized">
+            <button pl-button class="link" (click)="onClickMaximizeView()">
+            <pl-icon [svg]="'close-inverted'" [height]="18" [width]="18"></pl-icon>
+            <span>Close</span>
+            </button>
+        </div>
+
+        <div class="saving-errors" *ngIf="hasSaveErrors()">
+            <fieldset>
+            <legend>Please provide this error information to support</legend>
+            <div class="button-copy-to-clipboard" *ngIf="util.canCopyToClipboard()">
+                <button pl-button class="pl-button info" (click)="copyErrorInfoToClipboard()">
+                Copy to clipboard
+                </button>
+            </div>
+            <div id="errorDataSupport">
+                <div class="saving-errors-header">
+                <div class="provider-info" *ngIf="state.user">
+                    <span class="username">{{state.user.username}}</span>
+                    <span class="uuid">{{state.user.uuid}}</span>
+                </div>
+                </div>
+                <ul class="error-info">
+                <li *ngFor="let err of getSaveErrors()">
+                    <ngx-json-viewer [json]="err"></ngx-json-viewer>
+                </li>
+                </ul>
+            </div>
+            </fieldset>
+        </div>
+
+        <div class="main" [class.maximized]="state.maximized" [class.scale-view]="state.maximized" [class.scale-xsmall]="state.scale === 'xsmall'" [class.scale-small]="state.scale === 'small'" [class.scale-medium]="state.scale === 'medium'" [class.scale-large]="state.scale === 'large'" [class.scale-xlarge]="state.scale === 'xlarge'">
+            <pl-weekly-time-grid
+                [readOnly]="readOnly || isCAMView"
+                [timezone]="state.timezone"
+                [showWorkstations]="false"
+                [blocks]="rawBlocks"
+                (hoursChanged)="onHoursChanged($event)"
+            ></pl-weekly-time-grid>
+        </div>
+
+        <div class="debug" *ngIf="isDevDebug('DEBUG_INLINE_CONSOLE')">
+            <span class="indicator" [style.font-weight]="bold">DEBUG: </span>
+            <span class="indicator" [style.background-color]="'red'" [style.color]="'white'" *ngIf="state.activeBlock.style">Active Block</span>
+            <span class="indicator" [style.background-color]="'green'" [style.color]="'white'" *ngIf="state.activeBlock.clone">Active Block Edit</span>
+            <span class="indicator" [style.background-color]="'blue'" [style.color]="'white'" *ngIf="getCloneBlock()">Clone Index
+            {{getCloneBlock().index}}</span>
+        </div>
+
+        <div *ngIf="!state.saving && isCAMView" class="bottom" [class.max-off]="state.maximized">
+          <div class="available-hours" *ngIf="!isDoneEnteringTime">
+            Total Hours: <strong class="total-hours">{{state.totalAvailableHours}}</strong>
+          </div>
+        </div>
+        <div *ngIf="!state.saving && !isCAMView" class="bottom" [class.max-off]="state.maximized">
+            <div class="available-hours" *ngIf="!isDoneEnteringTime">
+                You have <span class="total-hours">{{state.totalAvailableHours}} available hours</span> so far.
+            </div>
+            <button *ngIf="!isDoneEnteringTime && state.totalAvailableHours > 0" pl-button (click)="onClickDoneEnteringTime()" class="primary">I'm done entering time</button>
+            <div [hidden]="!isDoneEnteringTime">
+                <div *ngIf="state.totalAvailableHours >= 1 || model.maxHours > 0">
+                    <h3 class="margin-t margin-b">Maximum Hours</h3>
+                    <span class="max-hours-label">
+                        What is the maximum number of hours you would like to <b>work with students</b> each week?
+                    </span>
+                    <br />
+                    <div class="max-hours">
+                        <span class="max-hours-select">
+                        <pl-input-select [options]="state.maxHoursOptions" [(model)]="model.maxHours" [bigFilter]="false" [filter]="false" [placeholder]="'Select'" [disabled]="state.maxHoursOptions && !state.maxHoursOptions.length">
+                        </pl-input-select>
+                        </span>
+                    </div>
+                    <div class="margin-xlarge-t x-qa-total-working-hours-text" *ngIf="model.maxHours > 0">
+                        {{ model.maxHours }} hour{{ model.maxHours === 1 ? "" : "s" }} with students equates to about <b>{{ getTotalWorkingHours() }} total working hours per week</b>, including all meetings, direct sessions, and paperwork.
+                    </div>
+                </div>
+                <div class="form-submit">
+                <button pl-button *ngIf="!state.saving" class="primary" (click)="onClickSubmitForm()" [disabled]="!model.maxHours">
+                    <span *ngIf="!state.blocks.length">Submit</span>
+                    <span *ngIf="state.blocks.length">Save & Confirm</span>
+                </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="state.saving" class="save">
+            <div class="save-message">Saving Your Availability</div>
+            <div class="save-dot-loader">
+            <pl-dot-loader [align]="'left'"></pl-dot-loader>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showTips" class="col col2" [class.max-off]="state.maximized">
+      <div class="tips">
+        <div class="header">
+          Quick Tips
+        </div>
+        <div class="row tip">
+          <div class="icon"><pl-icon [svg]="'school-building'" class="blue-medium" [height]="24" [width]="24"></pl-icon></div>
+          <div class="text">Make yourself available during regular "school hours"</div>
+        </div>
+        <div class="row tip">
+          <div class="icon"><pl-icon [svg]="'around-clock'" class="blue-medium" [height]="24" [width]="24"></pl-icon></div>
+          <div class="text">Strive to be available for 4-6 hours</div>
+        </div>
+        <div class="row tip last">
+          <div class="icon"><pl-icon [svg]="'calendar-3'" class="blue-medium" [height]="24" [width]="24"></pl-icon></div>
+          <div class="text">Make yourself available on alternating days and afternoons</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

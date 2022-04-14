@@ -1,0 +1,38 @@
+<pl-modal-header-wrapper [headerText]="'Merge tips'">
+    <div class="before-merging-text">
+            Before Merging
+    </div> <br>
+    <div *ngIf="currentTip == 1">
+        <pl-icon [svg]="'merge-transfer-location'" [width]="400" [height]="150"></pl-icon>
+        <div class="merge-tips-text">
+            <span class="tip-number">1</span> Transfer clients to same location
+        </div>
+    </div>
+    <div *ngIf="currentTip == 2">
+        <pl-icon [svg]="'merge-chain'" [width]="400" [height]="150"></pl-icon>
+        <div class="merge-tips-text">
+            <span class="tip-number">2</span> Make sure not to chain client merges
+        </div>
+    </div>
+    <div *ngIf="currentTip == 3">
+        <pl-icon [svg]="'merge-duplicate-referrals'" [width]="400" [height]="150"></pl-icon>
+        <div class="merge-tips-text">
+            <span class="tip-number">3</span> Delete duplicate referrals
+        </div>
+    </div>
+    <div *ngIf="currentTip == 4">
+        <pl-icon [svg]="'merge-duplicate-evals'" [width]="400" [height]="150"></pl-icon>
+        <div class="merge-tips-text">
+            <span class="tip-number">4</span> Cancel duplicate evaluations
+        </div>
+    </div>
+    <br><br>
+    <div class="dotstyle dotstyle-scaleup">
+        <ul>
+            <li [ngClass]="{current: currentTip == 1}" (click)="currentTip=1"><a></a></li>
+            <li [ngClass]="{current: currentTip == 2}" (click)="currentTip=2"><a></a></li>
+            <li [ngClass]="{current: currentTip == 3}" (click)="currentTip=3"><a></a></li>
+            <li [ngClass]="{current: currentTip == 4}" (click)="currentTip=4"><a></a></li>
+        </ul>
+    </div>
+</pl-modal-header-wrapper>

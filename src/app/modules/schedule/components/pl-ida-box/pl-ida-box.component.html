@@ -1,0 +1,73 @@
+<div *ngIf="!viewOnly && idaData && !templateIsBillingSubmitted" class="ida-link ida-box"
+  [class.billing-period-over]="templateIsBillingPeriodOver">
+
+  <ng-container *ngIf="templateIncompletedTotalEvents && !templateIsBillingSubmitted">
+    <div class="month-name margin-t">
+      <div class="title">
+        {{ idaData.invoicePeriod?.monthName | uppercase }}
+        <ng-container *ngIf="isW2Provider">
+          TIMESHEET
+        </ng-container>
+        DOCUMENTATION
+        <ng-container *ngIf="isW2Provider">
+          <ng-container *ngTemplateOutlet="timeSheetPeriod"></ng-container>
+        </ng-container>
+      </div>
+      <div *ngIf="templateIncompletedPastEvents; else allCaughtUp" class="number"
+        [class.billing-period-over]="templateIsBillingPeriodOver">
+        <span>
+          {{ templateIncompletedPastEvents }}
+        </span>
+        <span class="text">
+          event{{ templateIncompletedPastEvents > 1 ? 's are': ' is' }} ready to document
+        </span>
+      </div>
+      <ng-template #allCaughtUp>
+        <div class="number">
+          Great, all caught up!
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!viewOnly && !templateIncompletedTotalEvents && !templateIsBillingSubmitted">
+    <div class="info-unsigned-events">
+      <ng-container *ngIf="templateIsBillingPeriodOver; else billingPeriod">
+        <div class="info-message">
+          UNSUBMITTED {{ isW2Provider ? 'TIMESHEET' : 'INVOICE' }}
+        </div>
+        <div>
+          Please submit {{ isW2Provider ? 'timesheet' : 'invoice' }} for
+          <ng-container *ngIf="!isW2Provider; else timeSheetPeriod">
+            {{ idaData.invoicePeriod.monthName }}
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #billingPeriod>
+        <div class="info-message">
+          {{ templateBillingPeriod | uppercase }} DOCUMENTATION
+        </div>
+        <div>
+          Great, all caught up!
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+  <div class="button ida-button">
+    <button pl-button *ngIf="templateDisplayBillingButton; else daBtn"
+      [ngClass]="templateIsBillingPeriodOver ? 'danger' : 'info'" routerLink="/billing/billings">
+      {{ templateIsBillingPeriodOver ? 'Go to Billing' : 'Billing' }}
+    </button>
+    <ng-template #daBtn>
+      <button pl-button routerLink="/documentation-assistant" [ngClass]="templateIDAClass">
+        Documentation Assistant
+      </button>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #timeSheetPeriod>
+  <br/>
+  {{ idaData.work_period_expanded.start_date | date: 'M/d/yyyy' }} -
+  {{ idaData.work_period_expanded.end_date | date: 'M/d/yyyy' }}
+</ng-template>

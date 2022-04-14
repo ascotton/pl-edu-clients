@@ -1,0 +1,26 @@
+<section class="pl-client-referral-save">
+    <div class="header-blue fixed padding-large-lr padding-tb flexbox">
+        <div class="font-h2 flex1">
+            <span *ngIf="!initing && !isEdit">Add</span><span *ngIf="!initing && isEdit">Edit</span> Single Referral
+        </div>
+        <div (click)="onClose()" class="pointer padding-small-t">
+            <pl-icon class="white margin-small-r" [svg]="'close-inverted'" [scale]="1"></pl-icon> Close
+        </div>
+    </div>
+    <div class="header-blue-fixed-spacer">&nbsp;</div>
+
+    <pl-dot-loader [hidden]="!initing" [align]="'center'"></pl-dot-loader>
+    <div *ngIf="!initing">
+        <pl-client-referral-save-client *ngIf="!client || !client.firstName" (onSelect)="selectClient($event)"></pl-client-referral-save-client>
+        <pl-client-referral-save-referral
+            *ngIf="client && client.firstName"
+            [client]="client"
+            [referral]="clientReferral"
+            [saving]="saving"
+            (onChangeClient)="removeClient($event)"
+            (onSave)="save($event)"
+            (onSaveAndConvert)="saveAndConvert($event)"
+            (onCancel)="cancel($event)">
+        </pl-client-referral-save-referral>
+    </div>
+</section>

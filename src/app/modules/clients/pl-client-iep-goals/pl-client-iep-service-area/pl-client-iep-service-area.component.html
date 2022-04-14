@@ -1,0 +1,96 @@
+<div class="pl-client-iep-service-area margin-large-b" [ngClass]="{'debug-show-div': util.showDivs(_state)}">
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <!-- Service Goals block header-->
+  <div class="service-type-header">
+    <div class="divider-line"></div>
+    <div class="service-type-header-columns">
+      <div class="col col-1">
+        <span class="header-toggle" (click)="onClickServiceTypeHeader()">
+          <pl-icon *ngIf="showGoals()" [svg]="'collapse'" [scale]="0.75" [verticalAlign]="'-2px'"></pl-icon>
+          <pl-icon *ngIf="!showGoals()" [svg]="'expand'" [scale]="0.75" [verticalAlign]="'-2px'"></pl-icon>
+          &nbsp;{{getServiceAreaType().label}} Goals
+          <span *ngIf="isServiceAreaClosed() && !service.isIepComplete(iep)">(ENDED)</span>
+        </span>
+        <a class="toggle-goals-link" *ngIf="this.showGoals() && !_state.toggleExpandAllGoals" (click)="onClickToggleExpandAllGoals()">Expand All Goals</a>
+        <a class="toggle-goals-link" *ngIf="this.showGoals() && _state.toggleExpandAllGoals" (click)="onClickToggleExpandAllGoals()">Collapse All Goals</a>
+      </div>
+      <div class="col col-2">
+        <button pl-button class="add-goal-button"
+          (click)="onClickAddGoal()"
+          [disabled]="!isServiceAreaModifiable() || this.isInAddFlowState()"
+          *ngIf="isServiceAreaModifiable()">
+          <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'" class="margin-small-r"></pl-icon> Add Goal
+        </button>
+      </div>
+    </div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div *ngIf="showGoals()">
+    <!-- MESSAGES: service area closed but other SA exist-->
+    <div class="banner info padding margin-tb" *ngIf="showServiceAreaClosedMessage()">
+      <span class="icon"><span class="text">!</span></span>
+      <span class="banner-text"><span class="message">
+        Some other Service Areas are still open. When they are closed, this {{service.getTypeDisplayName(iep)}} year will end.
+      </span></span>
+    </div>
+
+    <!-- MESSAGES: info: goals not available till activation-->
+    <div *ngIf="canShowProgressTrackingInfoMessage()">
+      <div class="banner info INFO-wait-till-active margin-tb">
+        <span class="icon"><span class="text">!</span></span>
+        <span class="banner-message">
+          Progress tracking for these goals won't be available in the room until this becomes your active {{service.getTypeDisplayName(iep)}}.
+        </span>
+      </div>
+    </div>
+
+    <!-- MESSAGES: edge case-->
+    <div class="empty-goals-container padding-xlarge-tb closed-no-goals" *ngIf="service.isIepComplete(iep) && !canShowGoals()">
+      This service area is closed and contains no goals.
+    </div>
+  </div>
+
+  <!-- show add goals graphic section when no goals exist for provider's service type -->
+  <div class="empty-goals-container"
+    *ngIf="canShowEmptyServiceArea()"
+    [@enterAnimation]>
+    <div class="empty-goals-graphic margin-large-tb">
+      <pl-icon [svg]="'new-goal-graphic'" [height]="275" [width]="335"></pl-icon>
+    </div>
+    <div class="empty-goals-instructions" *ngIf="service.isTypeIep(iep)">
+      Copy your goals from your IEP
+    </div>
+    <div class="empty-goals-action">
+      <a class="empty-goals-action-link" (click)="onClickAddGoal()">Add Goal</a>
+    </div>
+  </div>
+
+  <!-- list of goals for this service type-->
+  <div class="goals-container padding-large" *ngIf="showGoals() && canShowGoals()">
+    <div class="goals-instructions margin-large-b" *ngIf="isServiceAreaModifiable() && service.isIepActive(iep) && service.isTypeIep(iep)">
+      Goals should directly reflect what is written in the {{service.getTypeDisplayName(iep)}}. At the end of the {{service.getTypeDisplayName(iep)}} cycle, click <b>End {{service.getTypeDisplayName(iep)}}</b>.
+    </div>
+    <div>
+      <div class="goal-items">
+        <pl-client-iep-goal-item *ngIf="isInAddFlowState()"
+          [goal]="_state.model.emptyGoal"
+          [serviceArea]="serviceArea"
+          [iep]="iep"
+          [client]="_state.client"
+          [@enterAnimation]
+          ></pl-client-iep-goal-item>
+        <pl-client-iep-goal-item *ngFor="let goal of getGoals()"
+          [goal]="goal"
+          [serviceArea]="serviceArea"
+          [iep]="iep"
+          [client]="_state.client"
+          [@enterAnimation]
+        ></pl-client-iep-goal-item>
+      </div>
+    </div>
+  </div>
+</div>

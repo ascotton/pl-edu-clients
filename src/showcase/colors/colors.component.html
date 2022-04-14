@@ -1,0 +1,10 @@
+<h3>Click on a color chip to copy its hex value to the clipboard.</h3>
+
+<div class="row" *ngFor="let group of colorGroups">
+    <div class="swatch" *ngFor="let color of group">
+        <div class="name">{{ color.name }}</div>
+        <div class="chip" [ngStyle]="{'background-color':color.value}" (click)="copyToClipboard()">
+            <div class="colorValue">{{ color.value }}</div>
+        </div>
+    </div>
+</div>

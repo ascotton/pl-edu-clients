@@ -1,0 +1,8 @@
+<pl-clients-assessements
+    *ngIf="!loading"
+    [customerLocation]="location">
+</pl-clients-assessements>
+
+<div *ngIf="loading" class="padding-xlarge-tb">
+    <pl-dot-loader></pl-dot-loader>
+</div>

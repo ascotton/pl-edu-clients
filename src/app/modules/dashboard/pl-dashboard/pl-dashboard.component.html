@@ -1,0 +1,319 @@
+<div class="pl-dashboard" *ngIf="pageInitialized">
+
+  <div class="grid-container pl-dashboard-columns">
+
+    <div class="pl-dashboard-left-column">
+
+        <div class="tasks grid-item" *ngIf="tasksOnboarding.length > 0 && (currentUser.xProvider && currentUser.xProvider.providerSubStatus == 'Onboarding')">
+          <span class="section-header">
+            <span>Onboarding Checklist</span>
+          </span>
+          <div *ngIf="!tasksOnboardingAllComplete" class="padding padding-large-lr">Thanks for updating your information! While we verify a few things on our end, you can get started on the next required onboarding tasks.</div>
+          <div *ngIf="tasksOnboardingAllComplete" class="onboarding-tasks-complete margin-b padding-large">
+            Woohoo! You did it! Now take a look around our platform and practice using our tools so you’re comfortable, confident, and ready to serve your kids when you get your first assignment! Your Clinical Account Manager will be following up with you to make sure you're comfortable navigating the PL Platform and Therapy Room.
+          </div>
+          <div class="card">
+            <div *ngFor="let task of tasksOnboarding" class="task-onboarding-item flexbox">
+                <div class="task-onboarding-icon">
+                    <pl-icon *ngIf="task.xIsComplete" class="green pointer" [svg]="'check-circle'" [scale]="1" (click)="tasksOnboardingToggleHidden(task)"></pl-icon>
+                    <div *ngIf="!task.xIsComplete">
+                        <pl-input-checkbox [(model)]="tasksOnboardingCheckboxVals[task.taskType.code]"
+                        (click)="tasksOnboardingCompleteTask(task)"></pl-input-checkbox>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-npin'">
+                    <div class="margin-small-b"><h4>Submit Your National Provider Identifier Number</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b">The National Provider Identifier (NPI) number is a HIPAA requirement which allows our school partners to accurately report and bill for services. PresenceLearning needs to collect NPI numbers for all providers from all disciplines: occupational therapists, speech language therapists, and mental and behavioral health professionals.</div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://nppes.cms.hhs.gov/">Apply for a New NPI number</a>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" [href]="'https://www.tfaforms.com/4808819?tfa_4=' + salesforceId"><b>Submit Your NPI number</b></a>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://presencelearning.helpjuice.com/71385-being-a-provider-with-presencelearning/national-provider-identifier-npi-requirements">Read About the NPI Number in the Help Center</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-w9-tax-form'">
+                    <div class="margin-small-b"><h4>Submit Tax Information</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b">If you legally reside in California, New York, Massachusetts, Oregon, Illinois, or Utah, you must provide proof of being incorporated (Inc.), operating as a limited liability company (LLC), or have an employer identification number (EIN). This information needs to be submitted along with a completed W-9 tax form. Remember to use your <b>full legal name</b> and / or <b>business name</b> along with your <b>Social Security Number</b> or <b>Employer Identification Number</b> - whichever you use to file your taxes.</div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://www.irs.gov/pub/irs-pdf/fw9.pdf">Download W-9 Form from the IRS Website</a>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" [href]="'https://www.tfaforms.com/4808978?tfa_4=' + salesforceId + '&tfa_53=' + currentUser.xProvider.billing_state + '&tfa_105=' + fullName"><b>Submit Your Tax Information</b></a>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://presencelearning.helpjuice.com/71385-being-a-provider-with-presencelearning/tax-information-center">Read Tax Information in the Help Center</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-liability-insurance'">
+                    <div class="margin-small-b"><h4>Submit Proof of Liability Insurance</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b">In order to provide services on behalf of PresenceLearning, all contractors must maintain active professional liability insurance that meets the requirements listed below.</div>
+                        <div class="margin-small-b">
+                            <a target="_blank" [href]="'https://www.tfaforms.com/4808817?tfa_3=' + salesforceId"><b>Submit Your Proof of Liability Insurance</b></a>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://presencelearning.helpjuice.com/71385-being-a-provider-with-presencelearning/liability-insurance-requirements">Read About Liability Insurance Requirements in the Help Center</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-driver-license'">
+                    <div class="margin-small-b"><h4>Submit Your Driver's License</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b">PresenceLearning maintains a copy of your driver's license to assist with identity verification and background checks.</div>
+                        <div class="margin-small-b">
+                            <a target="_blank" [href]="'https://www.tfaforms.com/4808957?tfa_3=' + salesforceId"><b>Submit Your Driver’s License</b></a>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://presencelearning.helpjuice.com/71385-being-a-provider-with-presencelearning/drivers-license-requirements">Read About the Driver’s License Requirement in the Help Center</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-orientation'">
+                    <div class="margin-small-b"><h4>Complete Orientation</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b"><b>Start here!</b> Learn more about PresenceLearning ahead of your Onboarding Check-in call.</div>
+                        <div class="margin-small-b">
+                            <a target="_blank" routerLink="/landing/launch-coassemble"><b>Complete e-Orientation Course</b></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-provider-lounge'">
+                    <div class="margin-small-b"><h4>Visit the Provider Lounge</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b">Log into the Lounge to connect with other PL Care Network Providers. Access this online community to help you on your teletherapy journey.</div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://www.presencelearning.com/lounge/"><b>Visit the Provider Lounge</b></a>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://presencelearning.helpjuice.com/71385-being-a-provider-with-presencelearning/social-networking-account-management">Read Help Center Article on Community Guidelines for the Lounge</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-telehealth-institute-prime'">
+                    <div class="margin-small-b"><h4>Complete Onboarding Courses in Telehealth Institute</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b">The Telehealth Institute includes a variety of courses to help you excel as a teletherapist using the PresenceLearning Platform, including:
+                            <ul>
+                                <li>HIPAA & IT Security Essentials</li>
+                                <li>Account Set Up Essentials</li>
+                                <li>Therapy Room Essentials</li>
+                                <li>Library Navigation Essentials</li>
+                                <li>Student Information & Billing Essentials</li>
+                            </ul>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" routerLink="/landing/launch-coassemble"><b>Complete Telehealth Institute Courses</b></a>
+                        </div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://presencelearning.helpjuice.com/71385-being-a-provider-with-presencelearning/learning-development-account-management">Read Help Center Article on Telehealth Institute</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-assignment-readiness-check'">
+                    <div class="margin-small-b"><h4>Prepare for your Assignment Readiness Check</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b">
+                            <ul>
+                                <li *ngIf="!this.isSchoolPsych">
+                                    <span>Writing student goals and communicating with school stakeholders is an important part of your work with PresenceLearning. Please complete a goal writing sample.</span><br />
+                                    <a target="_blank" href="{{ goalWritingSampleUrl }}"><b>Submit Goal Writing Exercise Response</b></a><br />
+                                    <br />
+                                </li>
+                                <li>
+                                    <span>Great therapy sessions start with you and your comfort navigating the PL Platform and Therapy Room. Please complete the exercises outlined in the study guide to get hands-on practice.</span><br />
+                                    <a target="_blank" href="https://presencelearning.helpjuice.com/71385-being-a-provider-with-presencelearning/assignment-readiness-study-guide"><b>Review the Study Guide in the Help Center</b></a><br />
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="margin-small-b">
+                            Once completed, we’ll contact you to schedule a time to meet with a member of the clinical team to review your work.
+                        </div>
+                    </div>
+                </div>
+                <div class="flex1" *ngIf="task.taskType.code === 'onboarding-documentation-and-billing'">
+                    <div class="margin-small-b"><h4>Get a handle on how to schedule, document, and submit your invoice through the PL Platform</h4></div>
+                    <div *ngIf="!task.xHidden">
+                        <div class="margin-small-b">The end of the month billing cycle comes up quickly. Learn the ropes and expectations so you’re prepared to submit your invoice on time to get paid.</div>
+                        <div class="margin-small-b">
+                            <a target="_blank" href="https://presencelearning.helpjuice.com/61228-billing-invoicing"><b>Read About Billing & Payment in the Help Center</b></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tasks grid-item" *ngIf="(!currentUser.xProvider || currentUser.xProvider.providerSubStatus != 'Onboarding')">
+          <span class="section-header">
+            <span>My Tasks</span>
+            <span class="subheader" *ngIf="!loadingTasks">({{ tasks.length }} total<span *ngIf="newCount > 0"> / {{ newCount }} new</span>)</span>
+            <pl-icon class="blue-medium pointer" [svg]="'info'" [height]="18" [width]="18" [verticalAlign]="'-1px'" (click)="toggleShowTips('tasks')"></pl-icon>
+            <div [hidden]="!showTips.tasks" class="tip">Tasks will help keep you organized. As you complete tasks, they will disappear from this list.</div>
+          </span>
+          <div class="card">
+            <div class="no-tasks" *ngIf="tasks.length <= 0 && !loadingTasks">
+              <pl-icon class="blue-medium" [svg]="'mr-clipboard'" [height]="160" [width]="160"></pl-icon>
+              <span class="padding-tb" *ngIf="!loadingTasks">All done for the day!</span>
+            </div>
+            <ul class="task-list">
+              <li class="task placeholder" *ngIf="loadingTasks">
+                <div class="task-container loading severity3">
+                  <span class="icon"></span>
+                  <span class="description">&nbsp;</span>
+                </div>
+              </li>
+              <li class="task placeholder" *ngIf="loadingTasks">
+                <div class="task-container loading severity3">
+                  <span class="icon"></span>
+                  <span class="description">&nbsp;</span>
+                </div>
+              </li>
+              <li class="task placeholder" *ngIf="loadingTasks">
+                <div class="task-container loading severity3">
+                  <span class="icon"></span>
+                  <span class="description">&nbsp;</span>
+                </div>
+              </li>
+              <li class="task" *ngFor="let task of tasks">
+                <span (click)="handleTask(task)" class="task-container severity{{ task.severity }}">
+                  <div class="icon">
+                    <pl-icon *ngIf="task.severity === 1" class="white" [svg]="'alert'" [scale]="1"></pl-icon>
+                    <pl-icon *ngIf="task.severity === 2" class="white" [svg]="'caution'" [scale]="1"></pl-icon>
+                    <pl-icon *ngIf="task.severity === 3" class="white" [svg]="'info'"[height]="18" [width]="18"></pl-icon>
+                  </div>
+                  <span class="description">
+                    <span class="message" [innerHtml]="task.message"></span>
+                    <span class="new">
+                      <pl-icon *ngIf="!task.isRead" class="gray" [svg]="'new'" [scale]="1"></pl-icon>
+                    </span>
+                  </span>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="contact grid-item">
+          <span class="section-header">
+            <span>Accounts & Services</span>
+          </span>
+          <div class="card">
+            <div class="margin-large-b links-section">
+                <div class="margin-b links-header">Help & Support</div>
+                <div class="margin-large-b">
+                    <div class="font-h4">Support Services</div>
+                    <div><a href="mailto:asksupport@presencelearning.com">asksupport@presencelearning.com</a></div>
+                    <div>1-844-415-4592</div>
+                    <br />
+                    <div class="font-h4">Equipment</div>
+                    <div><a href="{{ equipmentOrderUrl }}" target="_blank">Equipment Order Form</a></div>
+                </div>
+            </div>
+            <div class="marging-large-b links-section">
+                <div>
+                    <div class="links-header">External Resources</div>
+                    <div><a target="_blank" href="https://qglobal.pearsonclinical.com/qg/login.seam">Q-Global</a></div>
+                    <div><a target="_blank" href="https://www.wjscore.com/WJIV/Home/Index/2">WJ Score</a></div>
+                    <div><a target="_blank" href="https://platform.wpspublish.com/account/login">Western Psychological Services</a></div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-item">
+            <span class="section-header">
+              <span>PresenceLearning Network Perk</span>
+            </span>
+            <div class="card">
+                Learn how to <a [routerLink]="" (click)="onClickShowPrivatePracticeDetails()">get a free version of our same great therapy platform</a>, Therapy Essentials, to use for your own private practice!
+            </div>
+        </div>
+    </div>
+
+    <div class="pl-dashboard-right-column">
+
+        <div class="room grid-item">
+          <span class="section-header">
+            <span>PresenceLearning Resources</span>
+          </span>
+          <div class="card">
+              <div class="section">
+                <div class="app-item inline-block padding-lr" *ngFor="let link of apps">
+                  <a *ngIf="link.href" routerLink="{{ link.href }}" routerLinkActive="active" [target]="(link.isNewWindow) ? '_blank' : null">
+                    <pl-icon class="blue-medium" [svg]="link.icon" [scale]="1.5"></pl-icon>
+                    <span class="font-h5 blue-medium" [ngClass]="link.cssClass"> <b> {{ link.label }} </b> </span>
+                  </a>
+
+                  <a *ngIf="link.hrefAbsolute" class="link-unstyled link-no-color" target="_blank" href="{{ link.hrefAbsolute }}">
+                    <pl-icon class="blue-medium" [svg]="link.icon" [scale]="1.5"></pl-icon>
+                    <span class="font-h5 blue-medium" [ngClass]="link.cssClass"> <b> {{ link.label }} </b> </span>
+                  </a>
+                </div>
+              </div>
+            <div class="room-title margin-small-b">
+                <span class="font-h4">Room URL</span>
+                <pl-icon class="blue-medium pointer" [svg]="'info'"[height]="18" [width]="18" [verticalAlign]="'-1px'" (click)="toggleShowTips('room')"></pl-icon>
+            </div>
+            <div [hidden]="!showTips.room" class="tip">Here is your Room URL which you can share with students. This will allow them to enter your Room for therapy sessions. <a target="_blank" href="https://presencelearning.helpjuice.com/61244-technical-support-troubleshooting/getting-started-in-the-room">Learn More About Your Room</a></div>
+            <div class="copy margin-small-b" [ngClass]="{'copied': isCopied()}">
+              <input id="room-url" class="url" value="{{ roomUrl }}" readonly />
+              <span class="copy-text" (click)="copyRoomUrl()">
+                <pl-icon *ngIf="isCopied()" class="white" [svg]="'check'" [scale]="1"></pl-icon>
+                <span class="copy-label" *ngIf="!isCopied()">Copy</span>
+              </span>
+            </div>
+            <div class="margin-large-t margin-small-b">Experiencing issues with your Room?</div>
+            <div><button pl-button class="link" (click)="onClickSupportChat()">Chat with Support</button></div>
+          </div>
+        </div>
+
+        <div class="schedule grid-item" *ngIf="(!currentUser.xProvider || currentUser.xProvider.providerSubStatus != 'Onboarding')">
+          <span class="section-header">
+            <div class="flexbox">
+                <div class="flex1">
+                    <span>My Schedule</span>
+                    <pl-icon class="blue-medium pointer" [svg]="'info'"[height]="18" [width]="18" [verticalAlign]="'-1px'" (click)="toggleShowTips('schedule')"></pl-icon>
+                </div>
+                <div class="font-h4 padding-small-t">
+                    <a routerLink="/schedule">View Calendar</a>
+                </div>
+            </div>
+            <div [hidden]="!showTips.schedule" class="tip">Here are the students you will be seeing today. <a target="_blank" href="https://presencelearning.helpjuice.com/61244-technical-support-troubleshooting/add-an-event-to-your-calendar">Learn More About Your Schedule</a></div>
+          </span>
+          <div class="card">
+            <span class="date" *ngIf="!loadingEvents">{{ today }}</span>
+            <span class="date" *ngIf="loadingEvents">Today</span>
+            <div class="scrollable">
+              <ul>
+                <li *ngFor="let event of events" [ngClass]="{'past': event.isPast, 'last': event.lastPast}">
+                  <span class="color-code {{getColorClass(event)}}"></span>
+                  <div class="description">
+                    <span class="title" *ngIf="event.billing_expanded">{{ event.billing_expanded.name }}</span>
+                    <span class="detail">
+                      <span class="clients">{{ event.clientList }}</span>
+                      <span class="locations">{{ event.locationList }}</span>
+                    </span>
+                  </div>
+                  <span class="time">{{ event.time }}</span>
+                </li>
+              </ul>
+              <div class="no-events" [ngClass]="{'spaced': !loadingEvents}">
+                <span *ngIf="loadingEvents">Getting your schedule...</span>
+                <pl-icon class="blue-medium" [svg]="'happy-schedule'" [height]="160" [width]="240"></pl-icon>
+                <span class="padding-tb" *ngIf="!loadingEvents">All done for the day!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <pl-fte-wrapper></pl-fte-wrapper>
+    </div>
+
+  </div>
+</div>

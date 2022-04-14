@@ -1,0 +1,14 @@
+<div class="pl-provider-onboarding padding-large">
+    <div *ngIf="mode == 'new'" class="margin-large-b"><h1>Provider Onboarding</h1></div>
+    <div class="flexbox columns">
+        <div *ngIf="steps && mode === 'new'" class="left-column">
+            <pl-nav-left-steps [steps]="steps" [skipSteps]="false" [mayGoPrevious]="false"></pl-nav-left-steps>
+        </div>
+        <div class="center-column flex1">
+            <router-outlet></router-outlet>
+        </div>
+        <div class="right-column padding-large">
+            <pl-help-support [contact]="contact" [support]="support" [links]="links"></pl-help-support>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<pl-modal-header-wrapper [headerText]="'Download'">
+    <div>
+        <pl-icon [svg]="'alert'"></pl-icon> You are downloading the {{ clientStudentCapital }}s for {{ schoolYearString }}<br><br>
+        <button pl-button class="success" (click)="confirm()">Correct</button>
+        <button pl-button (click)="cancel()">No, go back!</button>
+    </div>
+</pl-modal-header-wrapper>

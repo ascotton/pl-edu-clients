@@ -1,0 +1,47 @@
+@import 'core/colors.less';
+@import '../pl-time-grid.less';
+
+:host {
+    display: block;
+    z-index: 0;
+    .pl-time-grid {
+        width: 100%;
+        box-sizing: border-box;
+        position: relative;
+        @column-width: 80px;
+        &_body, &_header {
+            display: flex;
+        }
+        &_header {
+            &_right {
+                margin-left: auto;
+            }
+        }
+        &_time-labels {
+            border-right: solid 2px @pl-time-grid-slot-border-color;
+            flex-basis: @column-width;
+            min-width: @column-width;
+            max-width: @column-width;
+            background-color: @white;
+            position: sticky;
+            left: 0;
+
+            &_header {
+                background-color: @white;
+                border-bottom: solid 1px @pl-time-grid-slot-border-color;
+            }
+
+            &_slot {
+                &_hour {
+                    text-align: right;
+                    padding: 8px 4px;
+                    height: @pl-time-grid-slot-hour-height;
+                    border-bottom: solid 1px @pl-time-grid-slot-border-color;
+                }
+            }
+        }
+        ::ng-deep {
+            * { box-sizing: border-box; }
+        }
+    }
+}

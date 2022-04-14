@@ -1,0 +1,20 @@
+<div class="pl-fte-wrapper">
+    <div class="grid-item" [hidden]="!showFTE" [class.hideCard]="!showFTE ">
+        <div class="section-header">
+            <div class="flexbox">
+                <div class="flex1" [class.text-header-in-calendar]="fteInCalendarProps.inCalendarWeekView">
+                    <span>{{ headerText }}</span>
+                </div>
+                <div class="font-h4 padding-small-t" *ngIf="!fteInCalendarProps.inCalendarWeekView">
+                    <a href="{{ scheduleUrl }}">View Calendar</a>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <pl-fte-hours
+                [fteInCalendarProps]="fteInCalendarProps"
+                (displayFTEHours)="displayFTEHours($event)">
+            </pl-fte-hours>
+        </div>
+    </div>
+</div>

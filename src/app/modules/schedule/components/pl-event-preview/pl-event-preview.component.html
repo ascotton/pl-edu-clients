@@ -1,0 +1,127 @@
+<div class="pl-event-preview" [@plEventPreviewAppearing]>
+
+    <div *ngIf="isModal" class="header header-blue">
+        <div class="flexbox">
+            <div class="header-time">
+                <p> {{ eventView?.dateTimeDisplay }} </p>
+            </div>
+
+            <pl-icon *ngIf="displayActionButtonsInPreview" svg="close-inverted" class="pointer white header-close" 
+                (click)="action.emit({ type: 'close'})"></pl-icon>
+        </div>
+    </div>
+
+    <div [class.flexbox]="!isModal">
+        <div class="main">
+            <div class="margin-b">
+            <div class="pl-event-preview-title">
+                <span *ngIf="eventView?.type === 'BILLING'">
+                    {{ event.billing_expanded?.name | uppercase }}
+                </span>
+                <span *ngIf="eventView?.type === 'AVAILABILITY'">
+                    {{ eventView?.availabilityDetails }}
+                </span>
+            </div>
+            </div>
+    
+            <div *ngIf="recurrencePattern" class="margin-b">
+                {{ recurrencePattern }}
+            </div>
+    
+            <div *ngIf="locationName" class="margin-tb location-name">
+                {{ locationName }}
+            </div>
+    
+            <div class="pl-event-preview-record-container">
+                <pl-records-preview [event]="event" [user]="user" [billingCodes]="billingCodes"></pl-records-preview>
+            </div>
+        </div>
+        <div *ngIf="displayActionButtonsInPreview" [class.actions]="!isModal" [class.margin]="!isModal">
+            <div *ngIf="notFoundClients?.length" class="not-in-caselod margin-tb">
+                <ng-container *ngIf="notFoundClients.length === 1;else multiNotFound">
+                    This student is no longer on your caseload.
+                </ng-container>
+                <ng-template #multiNotFound>
+                    The following students are no longer on your caseload:
+                    <ul>
+                        <li *ngFor="let r of notFoundClients">
+                            {{ r.client_expanded.first_name }} {{ r.client_expanded.last_name }}
+                        </li>
+                    </ul>
+                </ng-template>
+                <br/>
+                To make changes, add the student to your caseload first.
+            </div>
+            <ng-container *ngIf="!isModal; else modalButtons">
+                <ng-container *ngIf="!readOnly; else readOnlyTmp">
+                    <pl-icon *ngIf="eventDocumentEdit || isAmendable" 
+                        tooltip="<div class='pl-tooltip'>Document</div>"
+                        theme="light"
+                        placement="top"
+                        svg="notes"
+                        class="pointer gray margin-lr"
+                        (click)="document()">
+                    </pl-icon>
+                    <pl-icon *ngIf="eventDocumentView && (!eventDocumentEdit || (isAmendable && event.signed)) && canViewDocumentationDetail" 
+                        tooltip="<div class='pl-tooltip'>View Documentation</div>"
+                        theme="light"
+                        placement="top"
+                        svg="view-only-document"
+                        class="pointer gray margin-lr"
+                        (click)="document(true)">
+                    </pl-icon>
+                    <pl-icon *ngIf="eventEdit" svg="pencil"
+                        tooltip="<div class='pl-tooltip'>Edit</div>"
+                        placement="top"
+                        theme="light"
+                        class="pointer gray margin-lr"
+                        (click)="edit()">
+                    </pl-icon>
+                    <pl-icon *ngIf="eventDelete || (event.locked && isAmendable)" svg="trash"
+                        tooltip="<div class='pl-tooltip'>Delete</div>"
+                        placement="top"
+                        theme="light"
+                        class="pointer gray margin-lr"
+                        (click)="delete()"></pl-icon>
+                    <pl-input-checkbox *ngIf="isSelected !== null"
+                        tooltip="<div class='pl-tooltip'>Select</div>"
+                        placement="top"
+                        theme="light"
+                        class="checkbox"
+                        [(model)]="isSelected"
+                        (click)="onCheckedChanged()"></pl-input-checkbox>
+                </ng-container>
+                <ng-template #readOnlyTmp>
+                    <button *ngIf="canViewDocumentationDetail" pl-button
+                        class="bare button-document-view"
+                        (click)="document(true)">
+                        View Documentation
+                    </button>
+                </ng-template>
+            </ng-container>
+            <ng-template #modalButtons>
+                <button *ngIf="eventDocumentEdit" pl-button 
+                    class="primary button-document"
+                    (click)="document()">
+                    {{ isAmendable ? 'Amend' : 'Document' }}
+                </button>
+                <button *ngIf="eventEdit" pl-button 
+                    class="gray-outline" 
+                    (click)="edit()">
+                    Edit
+                </button>
+                <button *ngIf="eventDocumentView && (!eventDocumentEdit || (isAmendable && event.signed)) && canViewDocumentationDetail" pl-button 
+                    class="bare button-document-view"
+                    (click)="document(true)">
+                    View Documentation
+                </button>
+                <button *ngIf="eventDelete || (event.locked && isAmendable)" pl-button 
+                    class="bare" 
+                    (click)="delete()">
+                    Delete
+                </button>
+            </ng-template>
+        </div>
+    </div>
+
+</div>

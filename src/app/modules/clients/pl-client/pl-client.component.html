@@ -1,0 +1,34 @@
+<div class="pl-client"
+    [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+    *ngIf="_state.initialized"
+>
+
+    <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+        {{_state.componentName}} {{_state.ID}}
+    </div>
+
+    <div *ngIf="!mayViewClient" class="padding-large">
+        <pl-permissions-denied [code]="permissionCode"></pl-permissions-denied>
+    </div>
+    <div [hidden]="!mayViewClient" *ngIf="_state.renderToggle.toggle" [@enterAnimation]>
+        <div class="outer-container">
+            <div class="header-container">
+                <div class="profile-container">
+                    <div class="profile-wrapper">
+                        <pl-client-profile-header [client]="client" *ngIf="!util.isFullScreenRoute()"></pl-client-profile-header>
+                    </div>
+                </div>
+                <div class="tabs-container" *ngIf="mayViewPhi">
+                    <div class="tabs-wrapper">
+                        <pl-tabs [tabs]="tabs" *ngIf="!util.isFullScreenRoute()" [updatePageTabTitleBasedOnActiveLink]="true"></pl-tabs>
+                    </div>
+                </div>
+            </div>
+            <div class="client-content-container" *ngIf="mayViewPhi" [ngClass]="{'is-fullscreen-route': util.isFullScreenRoute()}">
+                <div class="inner">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

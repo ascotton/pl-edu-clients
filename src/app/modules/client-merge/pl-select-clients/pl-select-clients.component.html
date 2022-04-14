@@ -1,0 +1,50 @@
+<div class="select-clients" [ngClass]="{'debug-show-div': util.debugDiv(_state)}" *ngIf="_state.initialized">
+    <div *ngIf="util.debugDiv(_state)" class="debug-component-name">
+        PLSelectClientsComponent
+    </div>
+    <div class="instructions">
+        Select two clients to merge together. Then click Next and choose the fields to keep.
+    </div>
+    <pl-schoolyear-select [(selectedSchoolYear)]="selectedSchoolYear" (onYearSelected)="onYearSelected($event)">
+    </pl-schoolyear-select><br>
+    <pl-table-wrapper (onQuery)="onQuery($event)" [orderKey]="'orderBy'" [pageSizeKey]="'first'"
+        [stateName]="TABLE_STATE_NAME">
+        <div class="filters">
+            <pl-table-filters-top-groups [filtersPrimary]="plSelectClientsTableService.filtersPrimary"
+                                     [filtersSecondary]="plSelectClientsTableService.filtersSecondary"
+                                     (onSearch)="plSelectClientsTableService.filtersSearch($event)"
+                                     (onSetModelOptions)="plSelectClientsTableService.filtersSetModelOptions($event)"></pl-table-filters-top-groups>
+        </div>
+        <pl-table-header>
+            <pl-table-header-cell></pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'lastName'">Last Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'firstName'">First Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'externalId'">Student ID</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'birthday'">Birthday</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'locationName'">Location</pl-table-header-cell>
+            <pl-table-header-cell>Organization</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!clients.length && !loading" class="center padding-xlarge-tb">
+            No matching clients.
+        </div>
+        <pl-table-row *ngFor="let client of clients" class="pointer">
+            <pl-table-cell>
+                <pl-input-checkbox [(model)]="clientMergeService.selectedClients[client.id]"
+                    (click)="clientMergeService.toggleClientSelection(client)"
+                    [disabled]="!clientMergeService.selectedClients[client.id] && clientMergeService.clientsSelected == 2">
+                </pl-input-checkbox>
+            </pl-table-cell>
+            <pl-table-cell>{{ client.lastName }}</pl-table-cell>
+            <pl-table-cell>{{ client.firstName }}</pl-table-cell>
+            <pl-table-cell>{{ client.externalId }}</pl-table-cell>
+            <pl-table-cell>{{ client.birthday }}</pl-table-cell>
+            <pl-table-cell>{{ client.locationName }}</pl-table-cell>
+            <pl-table-cell>{{ client.organizationName }}</pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="total" [currentPage]="currentPage"
+            [pageSize]="pageSize"></pl-table-footer>
+    </pl-table-wrapper>
+</div>

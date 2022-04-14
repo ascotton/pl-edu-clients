@@ -1,0 +1,18 @@
+<button
+    *ngIf="shouldShowMatchButton(assessment)"
+    pl-button
+    (click)="handleEditReferralMatchClick(assessment)">
+    Match
+</button>
+
+<button
+    *ngIf="shouldShowUnmatchButton(assessment)"
+    pl-button
+    (click)="openUnmatchingModal(assessment, 'Unmatch')">
+    Unmatch
+</button>
+<ng-container *ngIf="showConfirmEditButtons(assessment)">
+    <button pl-button (click)="handleConfirmReferralMatchClick(assessment)"> Confirm </button>
+    <button pl-button (click)="undoProposedReferral(assessment, 'Undo Proposal')"> Undo Proposal </button>
+    <button pl-button (click)="handleEditReferralMatchClick(assessment)"> Edit Provider </button>
+</ng-container>

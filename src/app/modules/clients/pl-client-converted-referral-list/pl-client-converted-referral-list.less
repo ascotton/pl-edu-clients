@@ -1,0 +1,31 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.referrals {
+    .referral {
+        padding: @spacing-normal @spacing-large;
+
+        dl {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: @spacing-normal;
+
+            dt {
+                font-weight: bold;
+            }
+
+            .notes {
+                p {
+                   font-style: italic;
+                   max-width: 28.57rem;
+
+                   .margin-t;
+                }
+            }
+        }
+    }
+
+    .referral + .referral {
+        border-top: 1px solid @slate-medium;
+    }
+}

@@ -1,0 +1,70 @@
+<pl-data-loader [loading]="loadingLicenses$ | async">
+    <div *ngIf="(data$ | async) as data" class="row">
+        <ng-container *ngIf="data.totals.total || data.totals.assigned; else emptyData">
+            <div class="col-xs-12 col-sm center-xs margin-large-b">
+                <pl-doughnut-chart 
+                    width="180"
+                    type="progress"
+                    color="slate-darkest"
+                    valueLabel="Assigned" 
+                    remainingLabel="Available"
+                    [max]="data.totals.total" [value]="data.totals.assigned">
+                    <span class="value">{{ data.totals.assigned }}</span>
+                    Assigned <br/> Licenses
+                </pl-doughnut-chart>
+                <div class="pl-license-legends margin-tb">
+                    <div class="legend">
+                        <span class="legend-label-text">
+                            {{ data.totals.total }} Purchased
+                        </span>
+                    </div>
+                    <div class="legend">
+                        <span class="legend-label-text">
+                            {{ data.totals.assigned }} Assigned
+                        </span>
+                    </div>
+                    <div *ngIf="data.totals.assigned > data.totals.total"
+                        class="pl-warning margin-t padding">
+                        <mat-icon color="warn" class="margin-lr">
+                            warning
+                        </mat-icon>
+                        <div class="pl-warning-text">
+                            {{ data.totals.assigned - data.totals.total }} 
+                            Assigned <br/>
+                            Over Purchased
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm">
+                <div *ngFor="let licenseType of data.list" class="margin-b">
+                    <div class="margin-b">
+                        <strong class="license-type-name">
+                            {{ licenseType.license_name }}
+                        </strong>
+                    </div>
+                    <div class="pl-license-type-container">
+                        <mat-progress-bar mode="determinate" [value]="(licenseType.quantity_used / licenseType.total_quantity) * 100">
+                        </mat-progress-bar>
+                        <div class="pl-license-type padding-large-lr">
+                            <span class="pl-license-type-value">
+                                {{ licenseType.quantity_used }} Assigned /
+                                {{ licenseType.total_quantity }} Purchased
+                            </span>
+                            <mat-icon *ngIf="licenseType.quantity_used > licenseType.total_quantity"
+                                class="margin-l" [matTooltip]="exceededWarning"
+                                color="warn">
+                                warning
+                            </mat-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #emptyData>
+            <div class="col-xs-12 col-sm center">
+                No information available
+            </div>
+        </ng-template>
+    </div>
+</pl-data-loader>

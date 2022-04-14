@@ -1,0 +1,16 @@
+<div class="captures-thumbnail-container">
+    <div *ngIf="hasMultipleCaptures">
+        <div class="captures-container">
+            <div class="capture-thumbnail deep-2"></div>
+            <div class="capture-thumbnail deep-1"></div>
+            <div class="capture-thumbnail">
+                <img *ngIf="thumbnailImg" [src]="thumbnailImg">
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!hasMultipleCaptures">
+        <div class="capture-thumbnail">
+            <img *ngIf="thumbnailImg" [src]="thumbnailImg">
+        </div>
+    </div>
+</div>

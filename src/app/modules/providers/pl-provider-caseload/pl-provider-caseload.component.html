@@ -1,0 +1,32 @@
+<div class="pl-provider-caseload">
+    <pl-table-wrapper (onQuery)="onQuery($event)" [orderKey]="'orderBy'" [pageSizeKey]="'first'" [stateName]="TABLE_STATE_NAME">
+        <pl-table-filters-top [filterSelectOpts]="plClientsTableService.filterSelectOpts" [total]="total" (onSearch)="plClientsTableService.filtersSearch($event)" (onSetModelOptions)="plClientsTableService.filtersSetModelOptions($event)"></pl-table-filters-top>
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'lastName'">Last Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'firstName'" [orderDirection]="'ascending'">First Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'referralMatchedCount'">Referrals</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'locationName'">Location</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'status'">Status</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!clients.length && !loading" class="center padding-xlarge-tb">
+            No matching <pl-client-student-display [user]="currentUser"></pl-client-student-display>s.
+        </div>
+        <pl-table-row *ngFor="let client of clients" (click)="clickRow(client)" class="pointer">
+            <pl-table-cell>{{ client.lastName }}</pl-table-cell>
+            <pl-table-cell>{{ client.firstName }}</pl-table-cell>
+            <pl-table-cell class="center">
+                <span *ngIf="client.referralMatchedCount > 0">
+                    <div class="orange-dot"></div>
+                    <b>{{ client.referralMatchedCount }}</b>
+                </span>
+                <span *ngIf="client.referralMatchedCount <= 0">--</span>
+            </pl-table-cell>
+            <pl-table-cell>{{ client.locationName }}</pl-table-cell>
+            <pl-table-cell>{{ client.status }}</pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="total" [currentPage]="currentPage" [pageSize]="pageSize"></pl-table-footer>
+    </pl-table-wrapper>
+</div>

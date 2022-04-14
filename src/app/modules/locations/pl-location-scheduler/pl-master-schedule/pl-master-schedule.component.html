@@ -1,0 +1,44 @@
+<ng-template #headerTemplate let-label="label">
+    <ng-template ngFor let-provider [ngForOf]="providers.length > 0 ? providers : [ null ]">
+        <div class="master-schedule-provider-day">
+            <div class="provider-title padding white">
+                {{ provider?.user.firstName }}
+                {{ provider?.user.lastName }} 
+                - 
+                <ng-template ngFor let-type [ngForOf]="provider?.providerTypes">
+                    {{ type.shortName }}
+                </ng-template>
+            </div>
+            <div class="day-title padding">
+                {{ label }}
+            </div>
+            <div class="weeks-title padding">
+                <div> 1st </div>
+                <div> 2nd </div>
+                <div> 3rd </div>
+                <div> 4th </div>
+            </div>
+        </div>
+    </ng-template>
+</ng-template>
+<pl-time-grid-scheduler 
+    [blocks]="blocks"
+    [timezone]="timezone"
+    [drawMode]="mode" [blockDuration]="blockDuration" [allWeeks]="allWeeks"
+    [dayHeaderTemplate]="headerTemplate"
+    (actionTriggerred)="manageBlockAdded($event)" 
+    (blockAction)="blockReaction($event)">
+    <div class="time-labels-header master-schedule-provider-day">
+        <button *ngIf="providerView; else timezoneTmp" pl-button class="pl-timezone-toggle" 
+            [innerHTML]="getTimezoneHTML()"
+            (click)="toggleTZ()">
+        </button>
+        <ng-template #timezoneTmp>
+            <div class="padding" [innerHTML]="getTimezoneHTML()">
+            </div>
+        </ng-template>
+        <div class="week-label padding">
+            Week:
+        </div>
+    </div>
+</pl-time-grid-scheduler>

@@ -1,0 +1,16 @@
+<pl-data-loader [loading]="loading">
+    <canvas *ngIf="chartData" baseChart chartType="doughnut"
+        [data]="chartData?.data"
+        [labels]="chartData?.labels"
+        [colors]="chartData?.colors"
+        [options]="chartData?.options"></canvas>
+    <div class="chart-label bold upper center-xs middle-xs">
+        <div class="chart-label_value line">
+            <ng-content #value select=".value"></ng-content>
+            <ng-container *ngIf="type === 'progress' && value == null">
+                0
+            </ng-container>
+        </div>
+        <ng-content></ng-content>
+    </div>
+</pl-data-loader>

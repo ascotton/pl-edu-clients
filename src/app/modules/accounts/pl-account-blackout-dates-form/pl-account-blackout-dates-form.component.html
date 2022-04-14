@@ -1,0 +1,44 @@
+<pl-modal-header-wrapper [headerText]="'Edit Non-Service Dates'">
+    <div class="pl-account-blackout-dates-form">
+        <div class="inner">
+            <p>
+                Set “Non-Service Dates” to include holidays, school breaks, in-service days, standardized testing days, etc. so that services are not scheduled for these days.
+            </p>            
+            <br />
+            <p>Enter days in each month separated by commas, e.g. "4,5,9".</p>
+            <br />
+            <form [formGroup]="datesFormGroup">
+                <div class="dates">
+                    <div>
+                        <h4 class="year">{{ year }}</h4>
+                        <pl-input-text 
+                            *ngFor="let d of ['July', 'August', 'September', 'October', 'November', 'December']"
+                            class="form-input"
+                            [label]="d"
+                            [(model)]="dates[d.toLowerCase()]"
+                            [required]="false"
+                            [pattern]="'^([0-9]|,)*$'"
+                            [validationMessages]="{ pattern: 'Separate multiple days with commas' }"
+                            [formCtrl]="datesFormGroup"                        
+                        ></pl-input-text>
+                    </div>
+                    <div>
+                        <h4 class="year">{{ year + 1 }}</h4>
+                        <pl-input-text 
+                            *ngFor="let d of ['January', 'February', 'March', 'April', 'May', 'June']"
+                            class="form-input"
+                            [label]="d"
+                            [(model)]="dates[d.toLowerCase()]"
+                            [required]="false"
+                            [pattern]="'^([0-9]|,)*$'"
+                            [validationMessages]="{ pattern: 'Separate multiple days with commas' }"
+                            [formCtrl]="datesFormGroup"                        
+                        ></pl-input-text>
+                    </div>
+                </div>
+            </form>
+            <br />
+            <button pl-button class="success" (click)="onClickSave()" [disabled]="!this.datesFormGroup.valid">Save</button>
+        </div>
+    </div>
+</pl-modal-header-wrapper>

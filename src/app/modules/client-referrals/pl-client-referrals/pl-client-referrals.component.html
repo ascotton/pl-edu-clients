@@ -1,0 +1,10 @@
+<div class="pl-client-referrals">
+    <ng-container *ngIf="tabs$ | async as tabs">
+        <div *ngIf="tabs?.length" class="tabs-container">       
+            <pl-tabs [tabs]="tabs"></pl-tabs>
+        </div>
+    </ng-container>
+    <div class="padding-large">
+        <router-outlet></router-outlet>
+    </div>
+</div>

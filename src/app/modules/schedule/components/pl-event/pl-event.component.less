@@ -1,0 +1,41 @@
+
+@import 'core/colors.less';
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .pl-event{
+        &-tabs{
+            &-header {
+                background-color: @slate-light;
+                display: flex;
+            }
+            &-item {
+                cursor: pointer;
+                &.active {
+                    font-weight: 500;
+                    border-bottom: solid 3px @blue;
+                }
+            }
+        }
+    }
+    .pending-services {
+        &-radio {
+            pl-input-radio-group {
+                .options {
+                    display: flex;
+                }
+            }
+        }
+    }
+    .event-details {
+        min-width: 400px;
+        &-field {
+            max-width: 250px;
+        }
+    }
+    .delete-button {
+        margin-right: 0;
+        margin-left: auto;
+    }
+}

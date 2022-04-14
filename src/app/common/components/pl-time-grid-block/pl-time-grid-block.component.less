@@ -1,0 +1,52 @@
+
+@import '../pl-time-grid.less';
+:host {
+    position: absolute;
+    background-color: #FFF;
+    // box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+    // border-radius: 4px;
+    overflow: hidden;
+    .pl-time-grid-block {
+        font-size: 10px;
+        line-height: 14px;
+        color: #4A4A4A;
+        &_title {
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 11px;
+        }
+        &_time {
+            font-size: 9px;
+        }
+        &_header {
+            position: relative;
+            .delete {
+                position: absolute;
+                top: 4px;
+                right: 4px;
+                border-radius: 50%;
+                height: 10px;
+                width: 10px;
+                padding: 0;
+                box-sizing: border-box;
+                background-color: white;
+                &:before, &:after {
+                    position: absolute;
+                    left: 4px;
+                    top: 1px;
+                    content: ' ';
+                    height: 6px;
+                    width: 1px;
+                    background-color: #333;
+                }
+                &:before {
+                    transform: rotate(45deg);
+                }
+                &:after {
+                    transform: rotate(-45deg);
+                }
+            }
+        }
+    }
+}
+

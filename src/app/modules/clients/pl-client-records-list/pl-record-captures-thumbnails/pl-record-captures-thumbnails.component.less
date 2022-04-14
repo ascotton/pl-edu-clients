@@ -1,0 +1,35 @@
+@import 'app/main.less';
+
+.captures-thumbnail-container {
+    padding: 8px 0 18px;
+    min-height: 120px;
+    .capture-thumbnail {
+        width: 178px;
+        height: 120px;
+        padding: 12px 0;
+        background-color: @slate-medium;
+        border: 1px solid #4A4A4A;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        box-sizing: border-box;
+
+        img {
+            height: 100%;
+        }
+    }
+
+    .captures-container {
+        position: relative;
+        .capture-thumbnail {
+            position: absolute;
+            &.deep-1 {
+                left: 10px;
+                transform: scaleY(0.9)
+            }
+            &.deep-2 {
+                left: 20px;
+                transform: scaleY(0.8);
+            }
+        }
+    }
+}

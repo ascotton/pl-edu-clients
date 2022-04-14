@@ -1,0 +1,195 @@
+@import 'app/main.less';
+
+.editable-table {
+    border: 1px solid #979797;
+    max-width: 100%;
+    width: 100%;
+
+    pl-error-message {
+        margin: 6px;
+    }
+}
+
+.editable-table-scroller {
+    overflow: auto;
+    height: 500px;
+    width: 100%;
+}
+.editable-table-body {
+    min-height: 500px;
+}
+.editable-table-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    background-color: @slate-lighter;
+    min-height: 25px;
+    border-bottom: 2px @gray solid;
+    z-index: 2;
+
+    .error-message {
+        margin-left: 18px;
+        pl-icon {
+            fill: @red;
+        }
+        .error-message-text {
+            padding-left: 4px;
+        }
+    }
+}
+.editable-table-row {
+    display: flex;
+    min-height: 50px;
+    position: relative;
+}
+.cell {
+    position: relative;
+    border-right: 1px @gray solid;
+    border-bottom: 1px @gray solid;
+    min-width: 159px;
+    width: 159px;
+    display: flex;
+    flex: 1;
+    &.sticky-cell {
+        justify-content: center;
+        align-items: center;
+        padding: 3px;
+        position: sticky;
+        text-align: center;
+        background-color: @slate-lighter;
+        color: @gray-darkest;
+        z-index: 1;
+    }
+    &.row-header {
+        display: flex;
+        flex-direction: column;
+        width: 35px;
+        min-width: 35px;
+        max-width: 35px;
+        left: 0;
+        font-weight: bold;
+    }
+    &.row-footer {
+        display: flex;
+        flex-direction: column;
+        width: 35px;
+        min-width: 35px;
+        right: 0;
+        background-color: transparent;
+        .clear-icon {
+            fill: white;
+        }
+        .mat-mini-fab {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            .mat-button-wrapper {
+                padding: 0;
+            }
+        }
+    }
+    &.init-cell {
+        width: 35px;
+        min-width: 35px;
+        max-width: 35px;
+        padding: 3px;
+    }
+    &.value {
+        background-color: @white;
+    }
+    &.col-header {
+        pl-input-select {
+            width: 96%;
+            padding: 3px;
+        }
+        mat-form-field {
+            width: 159px;
+            .mat-form-field-wrapper {
+                margin-bottom: -1.34375em;
+             }
+             .mat-select-value-text {
+                white-space: nowrap !important;
+             }
+        }
+        .title {
+            width: 100%;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            color: @gray-darkest;
+            font-weight: bold;
+            &.sorted {
+                background-color: #d7e2ea;
+            }
+        }
+    }
+    &.highlighted-row {
+        background-color: #d5f2ff;
+    }
+    &.error-row {
+        background-color: @yellow-light;
+    }
+    &-input {
+        width: 100%;
+        padding: 3px;
+        border: none;
+        background: transparent;
+        color: @gray-darkest;
+        font-weight: 100;
+        resize: none;
+
+        &:focus {
+            border: 1px solid @blue-medium;
+        }
+
+        &.non-editable {
+            display: flex;
+            align-items: center;
+            background-color: @gray-lightest;
+        }
+    }
+    .icon-right {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        pl-icon {
+            fill: @gray-light;
+        }
+    }
+    .tip-arrow {
+        position: absolute;
+        bottom: -2px;
+        right: -6px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        transform: rotateZ(-45deg);
+        border-top: 8px solid @blue;
+    }
+}
+
+.editable-table-row-tooltip {
+    white-space: pre-line;
+    font-size: 0.8rem;
+}
+
+.editable-table-scroller::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.editable-table-scroller::-webkit-scrollbar:vertical {
+    width: 11px;
+}
+
+.editable-table-scroller::-webkit-scrollbar:horizontal {
+    height: 11px;
+}
+
+.editable-table-scroller::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid white;
+    background-color: rgba(0, 0, 0, .5);
+}

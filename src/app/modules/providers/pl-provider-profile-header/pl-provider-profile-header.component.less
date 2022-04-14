@@ -1,0 +1,58 @@
+@import 'core/colors.less';
+@import 'core/colors-classes.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+@import 'app/icons.less';
+
+a {
+    color: white;
+    text-decoration: underline;
+}
+
+.buttons {
+    display: flex;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+}
+
+.pl-provider-profile-header {
+    color: @white;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-gap: @spacing-normal;
+    position: relative;
+
+    .icon {
+        background-color: @blue-medium;
+        .margin-r;
+        .circled-icon;
+        .white;
+    }
+
+    .name {
+        grid-column: 2;
+    }
+
+    .fields {
+        grid-column: 2;
+        grid-row: 2;
+        list-style: none;
+
+        &.fields2 {
+            grid-row: 3;
+        }
+
+        .field {
+            display: inline-block;
+
+            .label {
+                .bold;
+            }
+
+            .value {
+                .margin-xlarge-r;
+            }
+        }
+    }
+}

@@ -1,0 +1,105 @@
+@libBasePath: '../../../lib-components/core/';
+// AOT does not play nice with imports with variables.
+
+@import 'core/reset.less';
+@import 'core/accessibility.less';
+@import 'core/colors.less';
+@import 'core/shapes.less';
+@import 'core/colors-classes.less';
+@import 'core/bootstrap-parts.less';
+@import 'core/typography.less';
+@import 'core/decoration.less';
+
+@import 'core/flexbox.less';
+@import 'core/layout.less';
+@import 'core/link.less';
+@import 'core/spacing.less';
+
+@import 'app/footers.less';
+@import 'app/form.less';
+@import 'app/headers.less';
+@import 'app/icons.less';
+@import 'app/table.less';
+
+.debug-box {
+    border: 1px solid black;
+    padding: 10px;
+}
+.debug-box-blue {
+    border: 1px solid rgb(0, 183, 255);
+    padding: 10px;
+}
+.debug-box-orange {
+    border: 1px solid @orange;
+    padding: 10px;
+}
+.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: 11px;
+        padding: 2px;
+        background-color: @debug-color;
+        color: white;
+    }
+}
+// ngx-toastr overrides
+.toast-container .ngx-toastr {
+    color: #4c4f52 !important;
+    border-top: solid 1px #eee;
+    font-size: 13px;
+    background: #fff;
+    padding-left: 30px !important;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+
+    &.toast-success {
+        border-left: solid 8px @green;
+    }
+
+    &.toast-error {
+        border-left: solid 8px @red;
+    }
+
+    &.toast-info {
+        border-left: solid 8px @slate;
+    }
+}
+.pl-popover {
+    &-panel {
+        background: #fff;
+        border-radius: 4px;
+        font-size: 12px;
+        flex-direction: column;
+    }
+}
+
+// mat-tooltip overrides
+.mat-tooltip {
+    background: rgba(97,97,97,.9);
+}
+.mat-tooltip-handset {
+    margin: 4px !important;
+}
+// overlay overrides
+.cdk-overlay-dark-backdrop {
+    background: rgba(0,0,0,.4);
+}
+// mat-dialog overrides
+.mat-dialog-container {
+    background-color: #FFF;
+    padding: 0 !important;
+    .mat-dialog-content {
+        max-height: none !important;
+    }
+    .mat-dialog-content, .mat-dialog-actions {
+        margin: 0 !important;
+    }
+    .mat-dialog-actions {
+        padding: 8px 24px;
+    }
+}

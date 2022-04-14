@@ -1,0 +1,147 @@
+@import 'core/colors.less';
+
+.pl-client-iep-goal-item {
+  flex: 0 50%;
+  background-color: #fefefe;
+  border: 1px solid #efefef;
+  box-shadow: 0px 4px 6px 0px @gray;
+  padding: 24px;
+  min-height: 299px;
+  height: 300px;
+  overflow-y: hidden;
+  width: 555px;
+  margin: 10px 10px 10px 0;
+  position: relative;
+  &.toggle {
+    height: auto;
+    padding-bottom: 25px;
+  }
+  &.add-edit-mode {
+    height: auto;
+  }
+
+  .goal-container {
+    .metrics-instructions {
+      margin-top: 30px;
+    }
+  }
+  .goal-header {
+    display: flex;
+    .col {
+      display: flex;
+      flex: 1;
+      &.col-1 {
+        justify-content: flex-start;
+      }
+      &.col-2 {
+        justify-content: flex-end;
+      }
+    }
+    .goal-status-bars {
+      .bar {
+        display: inline-block;
+        height: 10px;
+        width: 50px;
+        margin-right: 5px;
+        &.green {
+          background-color: @green;
+        }
+        &.blue {
+          background-color: @blue-medium;
+        }
+        &.gray {
+          background-color: @gray;
+        }
+        &.yellow {
+          border: 1px solid @gray-lighter;
+        }
+      }
+    }
+  }
+  .metrics-table {
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      th, td {
+        padding: 10px;
+      }
+      tr.metrics-header {
+        th {
+          background-color: @slate-lighter;
+          white-space: nowrap;
+          vertical-align: top;
+          text-align: right;
+          border-left: 3px solid white;
+          &.label {
+            width: 100%;
+            text-align: left;
+            border-left: 0;
+          }
+        }
+      }
+      tbody {
+        tr.metrics-item {
+          border-bottom: 1px solid @gray;
+          td {
+            text-align: right;
+            &.label {
+              text-align: left;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .expand-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 65px;
+    text-align: center;
+    width: 100%;
+    .opacity-low {
+      background-color: @white;
+      opacity: 0.6;
+      height: 20px;
+      &.toggle {
+        opacity: 0;
+      }
+    }
+    .opacity-high {
+      background-color: @white;
+      opacity: 0.9;
+      height: 20px;
+      &.toggle {
+        opacity: 0;
+      }
+    }
+    .toggle-bar {
+      background-color: @white;
+      height: 25px;
+      cursor: pointer;
+    }
+  }
+
+  .cursor-hand:hover {
+    cursor: pointer;
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+}

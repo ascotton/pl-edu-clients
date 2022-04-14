@@ -1,0 +1,47 @@
+<div mat-dialog-content class="pl-gallery-modal-container">
+    <div class="gallery-modal-header">
+        <h3>{{ galleryTitle }}</h3>
+        <pl-icon
+            class="close-button pointer margin-small-r"
+            [svg]="'cross'"
+            [scale]="0.8"
+            (click)="onClickCloseButton()">
+        </pl-icon>
+    </div>
+    <div class="gallery-container">
+        <div class="gallery-carousel">
+            <div class="gallery-carousel-actions">
+                <div class="back-next-actions" *ngIf="carouselImages.length > 1">
+                    <button type="button" pl-button class="light" (click)="onClickPrev()">
+                        <pl-icon [svg]="'chevron-left'" [width]="14" [height]="14"></pl-icon>
+                    </button>
+                    <button type="button" pl-button class="light" (click)="onClickNext()">
+                        <pl-icon [svg]="'chevron-right'" [width]="14" [height]="14"></pl-icon>
+                    </button>
+                </div>
+                <div class="zoom-actions">
+                    <button type="button" pl-button class="light" (click)="onClickZoomIn()">
+                        <pl-icon [svg]="'plus'" [width]="14" [height]="14"></pl-icon>
+                    </button>
+                    <button type="button" pl-button class="light" (click)="onClickZoomOut()">
+                        <pl-icon [svg]="'minus'" [width]="14" [height]="14"></pl-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="gallery-carousel-image">
+                <img [src]="carouselImages[currentIndex].url" alt="" [style.transform]="scaleXY">
+            </div>
+        </div>
+        <div class="gallery-thumbnails" *ngIf="carouselImages.length > 1">
+            <div *ngFor="let image of carouselImages; let i = index"
+                class="gallery-thumbnail-item"
+                [class.active]="image.id === carouselImages[currentIndex].id"
+                (click)="onChangeCurrentIndex(i)">
+                <div class="gallery-thumbnail">
+                    <img [src]="image.url" alt="">
+                    <div class="gallery-thumbnail-num"><p><b>{{ i + 1 }}</b></p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

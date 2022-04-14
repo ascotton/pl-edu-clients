@@ -1,0 +1,155 @@
+<section
+    class="pl-customer-dashboard padding-xlarge"
+    [ngClass]="{ 'debug-show-div': util.showDivs(_state) }"
+    *ngIf="_state.initialized && !_state.refreshPage"
+>
+    <div class="debug-component-name" *ngIf="util.showDivs(_state)">{{ _state.componentName }} {{ _state.ID }}</div>
+    <div class="content" *ngIf="_state.model.selectedOrgOrLocation">
+        <div class="margin-small-b">
+            <div class="inline-block font-h2 orange bold margin-xlarge-r">
+                Welcome<span *ngIf="_state.lastSeenDays > 30"> back</span>, {{ _state.currentUser.first_name }}!
+            </div>
+            <div *ngIf="_state.lastSeenDays === -1" class="white-box">
+                <div class="inline-block header-text">
+                    Our partnership brings you a world of data to your fingertips. Explore provider caseloads, student
+                    progress and more! If you have any questions, contact support:
+                    <a href="mailto:asksupport@presencelearning.com">asksupport@presencelearning.com</a>.
+                </div>
+            </div>
+            <div *ngIf="_state.lastSeenDays > 30" class="white-box">
+                <div class="inline-block header-text">
+                    It's been some time since you've been here! Let us know if you need help with anything by contacting
+                    us at <a href="mailto:asksupport@presencelearning.com">asksupport@presencelearning.com</a>.
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-heading">
+            <div class="font-h4 inline-block" *ngIf="_state.model.orgOrLocationOpts.length === 1">
+                <b>{{ _state.model.orgOrLocationOpts[0].label }}</b>
+            </div>
+            <div class="font-h4 inline-block" *ngIf="_state.model.orgOrLocationOpts.length > 1">
+                <pl-input-select
+                    [(model)]="_state.model.selectedOrgOrLocationUuid"
+                    [options]="_state.model.orgOrLocationOpts"
+                    [styleInline]="true"
+                    (onChange)="onChangeOrgOrLocation($event)"
+                >
+                </pl-input-select>
+            </div>
+
+            <div class="font-h5 margin-large-b">
+                {{ _state.model.currentSchoolYear.name }}
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-left">
+                <div class="box">
+                    <pl-icon [svg]="'clients'" class="blue-medium margin-small-r"></pl-icon>
+                    <span class="font-h3 margin-small-r">Your Students</span>
+                    <span class="your-students-count margin-small-l">
+                        {{ _state.model.clientStatsStudents.students }} Total Students (Updated:
+                        {{ _state.clientsUpdatedAt }})
+                    </span>
+                    <div class="white-box">
+                        <pl-clients-summary
+                            [uuid]="_state.model.selectedOrgOrLocationUuid"
+                            [isLocation]="_state.model.selectedOrgOrLocation.isLocation"
+                            [currentSchoolYearCode]="_state.model.currentSchoolYear.code"
+                        >
+                        </pl-clients-summary>
+                    </div>
+                </div>
+                <div class="box">
+                    <pl-icon [svg]="'people-question'" class="blue-medium margin-small-r"></pl-icon>
+                    <span class="font-h3">Support</span>
+                    <div class="white-box">
+                        <pl-support-summary [uuid]="_state.model.selectedOrgOrLocationUuid"></pl-support-summary>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-right">
+                <div class="box text-callout-box">
+                    <pl-icon
+                        [svg]="'version'"
+                        class="blue-medium margin-small-r"
+                        [height]="22"
+                        [width]="22"
+                    ></pl-icon>
+                    <span class="font-h3">Handbook</span>
+                    <div class="white-box">
+                        <div class="margin-large-b">
+                            View or edit district information, procedures, and policies at<br />
+                            <b>{{ _state.model.orgName }}</b>
+                        </div>
+                        <div class="margin-small-t">
+                            <button pl-button class="gray-outline margin-large-b"
+                                (click)="routeTo(_state.model.viewHandbookLink)">
+                                View/edit handbook
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box text-callout-box">
+                    <pl-icon
+                        [svg]="'user-add'"
+                        class="blue-medium margin-small-r"
+                        [height]="22"
+                        [width]="22"
+                        style="position:relative;top:-5px;"
+                    ></pl-icon>
+                    <span class="font-h3">Contacts</span>
+                    <div class="white-box">
+                        <div class="margin-large-b">
+                            <span *ngIf="canAddUser()">
+                                Add site contacts or grant access to the PresenceLearning platform at
+                                <b>{{ _state.model.orgOrLocationName }}</b>
+                            </span>
+                            <span *ngIf="!canAddUser()">
+                                Add site contacts at <b>{{ _state.model.orgOrLocationName }}</b>
+                            </span>
+                        </div>
+                        <div class="margin-small-t" *ngIf="_state.model.viewContactsLink">
+                            <button pl-button class="gray-outline margin-large-b"
+                                (click)="routeTo(_state.model.viewContactsLink)">
+                                View/edit contacts
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <pl-icon [svg]="'message-box'" class="blue-medium margin-small-r"></pl-icon>
+                    <span class="font-h3">Access Notes</span>
+                    <div class="white-box">
+                        <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+                        <pl-reports-summary
+                            *ngIf="!loading"
+                            [organizationId]="getSelectedOrganizationUuid()"
+                            [locationId]="getSelectedLocationUuid()"
+                            [locationName]="getSelectedLocationName()"
+                            [currentSchoolYearCode]="_state.model.currentSchoolYear.code"
+                        ></pl-reports-summary>
+                    </div>
+                </div>
+
+                <div class="box" *ngIf="_state.mayViewProviders">
+                    <pl-icon [svg]="'providers'" class="blue-medium margin-small-r"></pl-icon>
+                    <span class="font-h3">Providers</span>
+                    <div class="white-box">
+                        <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+                        <pl-providers-summary
+                            *ngIf="!loading"
+                            [organizationId]="getSelectedOrganizationUuid()"
+                            [locationId]="getSelectedLocationUuid()"
+                        >
+                        </pl-providers-summary>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

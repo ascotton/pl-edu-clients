@@ -1,0 +1,29 @@
+<div class="pl-service-save-client-details">
+    <form [formGroup]="formCtrl">
+        <h4 class="section-header">What is the service language of {{ client.firstName }}?</h4>
+        <div class="section-body">
+            <!-- Wrap to avoid loading / timing errors -->
+            <div *ngIf="serviceFormVals.language">
+                <pl-input-radio-group class="form-input" [formCtrl]="formCtrl" [label]="'Service Language'" [(model)]="serviceFormVals.language.code" [options]="languagesOptsPrimaryRadio" [disabled]="true" (onChange)="onChangeLanguage($event)"></pl-input-radio-group>
+                <pl-input-select class="form-input" [formCtrl]="formCtrl" [(model)]="serviceFormVals.language.code" [options]="languagesOptsOther" [placeholder]="'Select Other'" [disabled]="true" (onChange)="onChangeLanguage($event)"></pl-input-select>
+            </div>
+
+            <pl-input-select class="form-input x-qa-ell" [formCtrl]="formCtrl" [label]="'ELL (English Language Learner) Status'" [placeholder]="'Select ELL Status'" [(model)]="serviceFormVals.client.englishLanguageLearnerStatus" [options]="ellOpts" (onChange)="onChangeLanguage($event)"></pl-input-select>
+
+            <!-- Wrap to avoid loading / timing errors -->
+            <div *ngIf="serviceFormVals.client.secondaryLanguage">
+                <pl-input-radio-group class="form-input" [formCtrl]="formCtrl" [label]="'Additional Language (if any)'" [(model)]="serviceFormVals.client.secondaryLanguage.code" [options]="languagesOptsSecondaryRadio" (onChange)="onChangeLanguage($event)"></pl-input-radio-group>
+                <pl-input-select class="form-input" [formCtrl]="formCtrl" [(model)]="serviceFormVals.client.secondaryLanguage.code" [options]="languagesOptsOther" [placeholder]="'Select Other'" (onChange)="onChangeLanguage($event)"></pl-input-select>
+            </div>
+
+            <div [hidden]="!showCELDT">
+                <h3>CELDT Scores</h3>
+                <pl-input-text class="form-input" [formCtrl]="formCtrl" [label]="'Listening'" [(model)]="serviceFormVals.celdt.listening"></pl-input-text>
+                <pl-input-text class="form-input" [formCtrl]="formCtrl" [label]="'Speaking'" [(model)]="serviceFormVals.celdt.speaking"></pl-input-text>
+                <pl-input-text class="form-input" [formCtrl]="formCtrl" [label]="'Reading'" [(model)]="serviceFormVals.celdt.reading"></pl-input-text>
+                <pl-input-text class="form-input" [formCtrl]="formCtrl" [label]="'Writing'" [(model)]="serviceFormVals.celdt.writing"></pl-input-text>
+                <pl-input-text class="form-input" [formCtrl]="formCtrl" [label]="'Comprehension'" [(model)]="serviceFormVals.celdt.comprehension"></pl-input-text>
+            </div>
+        </div>
+    </form>
+</div>

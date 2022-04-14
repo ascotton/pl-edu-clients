@@ -1,0 +1,140 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+
+.pl-client-change-location {
+    .loading {
+        margin-top: 64px;
+    }
+
+    .info-bar {
+        background-color: @blue-lightest;
+        display: flex;
+        align-items: center;
+        margin: 10px 32px 10px 32px;
+        padding: 12px;
+        border-radius: 4px;
+        font-family: @opensans;
+        color: @gray-darkest;
+        .info-icon {
+            margin-right: 12px;
+            fill: @blue;
+        }
+    }
+    .change-location-body {
+        margin: 32px;
+        font-weight: normal;
+        .client-info {
+            background-color: @gray-lighter;
+            color: @gray-darkest;
+            display: flex;
+            padding: 16px;
+            margin-bottom: 10px;
+
+            .photo {
+                display: inline;
+                .photo-icon {
+                    display: inline-block;
+                    background-color: @blue-medium;
+                    border-radius: 100px;
+                    .padding;
+                }
+            }
+
+            .client-data {
+                display: inline;
+                .client-name {
+                    font-size: 28px;
+                }
+            }
+        }
+        .warning {
+          margin: 20px 44px;
+          border-radius: 7px;
+          border: 3px solid silver;
+          .detail {
+            padding: 10px 25px 20px 20px;
+          }
+          legend {
+            margin-left: 20px;
+            padding: 0 5px;
+            color: orange;
+            display: inline-block;
+            width: auto;
+            margin-bottom: 0;
+            font-size: 18px;
+            font-family: Roboto;
+            border-bottom: 0;
+          }
+        }
+
+        .change-location-edit {
+
+            .change-from {
+                margin-bottom: 10px;
+                .change-from-header {
+                    background-color: @gray-lighter;
+                    font-size: 18px;
+                    padding: 8px 0 8px 16px;
+                }
+                .change-from-body {
+                    background-color: @gray-lightest;
+                    display: flex;
+                    padding: 20px 25px 25px;
+                    div {
+                        margin-right: 8px;
+                    }
+                }
+            }
+
+            .change-to {
+                margin-bottom: 24px;
+                .change-to-header {
+                    background-color: @blue-lighter;
+                    font-size: 18px;
+                    padding: 8px 0 8px 16px;
+                }
+                .change-to-body {
+                    background-color: @blue-lightest;
+                    padding: 16px;
+                    div {
+                        margin-right: 8px;
+                    }
+                    .location-select {
+                        margin: 0px 0 16px 0;
+                        width: 75%;
+                        .location-input {
+                            padding: 0 24px 24px 24px;
+
+                            pl-input-select {
+                                width: 380px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .change-location-review {
+            .change-location-review-body {
+                h1 {
+                    font-weight: bold;
+                    margin: 30px 0 15px 0;
+                }
+            }
+            .change-location-review-info {
+                background-color: @gray-lighter;
+                padding: 20px 25px 25px;
+                div {
+                    padding-bottom: 16px;
+                    div {
+                        padding-bottom: 0px;
+                    }
+                }
+                div:last-child {
+                    padding-bottom: 0px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+<div class="pl-location-overview">
+    <pl-dot-loader *ngIf="!location"></pl-dot-loader>
+    <pl-account-overview
+        *ngIf="location"
+        [account]="location"
+        [organization]="location.parent"
+        [canEditDates]="isVirtual()"
+        [clientStats]="clientStats"
+    >
+    </pl-account-overview>
+</div>

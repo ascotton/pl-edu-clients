@@ -1,0 +1,232 @@
+<div class="compare-clients" [ngClass]="{'debug-show-div': util.debugDiv(_state)}" *ngIf="_state.initialized">
+    <div *ngIf="util.debugDiv(_state)" class="debug-component-name">
+        PLCompareClientsComponent
+    </div>
+    <div *ngIf="bothClientsHaveActiveIep()">
+        Both clients have active IEP
+    </div>
+    <div [hidden]="shouldBlockMerge()">
+        <div class="instructions">
+            <ul>
+                <li>Select the primary client whose data is most complete.</li>
+                <li>Select the correct information you want in the final merged record.</li>
+                <li>All client services, records, appointments, documents, and referrals from both clients will be merged together.</li>
+            </ul>
+        </div>
+        <div class="error-bar" *ngIf="displayError">
+            <pl-icon class="close-icon" [svg]="'close'" [height]="18" [width]="18"></pl-icon>
+            <span>{{errorMessage}}</span>
+            <button pl-button class="link refresh-button" (click)="reloadClients()">
+                <pl-icon [svg]="'rotate'" [height]="18" [width]="18"></pl-icon>
+                <span>Refresh</span>
+            </button>
+        </div>
+        <form>
+            <pl-dot-loader *ngIf="!loaded" [align]="'center'"></pl-dot-loader>
+            <div *ngIf="loaded" class="diff-table">
+                <div class="row">
+                    <div></div>
+                    <div class="stack">
+                        <pl-input-radio [(model)]="primary" [value]="leftClient.id" [label]="'Use as primary'"
+                                (onChange)="primarySelected()"></pl-input-radio>
+                        <button pl-button class="link" type="button" (click)="selectAll(leftClient.id)">Select All</button>
+                    </div>
+                    <div class="stack">
+                        <pl-input-radio [(model)]="primary" [value]="rightClient.id" [label]="'Use as primary'"
+                            (onChange)="primarySelected()"></pl-input-radio>
+                        <button pl-button class="link" type="button" (click)="selectAll(rightClient.id)">Select All</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>NAME</div>
+                    <pl-input-radio [(model)]="selections.name" [value]="leftClient.id" [label]="leftClient.name"
+                        (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.name" [value]="rightClient.id" [label]="rightClient.name"
+                        (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row">
+                    <div>DATE OF LAST EVENT</div>
+                    <div>{{leftClient.lastEvenDateFormatted}}</div>
+                    <div>{{rightClient.lastEvenDateFormatted}}</div>
+                </div>
+                <div class="row">
+                    <div>DATE OF BIRTH</div>
+                    <pl-input-radio [(model)]="selections.birthday" [value]="leftClient.id"
+                        [label]="leftClient.birthdayFormatted" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.birthday" [value]="rightClient.id"
+                        [label]="rightClient.birthdayFormatted" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row">
+                    <div>STUDENT ID</div>
+                    <pl-input-radio [(model)]="selections.externalId" [value]="leftClient.id"
+                        [label]="leftClient.externalId" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.externalId" [value]="rightClient.id"
+                        [label]="rightClient.externalId" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" [ngClass] ="{'error-row': displayError && errorType===error.location}">
+                    <div>LOCATION (Site)</div>
+                    <div>
+                        <span>{{leftClient.locationName}}</span>
+                        <a *ngIf="displayError && errorType===error.location"
+                            [routerLink]="['/client-merge', leftClient.id, 'change-location', rightClient.locationId]">
+                            Edit
+                        </a>
+                    </div>
+                    <div>
+                        <span>{{rightClient.locationName}}</span>
+                        <a *ngIf="displayError && errorType===error.location"
+                            [routerLink]="['/client-merge', rightClient.id, 'change-location', leftClient.locationId]">
+                            Edit
+                        </a>
+                    </div>
+                </div>
+                <div class="row" [ngClass] ="{'error-row': displayError && errorType===error.referral}">
+                    <div>ACTIVE REFERRAL(S)</div>
+                    <div>
+                        <div>{{leftClient.referrals}}</div>
+                        <a *ngIf="displayError && errorType===error.referral" target="_blank"
+                            [routerLink]="['/client', leftClient.id, 'services']">
+                            Edit
+                        </a>
+                    </div>
+                    <div>
+                        <div>{{rightClient.referrals}}</div>
+                        <a *ngIf="displayError && errorType===error.referral" target="_blank"
+                            [routerLink]="['/client', rightClient.id, 'services']">
+                            Edit
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>ACTIVE SERVICE(S)</div>
+                    <div>{{leftClient.services}}</div>
+                    <div>{{rightClient.services}}</div>
+                </div>
+                <div class="row">
+                    <div>LEARNING COACH</div>
+                    <div>{{leftClient.learningCoach}}</div>
+                    <div>{{rightClient.learningCoach}}</div>
+                </div>
+
+                <!-- Optional fields below. Would be nice to just iterate over the list, and bang out one template,
+                    but some need special formatting -->
+                <div class="row" *ngIf="diffFields.includes('grade')">
+                    <div>GRADE</div>
+                    <pl-input-radio [(model)]="selections.grade" [value]="leftClient.id"
+                        [label]="leftClient.gradeDisplay" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.grade" [value]="rightClient.id"
+                        [label]="rightClient.gradeDisplay" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('sex')">
+                    <div>SEX</div>
+                    <pl-input-radio [(model)]="selections.sex" [value]="leftClient.id"
+                        [label]="leftClient.sex" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.sex" [value]="rightClient.id"
+                        [label]="rightClient.sex" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('address')">
+                    <div>ADDRESS</div>
+                    <div class="address">
+                        <pl-input-radio [(model)]="selections.address" [value]="leftClient.id"
+                            (onChange)="updateMergeValues()"></pl-input-radio>
+                        <div>
+                            <div class="address-line">{{leftClient.addressLine1}}</div>
+                            <div class="address-line">{{leftClient.addressLine2}}</div>
+                        </div>
+                    </div>
+                    <div class="address">
+                        <pl-input-radio [(model)]="selections.address" [value]="rightClient.id"
+                            (onChange)="updateMergeValues()"></pl-input-radio>
+                        <div>
+                            <div class="address-line">{{rightClient.addressLine1}}</div>
+                            <div class="address-line">{{rightClient.addressLine2}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('phone')">
+                    <div>PHONE</div>
+                    <pl-input-radio [(model)]="selections.phone" [value]="leftClient.id"
+                        [label]="leftClient.phone" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.phone" [value]="rightClient.id"
+                        [label]="rightClient.phone" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('contactPreference')">
+                    <div>CONTACT PREFERENCE</div>
+                    <pl-input-radio [(model)]="selections.contactPreference" [value]="leftClient.id"
+                        [label]="leftClient.contactPreferenceFormatted" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.contactPreference" [value]="rightClient.id"
+                        [label]="rightClient.contactPreferenceFormatted" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('timezone')">
+                    <div>TIMEZONE</div>
+                    <pl-input-radio [(model)]="selections.timezone" [value]="leftClient.id"
+                        [label]="leftClient.timezone" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.timezone" [value]="rightClient.id"
+                        [label]="rightClient.timezone" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('primaryLanguage')">
+                    <div>PRIMARY LANGUAGE</div>
+                    <pl-input-radio [(model)]="selections.primaryLanguage" [value]="leftClient.id"
+                        [label]="leftClient.primaryLanguageName" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.primaryLanguage" [value]="rightClient.id"
+                        [label]="rightClient.primaryLanguageName" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('secondaryLanguage')">
+                    <div>SECONDARY LANGUAGE</div>
+                    <pl-input-radio [(model)]="selections.secondaryLanguage" [value]="leftClient.id"
+                        [label]="leftClient.secondaryLanguageName" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.secondaryLanguage" [value]="rightClient.id"
+                        [label]="rightClient.secondaryLanguageName" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('englishLanguageLearnerStatus')">
+                    <div>ENGLISH LANGUAGE LEARNER STATUS</div>
+                    <pl-input-radio [(model)]="selections.englishLanguageLearnerStatus" [value]="leftClient.id"
+                        [label]="leftClient.englishLanguageLearnerStatusFormatted" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.englishLanguageLearnerStatus" [value]="rightClient.id"
+                        [label]="rightClient.englishLanguageLearnerStatusFormatted" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('races')">
+                    <div>RACE(S)</div>
+                    <div class="address">
+                        <pl-input-radio [(model)]="selections.races" [value]="leftClient.id"
+                            (onChange)="updateMergeValues()"></pl-input-radio>
+                        <!-- races and ethnicities can be long and need to wrap, so don't just use the button label -->
+                        <div>{{leftClient.racesFormatted}}</div>
+                    </div>
+                    <div class="address">
+                        <pl-input-radio [(model)]="selections.races" [value]="rightClient.id"
+                            (onChange)="updateMergeValues()"></pl-input-radio>
+                        <div>{{rightClient.racesFormatted}}</div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('ethnicities')">
+                    <div>ETHNICITY(S)</div>
+                    <div class="address">
+                        <pl-input-radio [(model)]="selections.ethnicities" [value]="leftClient.id"
+                            (onChange)="updateMergeValues()"></pl-input-radio>
+                        <div><div>{{leftClient.ethnicitiesFormatted}}</div></div>
+                    </div>
+                    <div class="address">
+                        <pl-input-radio [(model)]="selections.ethnicities" [value]="rightClient.id"
+                            (onChange)="updateMergeValues()"></pl-input-radio>
+                        <div><div>{{rightClient.ethnicitiesFormatted}}</div></div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('strategies')">
+                    <div>STRATEGIES</div>
+                    <pl-input-radio [(model)]="selections.strategies" [value]="leftClient.id"
+                        [label]="leftClient.strategies" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.strategies" [value]="rightClient.id"
+                        [label]="rightClient.strategies" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+                <div class="row" *ngIf="diffFields.includes('teletherapyInformedConsent')">
+                    <div>TELETHERAPY INFORMED CONSENT</div>
+                    <pl-input-radio [(model)]="selections.teletherapyInformedConsent" [value]="leftClient.id"
+                        [label]="leftClient.teletherapyInformedConsentFormatted" (onChange)="updateMergeValues()"></pl-input-radio>
+                    <pl-input-radio [(model)]="selections.teletherapyInformedConsent" [value]="rightClient.id"
+                        [label]="rightClient.teletherapyInformedConsentFormatted" (onChange)="updateMergeValues()"></pl-input-radio>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

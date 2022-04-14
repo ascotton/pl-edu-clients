@@ -1,0 +1,77 @@
+<div class="pl-referral-duplicate">
+    <div *ngFor="let duplicate of clientsDuplicates"  class="dupe-client">
+        <p class="instructions">{{ getClientDuplicateMessage(clientOriginal, duplicate) }}</p>
+        <h4>Existing <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display> Found</h4>
+        <div class="client-item">
+            <div class="client-item-props">
+                <div class="client-item-name">
+                    <div class="dupe-label">Name: </div>
+                    <a href="/c/client/{{duplicate.id}}/details" target="_blank">
+                        {{duplicate.firstName}} {{duplicate.lastName}}
+                        <pl-icon [svg]="'new-tab'" [height]="16" [width]="16"></pl-icon>
+                    </a>
+                </div>
+                <div>
+                    <div class="dupe-label">Birthday: </div>
+                    <span>{{duplicate.birthday}}</span>
+                </div>
+                <div>
+                    <div class="dupe-label">ID: </div>
+                    <span>{{duplicate.externalId}}</span>
+                </div>
+                <div>
+                    <div class="dupe-label">Location: </div>
+                    <span>{{duplicate.locations[0]?.name}}</span>
+                </div>
+            </div>
+            <button pl-button (click)="selectExisting(duplicate)">{{ useExistingButtonText }}</button>
+        </div>
+    </div>
+    <div class="dupe-client">
+        <h4>Your Update</h4>
+        <div class="client-item">
+            <div class="client-item-props">
+                <div>
+                    <div class="dupe-label">Name: </div>
+                    <span>{{clientOriginal.firstName}} {{clientOriginal.lastName}}</span>
+                </div>
+                <div>
+                    <div class="dupe-label">Birthday: </div>
+                    <span>{{clientOriginal.birthday}}</span>
+                </div>
+                <div class="dupe-control">
+                    <div class="dupe-label">ID: </div>
+                    <span
+                        *ngIf="!isClientIdInDupes(clientOriginal.externalId)"
+                        class="dupe-input">
+                        {{clientOriginal.externalId}}
+                    </span>
+                    <span
+                        *ngIf="isClientIdInDupes(clientOriginal.externalId)"
+                        class="dupe-input">
+                        <pl-input-text
+                            [(model)]="clientOriginalId"
+                            [formCtrl]="formGroup"
+                        ></pl-input-text>
+                        <pl-error-message *ngIf="!clientOriginalId.length" [message]="errorMessageIdRequired"></pl-error-message>
+                        <pl-error-message *ngIf="isClientIdInDupes(clientOriginalId) || isExternalIdInUse" [message]="errorMessageIdInUse"></pl-error-message>
+                    </span>
+                </div>
+                <div>
+                    <div class="dupe-label">Location: </div>
+                    <span>{{clientOriginal.location}}</span>
+                </div>
+            </div>
+            <button
+                pl-button
+                *ngIf="!loading"
+                (click)="checkClient()"
+                [disabled]="isClientIdInDupes(clientOriginalId) || !clientOriginalId.length">
+                Create New
+            </button>
+            <button pl-button *ngIf="loading" class="action-button">
+                <pl-dot-loader [align]="'center'"></pl-dot-loader>
+            </button>
+        </div>
+    </div>
+</div>

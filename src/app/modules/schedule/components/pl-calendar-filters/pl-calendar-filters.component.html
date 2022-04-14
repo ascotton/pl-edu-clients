@@ -1,0 +1,14 @@
+<ng-content></ng-content>
+<pl-mini-calendar [model]="filterDate" (modelChange)="dateChanged($event)" class="padding-small margin-b">
+</pl-mini-calendar>
+<pl-input-radio-group class="margin-tb" optionWidth="140px" [model]="unsigned"
+    [options]="[{ value: 'all', label: 'All Events' }, { value: 'unsigned', label: 'Unsigned Events' }]"
+    (onChange)="unsignedChanged($event.model)">
+</pl-input-radio-group>
+
+<pl-ida-box [viewOnly]="viewOnly" [idaData]="idaData" [user]="user" [isW2Provider]="isW2Provider"></pl-ida-box>
+
+<pl-fte-wrapper 
+    *ngIf="fteInCalendarProps.inCalendarWeekView" 
+    [fteInCalendarProps]="fteInCalendarProps">
+</pl-fte-wrapper>

@@ -1,0 +1,36 @@
+<div class="pl-provider-qualification" *ngIf="canShowData">
+    <div *ngIf="!admin">
+        <div>All of the qualifications you have submitted to PresenceLearning are listed below. Qualifications are used to match you with assignments and it is important to keep them up to date. Not all qualifications are weighted equally. Depending on current needs, some qualifications may be more desirable than others. If you would like to learn more about expanding your qualifications into high need areas, please discuss with your Clinical Account Manager.</div>
+        <a [href]="'https://www.tfaforms.com/4831571?tfa_7=' + provider.salesforceId" [target]="_blank">
+            <button pl-button> Add New Qualification </button>
+        </a>
+    </div>
+    <div *ngIf="loading" class="padding-xlarge-tb">
+        <pl-dot-loader></pl-dot-loader>
+    </div>
+    <pl-table-wrapper *ngIf="!loading">
+        <pl-table-header>
+            <pl-table-header-cell>Qualification</pl-table-header-cell>
+            <pl-table-header-cell>State</pl-table-header-cell>
+            <pl-table-header-cell>Category</pl-table-header-cell>
+            <pl-table-header-cell>Expiration Date</pl-table-header-cell>
+            <pl-table-header-cell>Status</pl-table-header-cell>
+            <pl-table-header-cell>View Qualification</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="(!qualifications.length || qualifications.length==0)" class="center padding-xlarge-tb">
+            No Qualifications
+        </div>
+        <pl-table-row *ngFor="let qualification of qualifications">
+            <pl-table-cell>{{ qualification.qualification.name }}</pl-table-cell>
+            <pl-table-cell>{{ qualification.qualification.states.join(', ') }}</pl-table-cell>
+            <pl-table-cell>{{ qualification.qualification.category }}</pl-table-cell>
+            <pl-table-cell>{{ qualification.expiration_date | date:"MM/dd/yyyy" }}</pl-table-cell>
+            <pl-table-cell>{{ qualification.status }}</pl-table-cell>
+            <pl-table-cell>
+                <a *ngIf="admin" [target]="_blank" [href]="'https://plearn.lightning.force.com/lightning/r/Provider_Qualification__c/' + qualification.salesforce_id + '/view'">View Qualification</a>
+                <a *ngIf="!admin" [target]="_blank" [href]="'https://www.tfaforms.com/4837968?provqual=' + qualification.salesforce_id">Update Qualification</a>
+            </pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="total"></pl-table-footer>
+    </pl-table-wrapper>
+</div>

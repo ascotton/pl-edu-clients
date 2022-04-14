@@ -1,0 +1,116 @@
+<section class="pl-billing-preview" *ngIf="billing">
+    <form name="invoiceSaveForm">
+        <h4 class="header-blue padding-large">
+            <div class="container flexbox">
+                <div class="flex1">
+                    Preview {{ billingTypeForUI }} -
+                    <span *ngIf="billingType === billingTypeEnum.Invoice">
+                        Period Ending {{ billingDetail.periodEnd }}
+                    </span>
+                    <span *ngIf="billingType === billingTypeEnum.Timesheet">
+                        Work Period {{ billingDetail.periodStart }} - {{ billingDetail.periodEnd }}
+                    </span>
+                </div>
+                <pl-icon class="pointer white" svg="close-inverted" (click)="onCancel()"></pl-icon>
+            </div>
+        </h4>
+
+        <div class="billing-body">
+            <div *ngIf="billingDetail.status === 'submitted'" class="container margin-t">
+                <div *ngIf="!retractingBilling; else billingRetracting">
+                    <button pl-button (click)="onRetract()">Retract {{ billingTypeForUI }}</button>
+                </div>
+                <ng-template #billingRetracting>
+                    <pl-dot-loader align="left margin-l"></pl-dot-loader>
+                </ng-template>
+            </div>
+            <div *ngIf="billingDetail.status === 'unsubmitted'">
+                <div class="unsubmitted-banner padding-large-lr padding-tb margin-t">
+                    <pl-icon class="yellow margin-r" svg="caution"></pl-icon>
+                    Your {{ billingTypeForUI }} has not been submitted.
+                </div>
+            </div>
+            <div class="invoice-paper container padding-large margin-large-t">
+                <div class="flexbox invoice-top padding-b margin-large-b">
+                    <div class="flex1">
+                        <h4 class="margin-b"><b>FROM:</b></h4>
+                        <div><b>{{ billingDetail.from.name }}</b></div>
+                        <div>{{ billingDetail.from.address.street }}</div>
+                        <div>{{ billingDetail.from.address.city }}, {{ billingDetail.from.address.state }} {{
+                            billingDetail.from.address.zip }}</div>
+                        <div>{{ billingDetail.from.phone | plPhone }}</div>
+                    </div>
+                    <div class="invoice-top-right">
+                        <h1 class="invoice-top-right-title padding-tb"><b>{{ billingTypeForUI.toUpperCase() }}</b></h1>
+                        <h3 class="invoice-top-right-status padding-tb {{ billingDetail.status }}"><b>{{
+                                billingDetail.status }}</b></h3>
+                        <div class="invoice-top-table">
+                            <div class="flexbox padding-large-lr padding-tb">
+                                <div class="flex1"><b>{{ billingNumberForUI }} Number:</b></div>
+                                <div class="flex1">{{ billingDetail.billingNumber }}</div>
+                            </div>
+                            <div class="flexbox padding-large-lr padding-tb">
+                                <div class="flex1"><b>{{ billingPeriodForUI }} Period:</b></div>
+                                <div class="flex1">{{ billingDetail.periodStart }} - {{ billingDetail.periodEnd }}</div>
+                            </div>
+                            <div *ngIf="billingType === billingTypeEnum.Invoice"
+                                class="flexbox padding-large-lr padding-tb">
+                                <div class="flex1"><b>Terms:</b></div>
+                                <div class="flex1">{{ billingDetail.terms }}</div>
+                            </div>
+                        </div>
+                        <div class="flexbox invoice-top-table-total padding-large-lr padding-tb">
+                            <div class="flex1">
+                                <h3 class="flex1 margin-t"><b>{{ totalAmountForUI }}</b></h3>
+                            </div>
+                            <div class="flex1">
+                                <h1>
+                                    <b *ngIf="billingType === billingTypeEnum.Invoice"> {{ billingDetail.amount |
+                                        plCurrency }} </b>
+                                    <b *ngIf="billingType === billingTypeEnum.Timesheet"> {{ billingDetail.amount |
+                                        plTiming }} </b>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="billing-to margin-large-b">
+                    <h4 class="margin-b">
+                        <b><span *ngIf="billingType === billingTypeEnum.Invoice"> BILL </span> TO:</b>
+                    </h4>
+                    <div><b> PresenceLearning </b></div>
+                    <div> 530 Seventh Avenue, Suite M1 </div>
+                    <div> New York, NY 10018 </div>
+                    <div> 1-844-415-4592 </div>
+                </div>
+
+                <pl-billing-preview-summary 
+                    [summary]="billingDetail.summary" 
+                    [totalAmount]="billingDetail?.amount" 
+                    [type]="billingType">
+                </pl-billing-preview-summary>
+            </div>
+            <div *ngIf="billingDetail.status ==='unsubmitted'">
+                <div class="sign-off padding-tb margin-large-t {{ classes.signOff }}">
+                    <pl-input-checkbox class="margin-l" [(model)]="billingSignOff" (onChange)="onChangeSignOff()"></pl-input-checkbox>
+                    <strong>Sign-off:</strong> &nbsp; I verify that the items on this {{ billingType }} reflect my
+                    activity for this &nbsp;
+                    <span *ngIf="billingType === billingTypeEnum.Invoice"> billing </span>
+                    <span *ngIf="billingType === billingTypeEnum.Timesheet"> work </span>
+                    &nbsp; period.
+                </div>
+
+                <div class="header-submit padding-tb">
+                    <div *ngIf="!submittingBilling;">
+                        <button type="button" pl-button class="primary margin-l" [disabled]="onSubmitDisabled"
+                            (click)="onSubmit()">Submit</button>
+                        <button type="button" pl-button (click)="onCancel()">Cancel</button>
+                    </div>
+                    <div *ngIf="submittingBilling;" class="padding-nl-tb">
+                        <pl-dot-loader align="left margin-l"></pl-dot-loader>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>

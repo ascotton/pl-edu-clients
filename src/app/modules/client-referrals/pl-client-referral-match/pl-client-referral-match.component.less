@@ -1,0 +1,78 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/flexbox.less';
+
+.pl-client-referral-match {
+    min-width: 45rem;
+
+    // Always show scrollbar.
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 7px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(0, 0, 0, .5);
+        -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    }
+
+    .supporting-details {
+        display: flex;
+
+        & > * {
+            flex: 1 1 50%;
+        }
+
+        .direct-therapy-fields {
+            display: grid;
+            grid-gap: @spacing-normal;
+            grid-template-columns: auto 1fr;
+
+            .margin-large-b;
+        }
+
+        // add padding when language note is not alone
+        .direct-therapy-fields + .language-note {
+            .padding-l;
+        }
+
+        .language-note {
+            font-family: Roboto;
+            max-width: 30em;
+        }
+    }
+
+    .providers {
+        border: solid 1px @gray;
+    }
+
+    .header-col, .body-col {
+        .flex1;
+    }
+
+    .header-col {
+        font-weight: bold;
+    }
+
+    .name-col {
+        max-width: 150px;
+    }
+
+    .rows {
+        max-height: 250px;
+        overflow: auto;
+    }
+
+    .body-row:nth-child(odd) {
+        background-color: lighten(@gray-lightest, 5%);
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .referral-notes {
+        max-width: 45rem;
+    }
+}

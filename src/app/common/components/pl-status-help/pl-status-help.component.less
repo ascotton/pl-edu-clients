@@ -1,0 +1,37 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-client-direct-service-status-edit {
+    width: 600px;
+
+    .content {
+    }
+
+    .introduction {
+        margin-bottom: 25px;
+    }
+
+    .definitions {
+        margin: 15px 5px 10px 5px;
+        .definition {
+            margin-bottom: 10px;
+            display: flex;
+            .dot-name {
+                display: flex;
+                align-items: center;
+                width: 120px;
+                font-weight: bold;
+                .dot {
+                    .margin-r;
+                }
+                pl-icon {
+                    fill: @gray-darkest;
+                }
+            }
+            .description {
+                width: 400px;
+            }
+        }
+    }
+
+}

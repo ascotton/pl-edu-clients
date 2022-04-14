@@ -1,0 +1,54 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+:host {
+    display: flex;
+    align-items: center;
+    .tz {
+        flex: 1;
+        text-align: right;
+        font-size: 11px;
+        color: #4c4f52;
+        .padding-l;
+    }
+    .legend {
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        &-checkbox {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            border: solid 1px @green;
+            margin-right: 5px;
+            &.clients {
+                background-color: @green;
+            }
+            &.student_absence {
+                background-color: @yellow;
+            }
+            &.cancellation {
+                background-color: @red;
+            }
+            &.documentation_planning {
+                background-color: @blue;
+            }
+            &.other {
+                background-color: @blue-medium;
+            }
+            &.personal {
+                background-color: @purple;
+            }
+            &.fte_contract_services {
+                background-color: @blue-lighter;
+            }
+        }
+
+        &-label-text {
+            font-size: 12px;
+            font-weight: normal;
+            color: #4c4f52;
+        }
+    }
+}

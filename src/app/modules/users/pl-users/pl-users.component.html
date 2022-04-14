@@ -1,0 +1,54 @@
+<div class="pl-users padding-large" *ngIf="_state.initialized" [ngClass]="{ 'debug-show-div': util.showDivs(_state) }">
+    <div class="debug-component-name" *ngIf="util.showDivs(_state)">{{ _state.componentName }} {{ _state.ID }}</div>
+
+    <div *ngIf="isUserFormVisible">
+        <pl-user-edit
+            *ngIf="userFormUserId"
+            [userID]="userFormUserId"
+            (cancel)="onCancel()"
+            [context]="'page'"
+        ></pl-user-edit>       
+    </div>
+
+    <!-- hide the table wrapper so as not to have to reinitialize it when we show the user form -->
+    <pl-table-wrapper
+        [hidden]="isUserFormVisible"
+        class="x-qa-table"
+        (onQuery)="onQuery($event.query)"
+        [orderKey]="'ordering'"
+        [pageSizeKey]="'limit'"
+        [stateName]="'c'"
+    >
+        <pl-table-filters-top [filterSelectOpts]="filterSelectOpts" [total]="total"></pl-table-filters-top>
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'last_name'" [orderDirection]="'ascending'"
+                >Last Name</pl-table-header-cell
+            >
+            <pl-table-header-cell [orderKey]="'first_name'">First Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'username'">Username</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'email'">Email</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'group'">Role</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'is_active'">Active</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <pl-table-row *ngFor="let user of users" class="pointer">
+            <pl-table-cell (click)="selectUser(user)">{{ user.account.lastName }}</pl-table-cell>
+            <pl-table-cell (click)="selectUser(user)">{{ user.account.firstName }}</pl-table-cell>
+            <pl-table-cell (click)="selectUser(user)">{{ user.account.username }}</pl-table-cell>
+            <pl-table-cell (click)="selectUser(user)">{{ user.account.email }}</pl-table-cell>
+            <pl-table-cell (click)="selectUser(user)">{{ visibleRoles(user.roles) }}</pl-table-cell>
+            <pl-table-cell class="dropdown-cell">
+                <span>
+                    {{ user.account.isActive ? 'Active' : 'Inactive' }}
+                </span>
+                <pl-dot-loader *ngIf="user.isUpdatingActiveStatus"></pl-dot-loader>
+            </pl-table-cell>
+        </pl-table-row>
+        <div *ngIf="!users.length && !loading" class="center padding-xlarge-tb">
+            No matching users.
+        </div>
+        <pl-table-footer [total]="total" [totalLabel]="'Users'"></pl-table-footer>
+    </pl-table-wrapper>
+</div>

@@ -1,0 +1,11 @@
+<div class="pl-time-grid-block_header not-clickable">
+    <!--
+    <button *ngIf="editable" type="button" class="delete" (click)="triggerAction(2)"></button>
+    -->
+    <div class="pl-time-grid-block_title padding-small-tb padding-lr">
+        {{ block.title }}
+    </div>
+    <div *ngIf="viewTime" class="pl-time-grid-block_time padding-l">
+        {{ time }}
+    </div>
+</div>

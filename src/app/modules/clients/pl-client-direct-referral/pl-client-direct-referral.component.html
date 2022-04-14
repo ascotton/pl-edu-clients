@@ -1,0 +1,110 @@
+<pl-client-services-expandable-row
+    [rowId]="referral.id"
+    [queryParam]="'referral_id'">
+    <div class="pl-client-direct-referral" [ngClass]="classesContainer">
+        <div class="header flexbox">
+            <div class="expand-button" (click)="toggleExpand()" #expandButton>
+                <pl-icon *ngIf="!expanded" [svg]="'expand'" [scale]="0.75" [verticalAlign]="'-2px'"></pl-icon>
+                <pl-icon *ngIf="expanded" [svg]="'collapse'" [scale]="0.75" [verticalAlign]="'-2px'"></pl-icon>
+            </div>
+            <div class="flex2 service-type" (click)="toggleExpand()">
+                <b>Referral - {{ referralDisplay.providerType.longName }} {{ referralDisplay.productType.longName }} </b>
+                <pl-icon *ngIf="referral.hasNotes" class="margin-l" [svg]="'message-box'"></pl-icon>
+            </div>
+            <div class="flex1 created"><b>Creation Date:</b> <span class="x-qa-created">{{ referralDisplay.xCreated }}</span></div>
+            <div class="flex1 created"><b>School Year:</b> <span class="x-qa-created">{{ referralDisplay.schoolYear.name.replace(' School Year', '') }}</span></div>
+            <div class="flex1">
+                <div class="orange-dot status-dot"></div>
+                <div class="inline-block active-text"><span class="x-qa-status">{{ referralDisplay.xStatus }}</span>
+                    <span *ngIf="referralDisplay.xStatus === 'Matched' && referralDisplay.provider && referralDisplay.provider.id">
+                        <a *ngIf="referralDisplay.provider && referralDisplay.provider.id"
+                            [routerLink]="['/provider', referralDisplay.provider.id]">
+                            - {{ referralDisplay.provider.firstName }} {{ referralDisplay.provider.lastName }}
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div [hidden]="!expanded" class="service-details margin-t">
+            <div class="service-details-border">
+                <div class="service-details-left">
+                    <div class="margin-b">
+                        <b class="margin-r"> Service Language </b>
+                        <span *ngIf="referralDisplay.language && referralDisplay.language.name">{{ referralDisplay.language.name }}</span>
+                        <span *ngIf="!referralDisplay.language && client.primaryLanguage && client.primaryLanguage.name">{{ client.primaryLanguage.name }}</span>
+                    </div>
+                    <div *ngIf="!isPartOfDirectServices()">
+                        <div class="margin-b">
+                            <b class="margin-r"> Evaluation Due Date </b>
+                            <span class="x-qa-created">{{ referralDisplay.dueDate }}</span>
+                        </div>
+                        <div class="margin-b">
+                            <b class="margin-r"> Assessment Plan Signature Date </b>
+                            <span class="x-qa-created">{{ referralDisplay.assessmentPlanSignedOn }}</span>
+                        </div>
+                        <div class="margin-b">
+                            <b class="margin-r"> Meeting Date </b>
+                            <span class="x-qa-created">{{ referralDisplay.meetingDate }}</span>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="isPartOfDirectServices()">
+                        <div class="margin-b">
+                            <b class="margin-r">Grade</b>
+                            <span>{{ referralDisplay.grade }}</span>
+                        </div>
+                        <div class="margin-b">
+                            <b class="margin-r">Duration</b>
+                            <span>{{ referralDisplay.duration | i18nPlural : durationPluralization }}</span>
+                        </div>
+                        <div class="margin-b">
+                            <b class="margin-r">Frequency</b>
+                            <span>{{ getFrequencyLabel(referralDisplay.frequency) }}</span>
+                        </div>
+                        <div class="margin-b">
+                            <b class="margin-r">Interval</b>
+                            <span>{{ referralDisplay.interval | plOptions : intervalOptions }}</span>
+                        </div>
+                        <div class="margin-b">
+                            <b class="margin-r">Individual/Group</b>
+                            <span>{{ referralDisplay.grouping | plOptions : groupingOptions }}</span>
+                        </div>
+                        <div class="margin-b">
+                            <b class="margin-r">ESY</b>
+                            <span>{{ referralDisplay.esy | plYesNoEmpty }}</span>
+                        </div>
+                    </ng-container>
+                    <div class="margin-b">
+                        <b class="margin-r">Short Term Coverage</b>
+                        <span>{{ referralDisplay.isShortTerm | plYesNoEmpty }}</span>
+                    </div>
+                </div>
+                <div class="service-details-right">
+                    <div>
+                        <b class="margin-r">Notes</b>
+                    </div>
+                    <pl-referral-notes
+                        *ngIf="expanded"
+                        [currentUser]="currentUser"
+                        [referralId]="referral.id"
+                        [clientId]="client.id"
+                        [locationId]="locationId"
+                        [mayEditNotes]="referralDisplay.permissions.updateReferral"
+                        (noteCreated)="handleNoteCreated($event)">
+                    </pl-referral-notes>
+                </div>
+            </div>
+            <div>
+                <a *ngIf="mayConvertToService" class="link-unstyled" [routerLink]="['/service-save']" [queryParams]="{ client: client.id, referral: referral.id }"><button pl-button class="primary x-qa-convert-to-service-btn">Convert to Service</button></a>
+                <a *ngIf="referralDisplay.permissions.updateReferral" class="link-unstyled" [routerLink]="['/client-referral-save']" [queryParams]="{ client: client.id, referral: referral.id }"><button pl-button class="x-qa-edit-btn">Edit</button></a>
+                <!--
+                    Removed pending adequate messaging to unmatched providers.
+                    See https://presencelearning.atlassian.net/browse/PL-1707
+                    and commit 429601e0c7ce1243648398db6a76ef3e92d16ce0
+                    <button>Unmatch</button>
+                -->
+                <button *ngIf="referralDisplay.permissions.declineReferral" pl-button class="x-qa-decline-btn" (click)="showDeclineConfirm()">Decline</button>
+                <button *ngIf="referralDisplay.permissions.deleteReferral" pl-button class="bare x-qa-delete-btn" (click)="showDeleteConfirm()">Delete</button>
+            </div>
+        </div>
+    </div>
+</pl-client-services-expandable-row>

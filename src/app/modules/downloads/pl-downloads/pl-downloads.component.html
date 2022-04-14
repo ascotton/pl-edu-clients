@@ -1,0 +1,30 @@
+<pl-anchored-dialog [hidden]="!isVisible" [title]="'Downloads'" (closeAttempt)="onCloseAttempt()">
+    <ol class="download-items">
+        <ng-container *ngFor="let downloadItem of downloadItems">
+            <li [ngSwitch]="downloadItem.status" class="download-item" [ngClass]="downloadItem.status">
+                <ng-container *ngSwitchCase="'error'">
+                    <div class="status">
+                        {{ downloadItem.error }}: <span class="title">{{ downloadItem.filename || downloadItem.title }}</span>
+                    </div>
+                    <pl-progress class="progress-bar" [value]="1" [isError]="true"></pl-progress>
+                    <div class="error-message">{{ downloadItem.errorDescription }}</div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'complete'">
+                    <a #downloadLink class="download-link status" [href]="downloadItem.url" download [attr.data-download-id]="downloadItem.id">
+                        Done: <span class="title">{{ downloadItem.filename }}</span>
+                    </a>
+                    <pl-progress class="progress-bar" [value]="1" [isComplete]="true"></pl-progress>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                    <div class="status">
+                        Zipping: <span class="title">{{ downloadItem.title }}</span>
+                    </div>
+                    <pl-progress class="progress-bar" [value]="downloadItem.progress"></pl-progress>
+                </ng-container>
+                <button pl-button class="cancel-button status-icon" (click)="onCancelItem(downloadItem.id)">
+                    <pl-icon class="gray-dark" [svg]="'close'" [scale]=".9"></pl-icon>
+                </button>
+            </li>
+        </ng-container>
+    </ol>
+</pl-anchored-dialog>

@@ -1,0 +1,58 @@
+@import 'core/colors.less';
+
+.pl-client-goal-status-help {
+  display: inline-block;
+  width: 705px;
+
+  .introduction {
+    margin-bottom: 45px;
+  }
+
+  .definitions {
+    margin: 15px 5px 10px 5px;
+    .definition {
+      margin-bottom: 30px;
+      display: flex;
+      position: relative;
+      .goal {
+        display: flex;
+        align-items: center;
+        width: 170px;
+        transform-origin: 0;
+        -webkit-transform-origin: 0;
+        transform: scale(0.80);
+      }
+      .description {
+        position: relative;
+        top: 12px;
+        left: -15px;
+        width: 480px;
+      }
+    }
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 30px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+  .title {
+    margin-bottom: 15px;
+  }
+  .divider-line {
+    height: 1px;
+    border-top: 1px solid @gray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}

@@ -1,0 +1,17 @@
+<div class="pl-provider-onboarding-contact-info padding-large">
+    <div class="margin-large-b"><h3>Review your Contact Information</h3></div>
+    <div>
+        <div *ngFor="let item of contactInfo" class="flexbox margin-xlarge-b">
+            <div class="label"><b>{{ item.label }}</b></div>
+            <div class="flex1">{{ item.value }}
+                <div *ngIf="item.value2">{{ item.value2 }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="margin-b">
+        If we've made a mistake, please contact <a href="mailto:provider.success@presencelearning.com">provider.success@presencelearning.com</a> with your updated information and we'll fix it in a jiffy!
+    </div>
+    <div>
+        <button pl-button class="primary" (click)="save()">Continue</button>
+    </div>
+</div>

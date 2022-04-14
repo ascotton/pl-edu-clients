@@ -1,0 +1,35 @@
+<mat-sidenav-container [style.top.px]="design?.header.height">
+    <mat-sidenav #sidenav class="mat-elevation-z6 padding-large-lr"
+        fixedInViewport
+        [disableClose]="true"
+        [opened]="plDesign.sideNavOpened$ | async"
+        [attr.role]="design?.sideNav?.role"
+        [mode]="design?.sideNav?.mode" 
+        [fixedTopGap]="design?.header.height">
+        <ng-content select="[sidenav]"></ng-content>
+        <ng-container *ngIf="menuItems">
+            <pl-menu-list class="margin-b"
+                [items]="menuItems" 
+                (itemClicked)="menuItemSelected(design?.isHandset)">
+            </pl-menu-list>
+            <mat-divider></mat-divider>
+        </ng-container>
+        <ng-container *ngIf="resources && (resourcesMenu$ | async) as resourcesMenu">
+            <div *ngIf="resourcesMenu.length" class="resources-title margin-large-t">
+                PresenceLearning Resources
+            </div>
+            <pl-menu-list 
+                [items]="resourcesMenu" 
+                (itemClicked)="menuItemSelected(design?.isHandset)">
+            </pl-menu-list>
+        </ng-container>
+        <pl-menu-list *ngIf="bottom"
+            class="bottom"
+            [items]="bottomMenu" 
+            (itemClicked)="menuItemSelected(design?.isHandset)">
+        </pl-menu-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="padding-xlarge-lr padding-b">
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>

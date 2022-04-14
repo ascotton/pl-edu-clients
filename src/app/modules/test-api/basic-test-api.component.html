@@ -1,0 +1,9 @@
+<div class="basic-test-api">
+  <div>
+    <button pl-button class="primary inline-block" (click)="onClickApiAction()">{{actionButtonLabel}}</button>
+    <button pl-button class="bare inline-block" (click)="onClickToggleData()" *ngIf="modelApiData">🎉</button>
+  </div>
+  <div *ngIf="modelApiData" [ngClass]="{'hide-data': _state.showData}">
+    <ngx-json-viewer [json]="modelApiData"></ngx-json-viewer>
+  </div>
+</div>

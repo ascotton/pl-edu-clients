@@ -1,0 +1,23 @@
+<div class="pl-user-view">
+    <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+    <br />
+    <pl-table-wrapper>
+        <pl-table-header>
+            <pl-table-header-cell>Organization</pl-table-header-cell>
+            <pl-table-header-cell>Location</pl-table-header-cell>
+            <pl-table-header-cell>Role</pl-table-header-cell>
+        </pl-table-header>
+        <pl-table-row *ngFor="let a of assignments">
+            <pl-table-cell>{{ a.orgName }}</pl-table-cell>
+            <pl-table-cell>{{ a.locationName }}</pl-table-cell>
+            <pl-table-cell>{{ a.roleCode }}</pl-table-cell>
+        </pl-table-row>
+    </pl-table-wrapper>
+    <br />
+    <div>
+        <button type="button" pl-button class="gray-outline x-qa-cancel-user-button" (click)="onCancelClick()">
+            Close
+        </button>
+        <ng-content></ng-content>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<h4 class="header-blue padding-large" mat-dialog-title>
+    <div class="flexbox">
+        <div class="flex1 padding-r"> 
+            Confirmation and Error Summary
+        </div>
+        <button mat-icon-button aria-label="Close" (click)="close()">
+            <mat-icon>
+                close
+            </mat-icon>
+        </button>
+    </div>
+</h4>
+<div mat-dialog-content class="padding-xlarge">
+    <div class="padding-xlarge-b">
+        You have successfully added {{ data.count.success }} users. 
+        There were {{ data.count.error }} of users with errors that need to be addressed before they can be added. 
+        Please download an error summary for correction and upload again.
+    </div>
+    <a mat-stroked-button cdkFocusInitial 
+        download="users_with_errors.csv"
+        [href]="csvUrl | safeurl">
+        Download Data with Errors
+        <mat-icon>
+            file_download
+        </mat-icon>
+    </a>
+</div>
+<div mat-dialog-actions class="padding-xlarge" align="end">
+    <button (click)="close()" mat-raised-button color="accent" mat-dialog-close>
+        Dismiss
+    </button>
+</div>

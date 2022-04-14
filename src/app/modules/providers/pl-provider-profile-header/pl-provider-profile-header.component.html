@@ -1,0 +1,50 @@
+<div class="pl-provider-profile-header flexbox padding-large">
+    <div class="icon">
+        <pl-icon [svg]="'user-outline'" [width]="28"></pl-icon>
+    </div>
+    <div class="name">
+        <h1 *ngIf="provider.user">{{ provider.user.firstName }} {{ provider.user.lastName }}</h1>
+        <div>{{ provider.title }}</div>
+    </div>
+    <ul class="fields">
+        <li *ngIf="provider.email" class="field">
+            <span class="label">Email:</span>
+            <span class="value">
+                <a
+                    href="mailto:{{ provider.email }}"
+                    title="Email {{ provider.user.firstName }} {{ provider.user.lastName }}"
+                >
+                    {{ provider.email }}
+                </a>
+            </span>
+        </li>
+        <li class="field">
+            <span class="label">Phone Number:</span>
+            <span class="value">{{ provider.phone | plPhone }}</span>
+        </li>
+        <li class="field" *ngIf="mayViewProvider">
+            <span class="label">Sub-Status:</span>
+            <span class="value">{{ provider.providerSubStatus }}</span>
+        </li>
+    </ul>
+    <ul class="fields fields2">
+        <li class="field">
+            <span class="label">Contact Owner:</span>
+            <span class="value" *ngIf="provider.accountOwner">{{ provider.accountOwner.firstName }} {{ provider.accountOwner.lastName }}</span>
+        </li>
+        <li class="field">
+            <span class="label">Time Zone:</span>
+            <span class="value">{{ provider.timezone }}</span>
+        </li>
+    </ul>
+    <div class="buttons">
+        <div *ngIf="showAssumeButton">
+            <pl-provider-assume-login-button [label]="provider.user.username" [email]="provider.email"></pl-provider-assume-login-button>
+        </div>
+        <div class="margin-l" [hidden]="!backLink">
+            <div (click)="onClose()" class="pointer margin-r x-qa-back-button">
+                <pl-icon class="white margin-small-r" [svg]="'close-inverted'" [scale]="1.5"></pl-icon>
+            </div>
+        </div>
+    </div>
+</div>

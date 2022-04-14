@@ -1,0 +1,16 @@
+
+<div class="data-loader" *ngIf="loading">
+    <ng-container *ngIf="type === 'spinner'; else bar">
+        <mat-progress-spinner class="margin-b"
+            [mode]="mode" [color]="color" [diameter]="diameter">
+        </mat-progress-spinner>
+        {{ loadingText }}...
+    </ng-container>
+    <ng-template #bar>
+        <mat-progress-bar [mode]="mode"  [color]="color">
+        </mat-progress-bar>
+    </ng-template>
+</div>
+<div class="data-loader-content" [hidden]="loading">
+    <ng-content ></ng-content>
+</div>

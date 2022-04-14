@@ -1,0 +1,129 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.alert-section {
+    border-top: solid 4px;
+    box-shadow: 0px 2px 4px 0px @gray-lighter;
+    .padding-nl;
+    background-color: @gray-really-light;
+
+    &.warning {
+        border-color: @yellow;
+    }
+    &.error {
+        border-color: @red;
+    }
+
+    button {
+        font-style: italic;
+    }
+}
+
+.pl-fte-hours {
+    .upper-buttons {
+        margin: 0 auto;
+        .margin-xlarge-b;
+    }
+    .toggle-button {
+        width: 125px;
+        &.selected {
+            background-color: @slate-darkest;
+            color: @white;
+        }
+    }
+    .refresh-btn {
+        margin-top: 10px;
+    }
+    .go-prev, .go-next {
+        &.disabled {
+            fill: @gray;
+        }
+    }
+    .header-date {
+        display: inline-block;
+        width: 165px;
+        text-align: center;
+    }
+    .info-tip {
+        background-color: @white;
+    }
+    .school {
+        .padding-large-tb;
+
+        &.past {
+            opacity: 0.5;
+        }
+
+        .col-target {
+            width: 55px;
+            .margin-nl-l;
+        }
+        .col-status {
+            &.over {
+                color: @red;
+            }
+
+            &.width-125px {
+                width: 125px; // Only aplicabble when not in calendar.
+            }
+        }
+
+        .circle-icon {
+            border-radius: 50px;
+            padding: 2px 3px;
+            height: 15px;
+            margin-right: 5px;
+            margin-top: 4px;
+
+            &.percent90, &.percent0 {
+                background-color: @yellow;
+            }
+            &.percent100 {
+                background-color: @green;
+            }
+            &.percent101 {
+                background-color: @red;
+            }
+        }
+
+        .hours {
+            text-align: right;
+        }
+
+        .bar-wrapper {
+            position: relative;
+            width: 100%;
+            height: 15px;
+        }
+        .bar-background {
+            background-color: @gray-light;
+            width: 100%;
+            height: 100%;
+        }
+        .bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+
+            &.percent101 {
+                background-color: @red;
+            }
+            &.percent100 {
+                background-color: @green;
+            }
+            &.percent90 {
+                background-color: @yellow;
+            }
+            &.percent89 {
+                background-color: @blue;
+            }
+        }
+    }
+    .bottom-border {
+        border-bottom: solid 1px @gray;
+    }
+    .fte-loader-padding {
+        .padding-t;
+        .padding-large-b;
+    }
+}

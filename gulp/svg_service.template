@@ -1,0 +1,22 @@
+/*
+This is a generated file, do NOT edit it (your changes will be overwritten).
+To change the contents of the file, add a .svg file to the svgDir (e.g. build/assets/svg) then `npm run svg`
+
+## Usage:
+1. Optimize SVG with SVGO
+    1. Typically, make sure the viewbox is a square (height same as width, with icon centered).
+    2. https://jakearchibald.github.io/svgomg/
+    3. REMOVE any height & width attributes on the svg. Optionally add 'width="100%"' instead.
+    4. Use / add explicit close tags, e.g. '<path></path>' instead of '<path />'.
+    5. Remove any 'fill' or other styling you want to use css for.
+2. Save your .svg files in a directory for this plugin to inline the svg code:
+    1. find and replace regex '\n' with '' to remove new lines
+3. the SVG will be responsive and resize based on the element dimensions; use CSS as normal to set width / height
+*/
+
+export class SvgInlineNgPluginService {
+  svgs: any = {
+    <% svgs.forEach(function(svg) { %> '<%= svg.name %>': { html: `<%= svg.contents %>` },
+    <% }) %>
+  };
+}

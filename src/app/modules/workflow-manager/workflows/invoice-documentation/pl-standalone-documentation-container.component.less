@@ -1,0 +1,64 @@
+@import 'core/colors.less';
+
+@separatorLine: 1px solid @gray-lightest;
+
+.pl-standalone-documentation-container {
+    background-color: @slate-darkest;
+    .pl-detail {
+        display: table;
+        height: 100%;
+        .list {
+            display: table-cell;
+            height: 100%;
+            padding-left: 5px;
+            .row-outer {
+                position: relative;
+                top: 66px;
+                background-color: @white;
+                border-radius: 5px;
+                padding: 5px 0 6px 0;
+                .list-header {
+                    background-color: white;
+                    padding: 5px;
+                    text-align: center;
+                    font-weight: bold;
+                    border-bottom: 1px solid @gray-darker;
+                }
+            }
+            .row-container {
+                max-height: 400px;
+                overflow-y: scroll;
+            }
+            .pl-row {
+                color: @slate-darkest;
+
+                &:hover {
+                    cursor: pointer;
+                }
+                .label {
+                    width: 200px;
+                    padding: 10px 5px;
+                    border-left: 5px solid @white;
+                    color: @slate-darkest;
+                    font-weight: 600;
+                    font-size: 12px;
+                    .name {
+                        font-size: 15px;
+                    }
+                    &.selected {
+                        border-left: 5px solid @purple;
+                        background-color: @gray-lightest;
+                    }
+                }
+            }
+        }
+        .detail {
+            display: table-cell;
+            width: 800px;
+        }
+    }
+
+    .loading {
+        padding: 5px;
+    }
+}

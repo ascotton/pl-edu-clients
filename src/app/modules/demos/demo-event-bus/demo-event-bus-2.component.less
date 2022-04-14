@@ -1,0 +1,29 @@
+@import 'core/colors.less';
+
+.pl-demo-event-bus-2 {
+  display: inline-block;
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 30px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+  .title {
+    margin-bottom: 15px;
+  }
+  .divider-line {
+    height: 1px;
+    border-top: 1px solid @gray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}

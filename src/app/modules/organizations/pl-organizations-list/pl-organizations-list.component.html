@@ -1,0 +1,51 @@
+<pl-tabs [tabs]="tabs"></pl-tabs>
+
+<div class="pl-organizations-list">
+    <pl-table-wrapper
+        (onQuery)="onQuery($event)"
+        [orderKey]="'orderBy'"
+        [pageSizeKey]="'first'"
+        [stateName]="'l'"
+    >
+        <pl-table-filters-top
+            [filterSelectOpts]="filterSelectOpts"
+            [filtersFixed]="true"
+            [total]="total"
+        ></pl-table-filters-top>
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'name'" [orderDirection]="'ascending'">Organization</pl-table-header-cell>
+            <pl-table-header-cell>Clinical Account Manager</pl-table-header-cell>
+            <pl-table-header-cell></pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="organizations.length === 0 && !loading" class="center padding-xlarge-tb">
+            No matching results
+        </div>
+        <pl-table-row *ngFor="let org of organizations">
+            <pl-table-cell>
+                <a
+                    [routerLink]="['/organization', org.id]"
+                    [title]="org.name + ' Overview'"
+                >
+                    {{ org.name }}
+                </a>
+            </pl-table-cell>
+            <pl-table-cell>
+                <span *ngIf="org.accountCam">{{ org.accountCam.firstName }} {{ org.accountCam.lastName }}</span>
+            </pl-table-cell>
+            <pl-table-cell>
+                <a target="_blank"
+                    [routerLink]="['/school-staff']"
+                    [queryParams]="{ 'org': org.id }">
+                    Platform Dashboard
+                </a>
+            </pl-table-cell>
+        </pl-table-row>
+
+        <pl-table-footer
+            [total]="total"
+        ></pl-table-footer>
+    </pl-table-wrapper>
+</div>

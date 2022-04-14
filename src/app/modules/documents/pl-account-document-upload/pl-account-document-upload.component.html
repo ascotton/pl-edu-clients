@@ -1,0 +1,37 @@
+<h2 class="margin-b">Upload Document</h2>
+<div class="pl-account-document-upload section-body margin-xlarge-b">
+    <form [formGroup]="documentUploadForm">
+        <pl-input-file class="form-input x-qa-file" [formCtrl]="documentUploadForm"
+            [label]="'Upload Document (.doc, .docx, .jpg, .jpeg, .gif, .png, .pdf) Max file size: 30MB'"
+            [(model)]="model.file" [required]="true" [extensions]="'doc,docx,jpg,jpeg,gif,png,pdf'" [maxFileSize]="30"
+            (onChange)="changeFile()" [fixtureId]="'documentUploadFixture'"></pl-input-file>
+        <!-- TODO - add this extension?? 'VND.OPENXMLFORMATS-OFFICEDOCUMENT.WORDPROCESSINGML.DOCUMENT' -->
+        <div class="flexbox">
+            <pl-input-text class="flex1 margin-large-r form-input x-qa-name" [formCtrl]="documentUploadForm"
+                [label]="'Document Name (without extension)'" [maxlength]="32" [pattern]="'^[0-9a-zA-Z ]*$'" [required]="true" [(model)]="model.name">
+            </pl-input-text>
+            <pl-input-select class="flex1 margin-large-l form-input x-qa-type" [formCtrl]="documentUploadForm"
+                [label]="'Document Type'" [(model)]="model.type" [options]="documentTypeOpts" [required]="true">
+            </pl-input-select>
+        </div>
+        <div [hidden]="!model.type || !clientServiceOpts.length">
+            <div class="flexbox">
+                <pl-input-select class="flex1 margin-large-r form-input x-qa-service" [formCtrl]="documentUploadForm"
+                    [label]="'Service'" [(model)]="model.clientService" [options]="clientServiceOpts"></pl-input-select>
+                <div class="flex1 margin-large-l form-input">&nbsp;</div>
+            </div>
+        </div>
+
+        <div class="footer-div" [hidden]="submitting">
+            <button pl-button class="success x-qa-upload-document-btn"
+                [disabled]="!documentUploadForm.valid || !validFileNameToUpload" (click)="upload()">Save</button>
+            <button type="button" pl-button class="bare x-qa-cancel-upload-documents-btn"
+                (click)="cancel()">Cancel</button>
+            <span *ngIf="!validFileNameToUpload">
+                <p><small>The name of the document should not have special characters in it. Please upload it again after you have
+                        removed the special characters.</small></p>
+            </span>
+        </div>
+        <pl-dot-loader [hidden]="!submitting" [align]="'left'"></pl-dot-loader>
+    </form>
+</div>

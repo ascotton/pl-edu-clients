@@ -1,0 +1,87 @@
+<div class="pl-cam-account-details">
+    <h2>{{ orgName }}</h2>
+    <div class="cam-account-details-wrapper">
+        <div class="charts">
+            <ng-container *ngFor="let service of services">
+                <pl-cam-service-details *ngIf="isServiceDetailVisible(service)"
+                    [serviceName]="service.serviceName"
+                    [inOnboardingCount]="service.onboardingCount"
+                    [inServiceCount]="service.inServiceCount"
+                    [notInServiceCount]="service.notInServiceCount"
+                    [assignedHours]="service.assignedProviderHours"
+                    [contractedHours]="service.contractedReferralHours"
+                >
+                </pl-cam-service-details>
+            </ng-container>
+        </div>
+        <div class="locations">
+            <div *ngIf="locationReferralStats.length === 0; else referralsTable">
+                {{ orgName }} does not have any locations.
+            </div>
+            <ng-template #referralsTable>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Location</th>
+                            <th>Open</th>
+                            <th>Unmatched</th>
+                            <th>Proposed</th>
+                            <th>Matched</th>
+                            <th>Converted</th>
+                            <th>Total</th>
+                            <ng-container *ngIf="!allAreVirtualLocations(locationReferralStats)">
+                                <th>Missing Info</th>
+                                <th>Scheduled</th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let referrals of orderByLocation(locationReferralStats)">
+                            <td class="column-location" scope="row">
+                                <a class="location-profile" [routerLink]="['/location', referrals.location.id]">
+                                    {{ referrals.location.name }}
+                                </a>
+                            </td>
+                            <td>{{ referrals.openCount }}</td>
+                            <td>
+                                <a
+                                    class="referral-manager-unmatched"
+                                    [routerLink]="['/client-referrals/manager']"
+                                    [queryParams]="{ crmf_state_In: 'UNMATCHED_PL_REVIEW', crmf_schoolYearCode_In: schoolYearCode, crmf_clientLocationId_In: referrals.location.id }"
+                                    title="Manage unmatched referrals for {{ referrals.location.name }}"
+                                >
+                                    {{ referrals.unmatchedCount }}
+                                </a>
+                            </td>
+                            <td>{{ referrals.proposedCount }}</td>
+                            <td>{{ referrals.matchedCount }}</td>
+                            <td>{{ referrals.convertedCount }}</td>
+                            <td class="column-total">{{ referrals.totalCount }}</td>
+                            <ng-container *ngIf="!allAreVirtualLocations(locationReferralStats)">
+                                <td class="column-leading-percentage">
+                                    <a
+                                        class="referral-manager-missing-info"
+                                        [routerLink]="['/client-referrals/manager']"
+                                        [queryParams]="{ crmf_missing_info: 'true', crmf_schoolYearCode_In: schoolYearCode, crmf_clientLocationId_In: referrals.location.id }"
+                                        title="Manage referrals missing info for {{ referrals.location.name }}"
+                                    >
+                                        {{ referrals.missingInfoPercentage | percent }}
+                                    </a>
+                                </td>
+                                <td>{{ referrals.scheduledPercentage | percent }}</td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </div>
+    </div>
+    <div class="footer">
+        <a
+            class="referral-manager"
+            [routerLink]="['/client-referrals/manager']"
+            [queryParams]="{ crmf_clientOrganizationId_In: orgId, crmf_schoolYearCode_In: schoolYearCode }"
+            title="Manage referrals for {{ orgName }}"
+        >Referral Manager</a>
+    </div>
+</div>

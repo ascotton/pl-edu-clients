@@ -1,0 +1,106 @@
+<div class="table-framework-demo">
+    <div class="margin-large-tb">
+        <a routerLink="/tables"><h2>Table (non Framework)</h2></a>
+    </div>
+
+    <h2 class="margin-b">Default</h2>
+    <div class="margin-large-b">
+        <!-- <pl-table-row>
+            <pl-table-cell>1.1</pl-table-cell>
+            <pl-table-cell>1.2</pl-table-cell>
+        </pl-table-row>
+        <pl-table-row>
+            <pl-table-cell>2.1</pl-table-cell>
+            <pl-table-cell>2.2</pl-table-cell>
+        </pl-table-row>
+        <pl-table-row>
+            <pl-table-cell>3.1</pl-table-cell>
+            <pl-table-cell>3.2</pl-table-cell>
+        </pl-table-row> -->
+
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'first'" [orderDirection]="orderDirectionDefault.first" (onQuery)="onQueryDefault($event)">First</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'last'" [orderDirection]="orderDirectionDefault.last" (onQuery)="onQueryDefault($event)">Last</pl-table-header-cell>
+            <pl-table-header-cell>Zip</pl-table-header-cell>
+        </pl-table-header>
+        <pl-table-row *ngFor="let row of dataDefault">
+            <pl-table-cell>{{ row.first }}</pl-table-cell>
+            <pl-table-cell>{{ row.last }}</pl-table-cell>
+            <pl-table-cell>{{ row.zip }}</pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="totalDefault" [currentPage]="currentPageDefault" [pageSize]="pageSizeDefault" (onQuery)="onQueryDefault($event)"></pl-table-footer>
+
+    </div>
+
+    <h2>Wrapper</h2>
+    <div class="margin-large-b">
+
+        <pl-table-wrapper (onQuery)="onQueryWrapper($event)" [stateName]="'wrapper1'">
+            <pl-table-filters-top [filterSelectOpts]="filterSelectOptsWrapper" [total]="totalWrapper"></pl-table-filters-top>
+            <pl-table-header>
+                <pl-table-header-cell [orderKey]="'first'">First</pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'last'">Last</pl-table-header-cell>
+                <pl-table-header-cell>Zip</pl-table-header-cell>
+            </pl-table-header>
+            <pl-table-row *ngFor="let row of dataWrapper">
+                <pl-table-cell>{{ row.first }}</pl-table-cell>
+                <pl-table-cell>{{ row.last }}</pl-table-cell>
+                <pl-table-cell>{{ row.zip }}</pl-table-cell>
+            </pl-table-row>
+            <pl-table-footer [total]="totalWrapper" [currentPage]="currentPageWrapper" [pageSize]="pageSizeWrapper"></pl-table-footer>
+        </pl-table-wrapper>
+
+    </div>
+
+    <h2 class="margin-b">Side Filters</h2>
+    <div class="margin-large-b">
+
+        <pl-table-wrapper (onQuery)="onQueryFiltersSide($event)" [stateName]="'filtersSide1'" class="flexbox">
+            <div [hidden]="!filtersVisibleSide" class="margin-r">
+                <pl-table-filters-side [filters]="filtersSide" [filtersVisible]="filtersVisibleSide" (onCloseFilters)="toggleFiltersSide($event)"></pl-table-filters-side>
+            </div>
+            <div class="flex1">
+                <div>
+                    <button *ngIf="filtersVisibleSide" pl-button class="gray-outline" (click)="toggleFiltersSide()">Hide Filters</button>
+                    <button *ngIf="!filtersVisibleSide" pl-button class="gray-outline" (click)="toggleFiltersSide()">Show Filters</button>
+                </div>
+                <pl-table-header>
+                    <pl-table-header-cell [orderKey]="'first'">First</pl-table-header-cell>
+                    <pl-table-header-cell [orderKey]="'last'">Last</pl-table-header-cell>
+                    <pl-table-header-cell>Zip</pl-table-header-cell>
+                </pl-table-header>
+                <pl-table-row *ngFor="let row of dataFiltersSide">
+                    <pl-table-cell>{{ row.first }}</pl-table-cell>
+                    <pl-table-cell>{{ row.last }}</pl-table-cell>
+                    <pl-table-cell>{{ row.zip }}</pl-table-cell>
+                </pl-table-row>
+                <pl-table-footer [total]="totalFiltersSide" [currentPage]="currentPageFiltersSide" [pageSize]="pageSizeFiltersSide"></pl-table-footer>
+            </div>
+        </pl-table-wrapper>
+
+    </div>
+
+    <h2 class="margin-b">Top Groups Filters</h2>
+    <div class="margin-large-b">
+
+        <pl-table-wrapper (onQuery)="onQueryFiltersTopGroups($event)" [stateName]="'filtersTopGroups1'">
+            <pl-table-filters-top-groups [filtersPrimary]="filtersPrimaryTopGroups" [filtersSecondary]="filtersSecondaryTopGroups"></pl-table-filters-top-groups>
+            <pl-table-order-top [orderValue]="'first'" [orderOptions]="orderOptionsTopGroups" [total]="totalFiltersTopGroups" [title]="'Clients'"></pl-table-order-top>
+            <pl-table-header>
+                <pl-table-header-cell>First</pl-table-header-cell>
+                <pl-table-header-cell>Last</pl-table-header-cell>
+                <pl-table-header-cell>Email</pl-table-header-cell>
+                <pl-table-header-cell>Zip</pl-table-header-cell>
+            </pl-table-header>
+            <pl-table-row *ngFor="let row of dataFiltersTopGroups">
+                <pl-table-cell>{{ row.first }}</pl-table-cell>
+                <pl-table-cell>{{ row.last }}</pl-table-cell>
+                <pl-table-cell>{{ row.email }}</pl-table-cell>
+                <pl-table-cell>{{ row.zip }}</pl-table-cell>
+            </pl-table-row>
+            <pl-table-footer [total]="totalFiltersTopGroups" [currentPage]="currentPageFiltersTopGroups" [pageSize]="pageSizeFiltersTopGroups"></pl-table-footer>
+        </pl-table-wrapper>
+
+    </div>
+
+</div>

@@ -1,0 +1,105 @@
+<div *ngIf="banner" 
+  class="pl-editable-table-banner mat-elevation-z1 flexbox padding-large-lr padding-tb margin-large-b">
+    <mat-icon color="error">
+        warning
+    </mat-icon>
+    <div class="padding-large-lr">
+        <div class="pl-editable-table-banner-title">
+            {{ banner.title }}
+        </div>
+        <ul *ngIf="banner.subtitles || maxRowsError" class="pl-editable-table-banner-subtitles">
+          <li *ngIf="maxRowsError">
+            You have exceeded {{ maxRows }} users for upload. We recommend splitting this list into multiple batches to avoid processing errors.
+          </li>
+          <li *ngFor="let subtitle of banner.subtitles">
+            {{ subtitle }}
+          </li>
+        </ul>
+    </div>
+    <!--
+    <button mat-button 
+      [style.marginLeft]="'auto'"
+      (click)="toggleView()">
+      {{ view === 'All' ? 'Show errors only' : 'All' }}
+    </button>
+    -->
+</div>
+<div class="pl-editable-table-container">
+  <mat-table [dataSource]="visibleRows" class="mat-elevation-z1">
+      <ng-container *ngFor="let col of columns; let i = index" 
+        [matColumnDef]="col.key">
+          <mat-header-cell *matHeaderCellDef
+            [style.minWidth.px]="col.config?.width">
+              <mat-select class="margin-lr" 
+                [value]="col.key"
+                (selectionChange)="swapColumns(col, $event.value)">
+                  <mat-option *ngFor="let column of columns" 
+                    [value]="column.key">
+                      {{ column.label }}
+                  </mat-option>
+              </mat-select>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row; let index = index" 
+            class="padding top-xs" 
+            [formGroup]="row.form"
+            [class.invalid]="getErrors(row, col.key).length"
+            [style.minWidth.px]="col.config?.width"
+            [matTooltip]="getTooltipError(row, col.key)">
+              <ng-container *ngIf="col.type === COLUMN_TYPES.Input">
+                  <input matInput
+                    [formControlName]="col.key"
+                    [type]="col.textType">
+              </ng-container>
+              <ng-container *ngIf="[COLUMN_TYPES.Select, COLUMN_TYPES.Boolean].includes(col.type)">
+                  <mat-select [formControlName]="col.key">
+                      <mat-option *ngFor="let opt of col.options" [value]="opt.value">
+                          {{ opt.label }}
+                      </mat-option>
+                  </mat-select>
+              </ng-container>
+              <ng-container *ngIf="col.type === COLUMN_TYPES.ReadOnly">
+                  {{ row.value[col.key] }}
+              </ng-container>
+          </mat-cell>
+      </ng-container>
+    <ng-container matColumnDef="selector" sticky>
+      <mat-header-cell *matHeaderCellDef class="selector-cell">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row; let i = index" class="selector-cell">
+        <ng-container *ngIf="getRowErrors(row) as errors; else rowCount">
+          <mat-icon
+            *ngIf="errors.length; else rowCount"
+            color="error"
+            [matTooltip]="errors[0].message">
+            warning
+        </mat-icon>
+        </ng-container>
+        <ng-template #rowCount>
+          <span class="row-count">
+            {{ i + 1 }}
+          </span>
+        </ng-template>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions" stickyEnd>
+      <mat-header-cell *matHeaderCellDef class="actions-cell">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row; let i = index" class="actions-cell">
+        <button mat-icon-button (click)="deleteRow(row, i)">
+          <mat-icon>
+            delete_forever
+          </mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="loader">
+        <mat-header-cell *matHeaderCellDef>
+          <mat-progress-bar
+              color="accent" mode="indeterminate"></mat-progress-bar>
+        </mat-header-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="columnsDefinition; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnsDefinition; let i = index;">
+    </mat-row>
+  </mat-table>
+</div>

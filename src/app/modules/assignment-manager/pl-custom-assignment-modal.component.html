@@ -1,0 +1,234 @@
+<div class="pl-custom-assignment-modal" [ngClass]="{ 'edit-mode': proposalItem, 'new-mode': !proposalItem }">
+    <pl-modal-header-wrapper [headerText]="headerText">
+        <div class="modal-content" *ngIf="saveErrors.length" [@fadeIn]>
+            <h2 class="margin-large-b nowrap">Save errors</h2>
+
+            <ul class="margin-large-l">
+                <li *ngFor="let err of saveErrors">
+                    <b>{{ err.key }}</b
+                    >: {{ err.text }}
+                </li>
+            </ul>
+            <div class="margin-large-t">
+                <button pl-button class="pl-button primary" (click)="saveErrors = []">Back</button>
+            </div>
+        </div>
+        <div *ngIf="loading">
+            <pl-dot-loader align="left"></pl-dot-loader>
+        </div>
+        <div class="modal-content" [hidden]="saveErrors.length || loading">
+            <div class="header">
+                <h2 class="school-year"><span class="nowrap">{{ schoolYear.name }}</span></h2>
+                <h2 class="nowrap">
+                    <span class="org-name">{{ orgDemandItem.orgName }}</span>
+                </h2>
+                <h4 class="oppty-line">
+                    <span class="service-type">{{ opptyDemandItem.serviceGroupName }}</span>
+                </h4>
+            </div>
+            <div
+                class="provider-name"
+                *ngIf="proposalItem"
+                [innerHtml]="model.provider | plOptions: providerOpts"
+            ></div>
+            <form [formGroup]="assignmentFormGroup">
+                <div class="form-container">
+                    <div *ngIf="!proposalItem && !proposeNonQualifiedProvider" class="providers-list">
+                        <pl-table-wrapper (onQuery)="onQuery($event)">
+                            <pl-table-header class="sticky-header">
+                                <pl-table-header-cell [orderKey]="'name'" [orderDirection]="'ascending'" style="height:35px;">
+                                    <div>
+                                        <svg style="float:left;" width="16" viewBox="0 0 20 20" class="gray-darkest" (click)="onSearchClick($event)">
+                                            <use xlink:href="assets/search-icons.svg#search" /> 
+                                        </svg>
+                                        <input
+                                            class="search-input"
+                                            [class.visible]="showNameSearch"
+                                            (click)="onSearchInputClick($event)"
+                                            (input)="onSearchInputChange($event)"
+                                        />
+                                        &nbsp;
+                                        <div class="name" [class.hidden]="showNameSearch">Name</div>
+                                    </div>
+                                </pl-table-header-cell>
+                                <pl-table-header-cell [orderKey]="'hours'">Remaining Availability</pl-table-header-cell>
+                                <pl-table-header-cell [orderKey]="'match'">Fitness Rank</pl-table-header-cell>
+                                <pl-table-header-cell [orderKey]="'other'">Other</pl-table-header-cell>
+                            </pl-table-header>
+                            <pl-table-row *ngFor="let p of providerOpts">
+                                <pl-table-cell>
+                                    <pl-input-radio 
+                                        [disabled]="!allowLockOrReserve"
+                                        [style.visibility]="p.remainingHours > 0 || opptyDemandItem.isESY ? 'visible' : 'hidden'" 
+                                        [value]="p.uuid"
+                                        [(model)]="model.provider" >
+                                    </pl-input-radio>
+                                    <a href="{{ p.dashboardUrl }}" target="_blank">{{ p.name }}</a><br />
+                                    <div *ngIf="p.separationDate" class="separation">Separation date: {{ p.separationDate }}</div>
+                                </pl-table-cell>
+                                <pl-table-cell>{{ p.remainingHours }} hour{{ p.remainingHours === 1 ? '' : 's' }}</pl-table-cell>
+                                <pl-table-cell>
+                                    <b *ngIf="p.rankColor" [ngClass]="p.rankColor">{{ p.rankDescription }}</b>
+                                    <span *ngIf="!p.rankColor && p.rankDescription">{{ p.rankDescription }}</span>
+                                </pl-table-cell>
+                                <pl-table-cell>
+                                    <div *ngIf="p.isOnboarding"><b class="yellow">* Onboarding *</b></div>
+                                    <div *ngIf="p.hasPendingReqs"><b class="yellow">* Pending Qualification *</b></div>
+                                    <div *ngIf="p.removedReasons"><b>Previously rejected:</b> {{ p.removedReasons }}</div>
+                                </pl-table-cell>
+                            </pl-table-row>
+                        </pl-table-wrapper>
+                    </div>
+                    <div *ngIf="!proposalItem && proposeNonQualifiedProvider">
+                        <div class="warning">
+                            <pl-icon class="yellow" [svg]="'caution'"></pl-icon>
+                            <span>You are proposing a provider who may not meet the necessary qualifications, and could prevent another qualified provider from taking this spot. Make sure you know what you're doing!</span>
+                        </div>
+                        <br />
+                        <pl-input-select
+                            [label]="'Provider'"
+                            [options]="nonQualifiedProviders"
+                            [(model)]="model.provider"
+                            [placeholder]="'Select Provider'"
+                            [bigFilter]="false"
+                            [filter]="true"
+                        >
+                        </pl-input-select>
+                        <br />
+                    </div>
+                    <div class="margin-large-b">
+                        <pl-input-text
+                            [label]="'Avg. Weekly Hours'"
+                            [disabled]="!allowLockOrReserve"
+                            [(model)]="model.weeklyHours"
+                            [required]="true"
+                            [pattern]="maxHoursPattern"
+                            [validationMessages]="{ pattern: 'Between 1 and 40 hours by 0.25 hour increments' }"
+                            [formCtrl]="assignmentFormGroup"
+                        >
+                        </pl-input-text>
+                    </div>
+                    <div class="margin-large-b" *ngIf="!proposalItem && !proposeNonQualifiedProvider">
+                        <div class="flexbox" [style.width]="'200px'">
+                            <pl-input-radio
+                                class="flex1"
+                                [disabled]="!allowLockOrReserve"
+                                [label]="'Locked'"
+                                [value]="'locked'"
+                                [(model)]="model.status"
+                                [formCtrl]="assignmentFormGroup"
+                            ></pl-input-radio>
+                            <pl-input-radio
+                                class="flex1"
+                                [disabled]="!allowLockOrReserve"
+                                [label]="'Reserved'"
+                                [value]="'reserved'"
+                                [(model)]="model.status"
+                                [formCtrl]="assignmentFormGroup"
+                            ></pl-input-radio>
+                        </div>
+                    </div>
+                    <!-- This is for PHASE 2
+            <div class="margin-large-b">
+                <pl-input-select
+                    [label]="'Assignment Type'"
+                    [placeholder]="'Select Assignment Type'"
+                    [(model)]="model.therapyType"
+                    [options]="therapyTypeOpts"
+                    [required]="true"
+                    [formCtrl]="assignmentFormGroup">
+                </pl-input-select>
+            </div>
+            -->
+                    <div *ngIf="proposalItem">
+                        <div class="margin-large-b">
+                            <pl-input-select
+                                [label]="'Status'"
+                                [placeholder]="'Select Status'"
+                                [(model)]="model.status"
+                                [options]="assignmentStatusOpts"
+                                [required]="true"
+                                [ignoreDeactivateScroll]="true"
+                                [formCtrl]="assignmentFormGroup"
+                            >
+                            </pl-input-select>
+                        </div>
+                        <div class="margin-large-b" [hidden]="!isStatusRejectedPL()">
+                            <pl-input-select
+                                [label]="'Reason'"
+                                [placeholder]="'Select a reason'"
+                                [(model)]="model.reason"
+                                [options]="rejectedReasonsOpts"
+                                [required]="true"
+                                [disabled]="!isStatusRejectedPL()"
+                                [ignoreDeactivateScroll]="true"
+                                [formCtrl]="assignmentFormGroup"
+                            >
+                            </pl-input-select>
+                        </div>
+                        <div class="margin-large-b" [hidden]="!isStatusDeclinedByProvider()">
+                            <pl-input-select
+                                [label]="'Reason'"
+                                [placeholder]="'Select a reason'"
+                                [(model)]="model.reason"
+                                [options]="declinedReasonsOpts"
+                                [required]="true"
+                                [disabled]="!isStatusDeclinedByProvider()"
+                                [ignoreDeactivateScroll]="true"
+                                [formCtrl]="assignmentFormGroup"
+                            >
+                            </pl-input-select>
+                        </div>
+                        <div class="margin-large-b" [hidden]="!isStatusRemoved()">
+                            <pl-input-select
+                                [label]="'Reason'"
+                                [placeholder]="'Select a reason'"
+                                [(model)]="model.reason"
+                                [options]="removedReasonsOpts"
+                                [required]="true"
+                                [disabled]="!isStatusRemoved()"
+                                [ignoreDeactivateScroll]="true"
+                                [formCtrl]="assignmentFormGroup"
+                            >
+                            </pl-input-select>
+                        </div>
+                        <div [hidden]="!isReasonOther()">
+                            <div>
+                                <pl-input-textarea
+                                    [height]="'120px'"
+                                    [label]="'Notes'"
+                                    [(model)]="model.notes"
+                                    [maxlength]="250"
+                                    [required]="true"
+                                    [disabled]="!isReasonOther()"
+                                    [formCtrl]="assignmentFormGroup"
+                                >
+                                </pl-input-textarea>
+                            </div>
+                            <div class="col right" *ngIf="!getNotesChars()">250 character limit</div>
+                            <div class="col right" *ngIf="getNotesChars()">
+                                <b>{{ 250 - getNotesChars() }}</b> / 250 characters left
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    pl-button
+                    type="button"
+                    class="success x-qa-save-user-button"
+                    [disabled]="inFlight || !this.assignmentFormGroup.valid || !model.status || !model.provider"
+                    (click)="onClickSave()"
+                >
+                    Save
+                </button>
+                <button pl-button type="button" class="gray-outline x-qa-cancel-user-button" (click)="onClickCancel()">
+                    Cancel
+                </button>
+                <button *ngIf="!proposalItem" pl-button type="button" class="gray-outline right" (click)="onClickProposeNonQualifiedProvider()">
+                    View {{ (proposeNonQualifiedProvider) ? 'qualified/proposed' : 'all' }} providers
+                </button>
+            </form>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

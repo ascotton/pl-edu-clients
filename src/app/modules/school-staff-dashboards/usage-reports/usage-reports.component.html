@@ -1,0 +1,59 @@
+<h1 class="margin-xlarge-tb">
+    Usage Reports 
+</h1>
+<h2 class="margin-tb">
+    Platform User Activity
+</h2>
+<pl-data-loader *ngIf="data$ | async as data" [loading]="data.loading">
+    <pl-platform-user-activity [usage]="data.usage.days"></pl-platform-user-activity>
+</pl-data-loader>
+<h2 class="margin-xlarge-tb">
+    Download Reports
+</h2>
+Download a summary of usage data over the date range you specify below. Your browser will automatically download the CSV file which can be imported into spreadsheet applications and text editors.
+<form [formGroup]="form" class="margin-large-tb" 
+    (ngSubmit)="download()">
+    <div class="margin-b">
+        <mat-form-field
+            [floatLabel]="plDesign.components.formField.floatLabel"
+            [appearance]="plDesign.components.formField.appearance">
+            <mat-label>Start Date</mat-label>
+            <input matInput required formControlName="start" [matDatepicker]="startPicker" [min]="mintDate">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker 
+                [startView]="plDesign.components.datepicker.startView" 
+                [startAt]="startAt">
+            </mat-datepicker>
+            <mat-error *ngIf="form.get('start').hasError('matDatepickerMin')">
+                Select a day after {{ mintDate | date: 'M/dd/yyyy' }}
+            </mat-error>
+        </mat-form-field>
+        <span class="margin-lr" [class.hidden]="(plDesign.responsive$ | async)?.isHandset"> to </span>
+        <mat-form-field
+            [floatLabel]="plDesign.components.formField.floatLabel"
+            [appearance]="plDesign.components.formField.appearance">
+            <input matInput required formControlName="end" [matDatepicker]="endPicker" [min]="mintDate">
+            <mat-label>End</mat-label>
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker 
+                [startView]="plDesign.components.datepicker.startView" 
+                [startAt]="startAt">
+            </mat-datepicker>
+            <mat-error *ngIf="form.get('end').hasError('matDatepickerMin')">
+                Select a day after {{ mintDate | date: 'M/dd/yyyy' }}
+            </mat-error>
+        </mat-form-field>
+        <mat-error *ngFor="let error of formErrorMessages">
+            {{ error }}
+        </mat-error>
+    </div>
+    <div class="flexbox start-xs middle-xs">
+        <button type="submit" mat-raised-button color="accent">
+            <mat-progress-spinner *ngIf="downloading"
+                class="margin-tb margin-r"
+                mode="indeterminate" [diameter]="16">
+            </mat-progress-spinner>
+            {{ downloading ? 'DOWNLOADING' : 'DOWNLOAD REPORT' }}
+        </button>
+    </div>
+</form>

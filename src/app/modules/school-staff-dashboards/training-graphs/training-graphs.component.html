@@ -1,0 +1,40 @@
+<div class="padding-xlarge-lr margin-large-b center-xs">
+    <div class="text-center bold margin-large-b">
+        Teletherapy Foundations Training
+    </div>
+    <pl-doughnut-chart 
+        width="150"
+        [loading]="loading"
+        [data]="teletherapyFoundationsTraining">
+        <div>
+            <div class="doughnut-value">
+                {{ inProgress }}
+            </div>
+            In Progress
+        </div>
+        <div>
+            <div class="doughnut-value">
+                {{ completed }}
+            </div>
+            Completed
+        </div>
+    </pl-doughnut-chart>
+    <pl-legends class="margin-t" [legends]="teletherapyFoundationsTraining" label=""></pl-legends>
+</div>
+<div class="padding-xlarge-lr">
+    <div class="text-center bold margin-large-b">
+        Live Training
+    </div>
+    <pl-doughnut-chart 
+        width="150"
+        [max]="total" 
+        type="progress"
+        [loading]="loading"
+        remainingLabel="Not Attended"
+        valueLabel="Attended"
+        [value]="attended">
+        <span class="value">{{ attended }}</span>
+        Attended
+    </pl-doughnut-chart>
+    <pl-legends class="margin-t" [legends]="liveTraining" label=""></pl-legends>
+</div>

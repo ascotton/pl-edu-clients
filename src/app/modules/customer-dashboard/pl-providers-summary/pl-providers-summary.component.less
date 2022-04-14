@@ -1,0 +1,34 @@
+@import 'core/colors.less';
+@import 'core/flexbox.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+
+.pl-providers-summary {
+    .provider-type {
+        line-height: 29px;
+        white-space: nowrap;
+    }
+    .provider-type-count {
+        .bold;
+        min-width: 20px;
+        text-align: right;
+        .margin-r;
+    }
+
+    .total-circle {
+        border: solid 3px @orange-light;
+        border-radius: 100px;
+        .padding;
+        text-align: center;
+        width: 75px;
+        height: 75px;
+        margin-top: 10px;
+    }
+    .total-circle-inner {
+        //padding-top: 18px;
+    }
+    .total {
+        .font-h1;
+        .bold;
+    }
+}

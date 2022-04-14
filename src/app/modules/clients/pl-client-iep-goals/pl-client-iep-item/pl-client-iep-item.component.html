@@ -1,0 +1,83 @@
+<div class="pl-client-iep-item"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  *ngIf="_state.initialized"
+  [@enterAnimation]
+>
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <div *ngIf="normalMode()" [@enterAnimation]>
+    <div class="iep-header iep-columns {{getIepStatus()}}">
+      <div class="col col-1">
+        <pl-icon [svg]="'star-flag'" [height]="24" [width]="24" [class]="'blue-medium margin-small-r'" [verticalAlign]="'-5px'"></pl-icon>
+        <span class="title" *ngIf="iep">
+          <b>{{service.getStatusDisplayName(iep)}}</b> {{service.getTypeDisplayName(iep)}} &nbsp;<b>·</b>&nbsp; {{getIepStart()}} - {{getIepEnd()}}</span>
+        <span *ngIf="isIepYearModifiable()">
+          <pl-icon [svg]="'pencil'" [height]="13" [width]="13" [class]="'inline-block gray-darker margin-large-r cursor-hand'"
+            style="position:relative;top:5px;left:8px;" (click)="onClickEditIep()"></pl-icon>
+        </span>
+      </div>
+      <div class="col col-2" *ngIf="!isReadOnly()">
+        <button pl-button class="end-iep-button" [ngClass]="{'enabled': canCompleteIep()}" [disabled]="!canCompleteIep()" *ngIf="isIepActive() && !canRemoveEmptyIep()" (click)="onClickEndIep()">
+          End {{service.getTypeDisplayName(iep)}}
+        </button>
+        <button pl-button class="remove-iep-button"
+          *ngIf="canRemoveEmptyIep()" (click)="onClickRemoveEmptyIep()">
+          Remove {{service.getTypeDisplayName(iep)}}
+        </button>
+      </div>
+    </div>
+
+    <!-- MESSAGES: due tomorrow-->
+    <div class="banner info padding margin-tb" *ngIf="iepDueTomorrow() && canShowOverdueWarningMessage()">
+      <span class="icon"><span class="text">!</span></span>
+      <span class="banner-text"><span class="message">
+        This {{service.getTypeDisplayName(iep)}} is due <b>tomorrow</b>. Click <a class="banner-end-iep" (click)="onClickEndIep()">End {{service.getTypeDisplayName(iep)}}</a> before the next {{service.getTypeDisplayName(iep)}} begins.
+      </span></span>
+    </div>
+
+    <!-- MESSAGES: overdue-->
+    <div class="banner info padding margin-tb" *ngIf="canShowOverdueWarningMessage()">
+      <span class="icon"><span class="text">!</span></span>
+      <span class="banner-text"><span class="message">
+          This {{service.getTypeDisplayName(iep)}} is past due. Click <a class="banner-end-iep" (click)="onClickEndIep()">End {{service.getTypeDisplayName(iep)}}</a> to finalize your goals.
+        </span></span>
+    </div>
+
+    <!-- Show provider's service area first-->
+    <div *ngIf="getProviderServiceArea(_state)">
+      <pl-client-iep-service-area
+        [iep]="iep"
+        [serviceArea]="getProviderServiceArea(_state)"
+        [client]="_state.client"
+        ></pl-client-iep-service-area>
+    </div>
+    <!-- show other service areas-->
+    <div *ngFor="let sa of getOtherNonEmptyServiceAreas(_state)">
+      <div *ngIf="hasGoals(sa)">
+        <pl-client-iep-service-area
+          [iep]="iep"
+          [serviceArea]="sa"
+          [client]="_state.client"
+          ></pl-client-iep-service-area>
+      </div>
+    </div>
+
+    <!-- In readonly mode and no goals yet, show placeholder -->
+    <div class="margin-tb" *ngIf="isReadOnly() && !hasGoalsInAnyServiceArea()">
+      No goals currently on file for this {{service.getTypeDisplayName(iep)}}.
+    </div>
+  </div>
+  <!-- EDIT IEP FORM-->
+  <div *ngIf="editMode()" [@enterAnimation]>
+    <pl-client-iep-form
+      [activeIep]="service.getActiveIep(_state)"
+      [futureIep]="service.getFutureIep(_state)"
+      [completedIep]="service.getMostRecentCompletedIep(_state)"
+      [editIep]="iep"
+      [client]="_state.client"
+      ></pl-client-iep-form>
+  </div>
+</div>

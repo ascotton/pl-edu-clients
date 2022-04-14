@@ -1,0 +1,39 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-users {
+    &.debug-show-div {
+        @debug-color: rgb(0, 183, 255);
+        border: 3px solid @debug-color;
+        padding: 20px;
+        position: relative;
+        .debug-component-name {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: 11px;
+        padding: 2px;
+        background-color: @debug-color;
+        color: white;
+        }
+    }
+    .filters {
+        .form-input {
+            display: inline-block;
+            vertical-align: top;
+            width: 250px;
+            .margin-r;
+            .margin-b;
+        }
+    }
+
+    // Table cell defaults to overflow hidden, which will cut off
+    // the dropdown.
+    .dropdown-cell {
+        // overflow-y: visible;
+        // Hack since overflow-y does not work
+        // https://stackoverflow.com/a/39554003
+        padding-bottom: 100px;
+        margin-bottom: -100px;
+    }
+}

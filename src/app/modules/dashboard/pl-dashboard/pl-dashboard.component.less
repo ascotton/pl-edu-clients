@@ -1,0 +1,544 @@
+@import 'core/colors.less';
+@import 'core/flexbox.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+@import 'core/decoration.less';
+@import 'core/bootstrap-parts.less';
+
+
+.pl-dashboard {
+  .section {
+    border-bottom: solid 1px @gray-light;
+    .padding-large-b;
+    .margin-large-b;
+  }
+
+  .app-item {
+    width: 65px;
+    text-align: center;
+    .margin-b;
+  }
+
+  .tip {
+        .margin-tb;
+        background-color: @white;
+        .padding;
+        .font-h5;
+    }
+
+  .tabs {
+    background-color: @gray-lightest;
+  }
+
+  .grid-container {
+    min-height: ~"calc(100vh - 211px)";
+    margin: 0 auto;
+    .padding-large;
+
+    .grid-item {
+      margin-bottom: 24px;
+
+        display: flex;
+        flex-flow: column;
+        flex: 1;
+        background-color: @slate-lightest;
+        box-shadow: 0px 2px 4px 0px @gray-dark;
+
+    &.hideCard {
+            display: none;
+        }
+
+      .section-header {
+        font-size: 18px;
+        color: @gray-darkest;
+        background-color: @slate-lightest;
+        border-bottom: solid 1px @gray;
+
+        span {
+          &.subheader {
+            font-size: 12px;
+            margin-left: 0;
+          }
+        }
+      }
+
+      .card {
+        .padding-large;
+        height: 100%;
+
+        .link-list {
+          .link-item {
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+
+    .task-onboarding-item {
+        .task-onboarding-icon {
+            width: 25px;
+            .padding-lr;
+        }
+        .padding-large-t;
+        .padding-b;
+        .padding-l;
+        .padding-large-r;
+        background-color: @white;
+
+        &:not(:last-child) {
+            border-bottom: solid 1px @gray-light;
+        }
+
+        h4 {
+            .margin-b;
+        }
+
+        ul {
+            .margin-large;
+            a {
+                position: absolute;
+                margin-top: 4px;
+            }
+        }
+    }
+    .onboarding-tasks-complete {
+        background-color: @green-light;
+    }
+
+    .tasks {
+      .section-header {
+        span {
+          margin-left: 0;
+        }
+      }
+
+      .card {
+        .no-tasks {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-flow: column;
+          justify-content: center;
+          align-items: center;
+
+          span {
+            color: @gray-darker;
+          }
+        }
+
+        .task-list {
+          max-height: 350px;
+          overflow-y: scroll;
+          overflow-x: hidden;
+          flex: 1;
+          width: 100%;
+
+          .task {
+            width: 100%;
+            display: flex;
+            flex-flow: row;
+            align-items: center;
+            justify-content: center;
+            margin: 5px 0;
+
+            &:first-child {
+              margin-top: 0;
+            }
+
+            .task-container {
+              width: 100%;
+              display: grid;
+              align-items: stretch;
+              grid-template-columns: 50px auto;
+
+              &:hover {
+                text-decoration: none;
+                cursor: pointer;
+              }
+
+              .icon {
+                grid-column: 1 / span 1;
+                display: flex;
+                flex-flow: row;
+                align-items: center;
+                justify-content: center;
+                min-height: 50px;
+              }
+
+              .description {
+                grid-column: 2 / span 1;
+                color: @gray-darkest;
+                padding: 10px;
+                display: flex;
+                flex-flow: row;
+                flex: 1;
+
+                .new {
+                  padding-left: 5px;
+                }
+              }
+
+              &:hover {
+                &.severity1 {
+                  .description {
+                    background-color: lighten(@red, 50%);
+                  }
+                }
+                &.severity2 {
+                  .description {
+                    background-color: lighten(@yellow, 33%);
+                  }
+                }
+                &.severity3 {
+                  .description {
+                    background-color: lighten(@blue, 38%);
+                  }
+                }
+              }
+
+              &.severity1 {
+                .description {
+                  background-color: lighten(@red, 53%);
+                }
+
+                .icon {
+                  background-color: @red;
+                }
+              }
+              &.severity2 {
+                .description {
+                  background-color: lighten(@yellow, 42%);
+                }
+
+                .icon {
+                  background-color: @yellow;
+                }
+              }
+              &.severity3 {
+                .description {
+                  background-color: lighten(@blue, 42%);
+                }
+
+                .icon {
+                  background-color: @blue;
+                }
+              }
+
+              &.loading {
+                &.severity1 {
+                  .icon {
+                    background-color: lighten(@red, 48%);
+                  }
+                }
+                &.severity2 {
+                  .icon {
+                    background-color: lighten(@yellow, 31%);
+                  }
+                }
+                &.severity3 {
+                  .icon {
+                    background-color: lighten(@blue, 35%);
+                  }
+                }
+
+                &:hover {
+                  &.severity1 {
+                    .description {
+                      background-color: lighten(@red, 53%);
+                    }
+                  }
+                  &.severity2 {
+                    .description {
+                      background-color: lighten(@yellow, 42%);
+                    }
+                  }
+                  &.severity3 {
+                    .description {
+                      background-color: lighten(@blue, 42%);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .view-all {
+          padding-top: 15px;
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+
+    .availability-assignments {
+        .aa-total-hours, .aa-projected-hours, .aa-remaining-hours {
+            border-top: solid 5px;
+            text-align: center;
+            background-color: @white;
+            box-shadow: 0px 2px 4px 0px @gray-lighter;
+            .margin-small-lr;
+            .padding-small-lr;
+            .padding-tb;
+
+            .aa-hours {
+                .h1;
+            }
+        }
+        .aa-total-hours {
+            border-color: @blue;
+            .aa-hours {
+                color: @blue;
+            }
+        }
+        .aa-projected-hours {
+            border-color: @orange;
+            .aa-hours {
+                color: @orange;
+            }
+        }
+        .aa-remaining-hours {
+            border-color: @green;
+            .aa-hours {
+                color: @green;
+            }
+        }
+    }
+
+    .room {
+      .card {
+        .room-title {
+          font-size: 14px;
+          margin-bottom: 10px;
+        }
+
+        .copy {
+          font-size: 12px;
+          display: flex;
+          flex-flow: row;
+          align-items: center;
+          border: 1px solid @blue-medium;
+          border-radius: 5px;
+          box-shadow: 0 0 0px @blue-medium;
+
+          &.copied {
+            animation: wiggle 1s;
+          }
+
+          .url {
+            flex: 1;
+            border: none;
+            background: @white;
+            padding: 7px 10px;
+            color: @gray-darker;
+            border-radius: 5px;
+          }
+
+          .copy-text {
+            margin-left: -5px; // force copy to touch the url container
+            background-color: @blue-medium;
+            color: @white;
+            height: 30px;
+            width: 50px;
+            display: flex;
+            flex-flow: row;
+            align-items: center;
+            justify-content: center;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+
+            &:hover {
+              cursor: pointer;
+              transition: all 0.2s;
+              background-color: darken(@blue-medium, 10%);
+            }
+          }
+        }
+      }
+    }
+
+    .contact {
+      .card {
+        .links-section {
+            display: inline-block;
+            .margin-large-r;
+            .margin-large-b;
+            vertical-align: top;
+            width: 45%;
+        }
+        .links-header {
+            .font-h3;
+        }
+      }
+    }
+
+    .schedule {
+      .card {
+        max-height: 350px;
+
+        .date {
+          font-size: 16px;
+          border-bottom: 2px solid @gray-lighter;
+          padding-bottom: 5px;
+        }
+
+        .no-events {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-flow: column;
+          justify-content: center;
+          align-items: center;
+
+          span {
+            color: @gray-darker;
+          }
+
+          &.spaced {
+            margin-top: 40px;
+          }
+        }
+
+        .scrollable {
+          flex: 1;
+          overflow-x: scroll;
+
+          ul {
+            li {
+              display: flex;
+              flex-flow: row;
+              align-items: center;
+              justify-content: flex-start;
+              border-bottom: 1px solid @gray-lighter;
+
+              &:last-child {
+                border-bottom: none;
+              }
+
+              &.past {
+                opacity: 0.5;
+
+                &.last {
+                  border-bottom: 1px solid @orange;
+                }
+              }
+
+              .color-code {
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                margin-left: 10px;
+
+                &.clients {
+                    background-color: @green;
+                }
+                &.student_absence {
+                    background-color: @yellow;
+                }
+                &.cancellation {
+                    background-color: @red;
+                }
+                &.documentation_planning {
+                    background-color: @blue;
+                }
+                &.other {
+                    background-color: @blue-medium;
+                }
+                &.personal {
+                    background-color: @purple;
+                }
+                &.contract_services {
+                    background-color: @blue-light;
+                }
+              }
+
+              .description {
+                flex: 1;
+                padding: 10px;
+
+                span {
+                  display: block;
+
+                  &.title {
+                    font-size: 14px;
+                    color: @gray-darker;
+                  }
+
+                  &.detail {
+                    font-size: 12px;
+                    color: @gray-dark;
+                  }
+                }
+              }
+
+              .time {
+                padding: 10px;
+                font-size: 14px;
+                color: @gray-dark;
+              }
+            }
+          }
+        }
+
+        .view-calendar {
+          width: 100%;
+          display: flex;
+          flex-flow: column;
+          justify-content: center;
+          align-items: center;
+
+          a {
+            margin-top: 20px;
+          }
+        }
+      }
+    }
+
+    .schedule {
+      .card {
+        max-height: 350px;
+        overflow-x: hidden;
+      }
+    }
+  }
+}
+
+.pl-dashboard-resource-fl {
+  float: left;
+}
+
+.pl-dashboard-resource-ml {
+  float: left;
+  margin-left: 20%;
+}
+
+.pl-dashboard-resource-sl {
+  float: left;
+  margin-left: 10%;
+}
+
+@media (min-width: 900px) {
+    .pl-dashboard-columns {
+        display: flex;
+    }
+    .pl-dashboard-left-column, .pl-dashboard-right-column {
+        flex-basis: 0;
+    }
+    .pl-dashboard-left-column {
+        flex-grow: 7;
+        margin-right: 12px;
+    }
+    .pl-dashboard-right-column {
+        flex-grow: 5;
+        margin-left: 12px;
+    }
+    .links-section {
+        width: auto;
+    }
+}
+
+@keyframes wiggle {
+  0% { box-shadow: 0 0 0px @blue-medium; }
+  50% { box-shadow: 0 0 25px @blue-medium; }
+  100% { box-shadow: 0 0 0px @blue-medium; }
+}

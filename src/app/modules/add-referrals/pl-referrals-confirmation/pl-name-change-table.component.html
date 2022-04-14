@@ -1,0 +1,19 @@
+<div class="pl-name-change-table">
+    <pl-table-wrapper (onQuery)="localTableService.onQuery($event)">
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'newLast'">Last Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'oldLast'">Last Name (former)</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'newFirst'">First Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'oldFirst'">First Name (former)</pl-table-header-cell>
+        </pl-table-header>
+        <pl-table-row *ngFor="let row of nameChanges">
+            <pl-table-cell>{{ row.newLast }}</pl-table-cell>
+            <pl-table-cell>{{ row.oldLast }}</pl-table-cell>
+            <pl-table-cell>{{ row.newFirst }}</pl-table-cell>
+            <pl-table-cell>{{ row.oldFirst }}</pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="localTableService.dataRows.length" [currentPage]="localTableService.currentPage"
+            [pageSize]="localTableService.pageSize">
+        </pl-table-footer>
+    </pl-table-wrapper>
+ </div>

@@ -1,0 +1,216 @@
+<section class="pl-client-absences-dashboard"
+    [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+    *ngIf="_state.initialized">
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+    <div class="fixed-side-table">
+        <pl-table-wrapper (onQuery)="onQueryTable($event)" [orderKey]="orderKey" [pageSizeKey]="pageSizeKey" [stateName]="'cad'"
+            class="fixed-height-table flexbox">
+            <pl-table-filter-set [(model)]="modelFilters" [filters]="filtersModel"></pl-table-filter-set>
+            <div class="table-top buttons padding-large-t">
+                <pl-button-group class="table-type-buttons">
+                    <button pl-button class="table-type-btn x-qa-absences-type-button-consecutive" [ngClass]="{'info': isConsecutiveAbsences()}"
+                        (click)="onAbsencesTypeClick(absencesConsecutive)">Consecutive</button>
+
+                    <button pl-button class="table-type-btn x-qa-absences-type-button-ytd" [ngClass]="{'info': isYtdAbsences()}"
+                        (click)="onAbsencesTypeClick(absencesYtd)">YTD Absences</button>
+
+                    <button pl-button class="table-type-btn x-qa-absences-type-button-60-day-rate" [ngClass]="{'info': isRateAbsences()}"
+                        (click)="onAbsencesTypeClick(absencesRate)">60-Day Rate</button>
+                </pl-button-group>
+            </div>
+            <div class="table-top filters margin-b">
+                <pl-table-filters-top-groups [filtersPrimary]="filtersPrimary" [filtersSecondary]="filtersSecondary"
+                    (onSearch)="filtersSearch($event)" (onSetModelOptions)="filtersSetModelOptions($event)">
+                </pl-table-filters-top-groups>
+            </div>
+            <div class="table-order padding-large-t padding-b">
+                <pl-table-order-top [orderValue]="orderAbsencesDescending" [orderOptions]="sortOpts" [total]="totalTable"></pl-table-order-top>
+            </div>
+
+            <pl-table-header>
+                <pl-table-header-cell class="color-box-cell">Absent</pl-table-header-cell>
+                <pl-table-header-cell>{{ clientStudentCapital }}</pl-table-header-cell>
+                <pl-table-header-cell>Location / Provider</pl-table-header-cell>
+            </pl-table-header>
+            <pl-dot-loader *ngIf="loadingClientServices" class="padding-tb"></pl-dot-loader>
+            <div *ngIf="!loadingClientServices" class="flex1 table-rows">
+                
+                <pl-table-row *ngFor="let clientService of clientServices" class="table-row pointer x-qa-student-absence-row" (click)="selectClientService(clientService)" [ngClass]="clientService.xClasses">
+                    <pl-table-cell class="color-box-cell" [ngClass]="clientService.xAbsencesValueClasses">
+                        <h2 class="color-box-cell-inner">{{ clientService.xAbsencesValue }}</h2>
+                    </pl-table-cell>
+                    <pl-table-cell>
+                        <h2 class="margin-small-b">{{ clientService.client.lastName }}, {{ clientService.client.firstName }}</h2>
+                        <div>{{ clientService.service.serviceType.longName }} ({{ clientService.xType }})</div>
+                    </pl-table-cell>
+                    <pl-table-cell>
+                        <div class="margin-small-b"><pl-icon class="blue-medium" [svg]="'location'" ></pl-icon>{{ clientService.xLocation }}</div>
+                        <div>
+                            <pl-icon class="blue-medium" [svg]="'providers'"></pl-icon>
+                            <span *ngIf="clientService.statistics.recentProvider">{{ clientService.statistics.recentProvider.lastName }}, {{ clientService.statistics.recentProvider.firstName }}</span>
+                            <span *ngIf="!clientService.statistics.recentProvider">--</span>
+                        </div>
+                    </pl-table-cell>
+                </pl-table-row>
+            </div>
+            <pl-table-footer [total]="totalTable" [currentPage]="currentPageTable" [pageSize]="pageSizeTable"></pl-table-footer>
+        </pl-table-wrapper>
+    </div>
+
+    <div class="fixed-side" [ngClass]="classes">
+        <div *ngIf="!selectedClientService.id">
+            <div class="flexbox">
+                <div class="flex1">&nbsp;</div>
+            </div>
+            <h3 class="margin-xlarge-b margin-xlarge-l slate">
+                <span *ngIf="!isYtdAbsences()">{{ clientStudentCapital }} Services</span>
+                <ng-container *ngIf="isConsecutiveAbsences()">Most Recent Consecutive Absence Snapshot</ng-container>
+                <ng-container *ngIf="isYtdAbsences()">Total Absences - Year to Date</ng-container>
+                <ng-container *ngIf="isRateAbsences()">60-Day Absence Rate Snapshot</ng-container>
+            </h3>
+            <div class="margin-large-lr">
+                <pl-client-absences-dashboard-bucket
+                    [priority]="1"
+                    [count]="summaryData.priority1"
+                    [canDownload]="canDownloadReport(1)"
+                    [isApplied]="prioritySelection.isSelected(1)"
+                    [filterButtonAnalyticsClass]="filterPriorityFilterAnalyticsClass(1)"
+                    [downloadButtonAnalyticsClass]="filterPriorityDownloadAnalyticsClass(1)"
+                    (toggle)="toggleFilterAbsencesPriority(1)"
+                    (download)="onDownloadReportClick(1)"
+                >
+                    <ng-container *ngIf="showConsecutiveSummaryText()">{{ clientStudentCapital }} Services with <em>3 or more</em> consecutive absences</ng-container>
+                    <ng-container *ngIf="showYtdSummaryText()">{{ clientStudentCapital }}s with <em>4 or more</em> absences in the same service area</ng-container>
+                    <ng-container *ngIf="showRateSummaryText()">{{ clientStudentCapital }} Services with <em>50–100%</em> absence rate</ng-container>
+                </pl-client-absences-dashboard-bucket>
+                <pl-client-absences-dashboard-bucket
+                    [priority]="2"
+                    [count]="summaryData.priority2"
+                    [canDownload]="canDownloadReport(2)"
+                    [isApplied]="prioritySelection.isSelected(2)"
+                    [filterButtonAnalyticsClass]="filterPriorityFilterAnalyticsClass(2)"
+                    [downloadButtonAnalyticsClass]="filterPriorityDownloadAnalyticsClass(2)"
+                    (toggle)="toggleFilterAbsencesPriority(2)"
+                    (download)="onDownloadReportClick(2)"
+                >
+                    <ng-container *ngIf="showConsecutiveSummaryText()">{{ clientStudentCapital }} Services with <em>2</em> consecutive absences</ng-container>
+                    <ng-container *ngIf="showYtdSummaryText()">{{ clientStudentCapital }}s with <em>2 or 3</em> absences in the same service area</ng-container>
+                    <ng-container *ngIf="showRateSummaryText()">{{ clientStudentCapital }} with <em>25–50%</em> absence rate</ng-container>
+
+                </pl-client-absences-dashboard-bucket>
+                <pl-client-absences-dashboard-bucket
+                    [priority]="3"
+                    [count]="summaryData.priority3"
+                    [canDownload]="canDownloadReport(3)"
+                    [isApplied]="prioritySelection.isSelected(3)"
+                    [filterButtonAnalyticsClass]="filterPriorityFilterAnalyticsClass(3)"
+                    [downloadButtonAnalyticsClass]="filterPriorityDownloadAnalyticsClass(3)"
+                    (toggle)="toggleFilterAbsencesPriority(3)"
+                    (download)="onDownloadReportClick(3)"
+                >
+                    <ng-container *ngIf="showConsecutiveSummaryText()">{{ clientStudentCapital }} Services with <em>0–1</em> consecutive absences</ng-container>
+                    <ng-container *ngIf="showYtdSummaryText()">{{ clientStudentCapital }}s with <em>1</em> absence</ng-container>
+                    <ng-container *ngIf="showRateSummaryText()">{{ clientStudentCapital }} Services with <em>&lt;25%</em> absence rate</ng-container>
+                </pl-client-absences-dashboard-bucket>
+            </div>
+
+            <dl class="margin-xlarge-tb margin-xlarge-lr absences-definition-list">
+                <div class="margin-xlarge-tb">
+                    <dt>Consecutive Absences</dt>
+                    <dd>Count of continuous absences for a <pl-client-student-display [user]="currentUser"></pl-client-student-display> starts from the most recent event. This is a good indicator of <pl-client-student-display [user]="currentUser"></pl-client-student-display> engagement difficulties. Follow up is recommended at 2-3 consecutive absences.</dd>
+                </div>
+                <div class="margin-xlarge-b">
+                    <dt>Total Absences - Year to Date</dt>
+                    <dd>Count of absences in the current school year. The count of absences is divided by service area in the panel on the left.</dd>
+                </div>
+                <div class="margin-xlarge-b">
+                    <dt>60-Day Absence Rate</dt>
+                    <dd>From the most recent signed off event for a given service, the system looks back 60 days and counts the number of registered absences, divides that count by the total number of that service's events for the same period, and then multiplies that by 100.</dd>
+                </div>
+            </dl>
+        </div>
+        <div *ngIf="selectedClientService.id" class="fixed-selected-client">
+            <ng-container *ngTemplateOutlet="plClientAbsencesSelectedClientService"></ng-container>
+        </div>
+    </div>
+
+    <ng-template #plClientAbsencesSelectedClientService>
+        <div *ngIf="selectedClientService.id" class="details-wrapper padding-lr" [ngClass]="selectedClientService.xClasses">
+            <div class="details flexbox">
+                <div class="details-top margin-large-b">
+                    <div class="flexbox padding-lr padding-t">
+                        <div class="flex1">&nbsp;</div>
+                        <pl-icon class="white pointer" [svg]="'close-inverted'" [scale]="1.1" (click)="closeSelected($event)"></pl-icon>
+                    </div>
+                    <div class="flexbox padding-lr">
+                        <div>
+                            <div class="client-icon margin-r">
+                                <pl-icon class="blue-medium" [svg]="'clients'"></pl-icon>
+                            </div>
+                        </div>
+                        <div class="flex1 margin-r">
+                            <a [routerLink]="['/client', selectedClientService.client.id, 'details']" target="_blank" class="link-no-color link-underline"><h1>{{ selectedClientService.client.lastName }}, {{ selectedClientService.client.firstName }}</h1></a>
+                            <div>{{ selectedClientService.service.serviceType.longName }} ({{ selectedClientService.xType }})</div>
+                            <div>ID: <b><pl-client-id [externalId]="selectedClientService.client.externalId" [internalId]="selectedClientService.client.id" [linkTarget]="'_blank'"></pl-client-id></b></div>
+                        </div>
+                        <div class="flex1">
+                            <div class="margin-small-b"><pl-icon class="white" [svg]="'location'" ></pl-icon>{{ selectedClientService.xLocation }}</div>
+                            <div>
+                                <pl-icon class="white" [svg]="'providers'"></pl-icon>
+                                <span *ngIf="selectedClientService.statistics.recentProvider">
+                                    <a [routerLink]="['/provider', selectedClientService.statistics.recentProvider.id]" target="_blank" class="link-no-color link-underline">
+                                        {{ selectedClientService.statistics.recentProvider.lastName }}, {{ selectedClientService.statistics.recentProvider.firstName }}
+                                    </a>
+                                    <span *ngIf="selectedClientService.statistics.recentProvider.email"> ({{ selectedClientService.statistics.recentProvider.email }})</span>
+                                </span>
+                                <span *ngIf="!selectedClientService.statistics.recentProvider">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-items padding-xlarge-lr padding-t">
+                    <div>
+                        <div class="info-item">
+                            <span class="absences-streak" [ngClass]="selectedClientService.xAbsencesStreakClasses">{{ selectedClientService.xAbsencesStreak }}</span>
+                            <span class="smaller-data nowrap">Consecutive Absences</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="absences-ytd" [ngClass]="selectedClientService.xAbsencesYtdClasses">{{ selectedClientService.xAbsencesYtd }}</span>
+                            <span class="smaller-data nowrap">YTD Absences</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="absences-rate" [ngClass]="selectedClientService.xAbsencesRateClasses">{{ selectedClientService.xAbsencesRate }}</span>
+                            <span class="smaller-data nowrap">60-Day Absence Rate</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="padding records-title font-h4 padding-large-t">
+                    Case Notes for Absences
+                </div>
+                <div class="records flex1">
+                    <pl-dot-loader *ngIf="loadingRecords"></pl-dot-loader>
+                    <div *ngIf="!loadingRecords">
+                        <div *ngFor="let record of selectedClientRecords" class="record margin-large padding-b">
+                            <div><b>{{ record.xStartDay }}</b> {{ record.xStart }} - {{ record.xEndTime }}</div>
+                            <div *ngIf="record.xNotes.subjective" class="record-note"><b class="record-note-label">Subjective - </b>{{ record.xNotes.subjective }}</div>
+                            <div *ngIf="record.xNotes.objective" class="record-note"><b class="record-note-label">Objective - </b>{{ record.xNotes.objective }}</div>
+                            <div *ngIf="record.xNotes.assessment" class="record-note"><b class="record-note-label">Assessment - </b>{{ record.xNotes.assessment }}</div>
+                            <div *ngIf="record.xNotes.plan" class="record-note"><b class="record-note-label">Plan - </b>{{ record.xNotes.plan }}</div>
+                            <div *ngIf="record.xNotes.notes" class="record-note"><b class="record-note-label">General - </b>{{ record.xNotes.notes }}</div>
+                            <div *ngIf="!record.xAtLeastOneNote">No notes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer margin-tb">
+                    <a class="margin-r" [routerLink]="['/client', selectedClientService.client.id, 'reports']" target="_blank">
+                        <button pl-button class="btn">View All Events</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</section>

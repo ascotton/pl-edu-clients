@@ -1,0 +1,126 @@
+<div class="pl-assessments-table-filters">
+    <div class="pl-assessments-table-filters-header">
+        <div class="pl-assessments-table-filters-header-title">
+            <pl-icon [svg]="'filter'" [scale]="0.8" class="white margin-small-r"></pl-icon> <strong>Filters</strong>
+        </div>
+        <pl-icon *ngIf="hasFiltersVisible" [svg]="'close-inverted'" class="white pointer x-qa-filter-x" (click)="onCloseFilters()"></pl-icon>
+        <pl-icon *ngIf="!hasFiltersVisible" [svg]="'menu'" [scale]="0.8" class="white pointer x-qa-filter-x" (click)="onCloseFilters()"></pl-icon>
+    </div>
+    <div *ngIf="hasFiltersVisible" [@inOutAnimation] class="pl-assessments-table-filters-body">
+        <button pl-button class="link margin-b" (click)="clearAllFilters()">Reset Filters</button>
+        <div
+            *ngIf="shouldDisplayFilter('accountCam')"
+            class="input margin-small-b margin-large-r">
+            <pl-input-checkbox-group
+                [(model)]="filters.accountCam.textArray"
+                [options]="filters.accountCam.selectOptsCheckbox"
+                [horizontal]="true"
+                [optionWidth]="(filters.accountCam.optionWidth || 'auto')"
+                (onChange)="onFilterChange('accountCam', $event)">
+            </pl-input-checkbox-group>
+        </div>
+        <div class="pl-assessments-table-filters-inputs">
+            <div
+                *ngIf="shouldDisplayFilter('organization')"
+                class="input margin-small-b margin-large-r">
+                <div class="filter-name"><strong>Organization:</strong></div>
+                <pl-input-multi-select-api
+                    [(model)]="filters.organization.textArray"
+                    [options]="filters.organization.selectOptsMultiApi"
+                    [loading]="filters.organization.searchLoading"
+                    [filterPlaceholder]="(filters.organization.placeholder || '')"
+                    [modelOptions]="(filters.organization.modelOptions || [])"
+                    [searchByDefault]="true"
+                    [resultsLimitedText]="filters.organization.optionsLimitedText"
+                    [resultsTotalCount]="filters.organization.selectOptsMultiApiTotalCount"
+                    (onChange)="onFilterChange('organization', $event)"
+                    (onSearch)="onFilterSearch(filters.organization.value, $event)">
+                </pl-input-multi-select-api>
+            </div>
+
+            <div
+                *ngIf="shouldDisplayFilter('location')"
+                class="input margin-small-b margin-large-r">
+                <div class="filter-name"><strong>Location:</strong></div>
+                <pl-input-multi-select-api
+                    [(model)]="filters.location.textArray"
+                    [options]="filters.location.selectOptsMultiApi"
+                    [loading]="filters.location.searchLoading"
+                    [filterPlaceholder]="(filters.location.placeholder || '')"
+                    [modelOptions]="(filters.location.modelOptions || [])"
+                    [searchByDefault]="true"
+                    [resultsLimitedText]="filters.location.optionsLimitedText"
+                    [resultsTotalCount]="filters.location.selectOptsMultiApiTotalCount"
+                    (onChange)="onFilterChange('location', $event)"
+                    (onSearch)="onFilterSearch(filters.location.value, $event)">
+                </pl-input-multi-select-api>
+            </div>
+
+            <div
+                *ngIf="shouldDisplayFilter('stage')"
+                class="input margin-small-b margin-large-r">
+                <div class="filter-name"><strong>Stage:</strong></div>
+                <pl-input-multi-select
+                    [(model)]="filters.stage.textArray"
+                    [options]="filters.stage.selectOptsMulti"
+                    [filter]="true"
+                    [placeholder]="'&nbsp;'"
+                    (onChange)="onFilterChange('stage', $event)">
+                </pl-input-multi-select>
+            </div>
+
+            <div
+                *ngIf="shouldDisplayFilter('status')"
+                class="input margin-small-b margin-large-r">
+                <div class="filter-name"><strong>Status:</strong></div>
+                <pl-input-multi-select
+                    [(model)]="filters.status.textArray"
+                    [options]="filters.status.selectOptsMulti"
+                    [filter]="true"
+                    [placeholder]="'&nbsp;'"
+                    (onChange)="onFilterChange('status', $event)">
+                </pl-input-multi-select>
+            </div>
+
+            <div
+                *ngIf="shouldDisplayFilter('provider')"
+                class="input margin-small-b margin-large-r">
+                <div class="filter-name"><strong>Provider:</strong></div>
+                <pl-input-select
+                    [(model)]="filters.provider.text"
+                    [options]="filters.provider.selectOpts"
+                    [filter]="true"
+                    (onChange)="onFilterChange('provider', $event)"
+                    [emptyOption]="true">
+                </pl-input-select>
+            </div>
+
+            <div
+                *ngIf="shouldDisplayFilter('student')"
+                class="input margin-small-b margin-large-r">
+                <div class="filter-name"><strong>Student Name:</strong></div>
+                <pl-input-text
+                    [(model)]="filters.student.text"
+                    [clearButton]="true"
+                    [placeholder]="''"
+                    [debounceChange]="'500'"
+                    [iconLeft]="'magnifier'"
+                    (onChange)="onFilterChange('student', $event)">
+                </pl-input-text>
+            </div>
+
+            <div
+                *ngIf="shouldDisplayFilter('service')"
+                class="input margin-small-b margin-large-r">
+                <div class="filter-name"><strong>Service Type:</strong></div>
+                <pl-input-multi-select
+                    [(model)]="filters.service.textArray"
+                    [options]="filters.service.selectOptsMulti"
+                    [filter]="true"
+                    [placeholder]="'&nbsp;'"
+                    (onChange)="onFilterChange('service', $event)">
+                </pl-input-multi-select>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+@import 'core/colors.less';
+@import 'core/typography.less';
+
+.pl-referral-duplicate {
+    overflow-y: auto;
+    min-height: 300px;
+    .instructions {
+        margin: 20px 0;
+        color: @gray-darkest;
+        background-color: @gray-lightest;
+        padding: 7px;
+    }
+    .dupe-client {
+        margin: 20px;
+        h4 {
+          font-size: 14px;
+          line-height: 1.29;
+          color: @gray-darkest;
+          background-color: @gray-lightest;
+          font-family: @opensans;
+          padding: 7px;
+        }
+        .dupe-control {
+            display: flex;
+        }
+        .dupe-label {
+            font-weight: bold;
+            width: 70px;
+            display: inline-block;
+        }
+        .dupe-input {
+            display: inline-block;
+            padding-left: 3px;
+        }
+        a {
+            font-weight: lighter;
+        }
+        pl-icon {
+            fill: @gray-light;
+        }
+        .client-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 10px;
+            .client-item-props {
+                padding: 5px;
+                .client-item-name {
+                    font-weight: bold;
+                }
+            }
+            button {
+                min-height: 32px;
+                max-width: 130px;
+                line-height: 20px;
+            }
+        }
+    }
+}

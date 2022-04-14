@@ -1,0 +1,15 @@
+<div class="padding-small-b">
+    <pl-input-checkbox-group class="form-input" [(model)]="reasons.presets" [options]="optsReasons" [optionWidth]="'100%'"></pl-input-checkbox-group>
+    <pl-input-text class="form-input" [label]="'Other'" [(model)]="reasons.other"></pl-input-text>
+    <div [hidden]="!message" class="red">{{ message }}</div>
+    <div>
+        <button pl-button class="primary" (click)="submit()">Submit</button>
+        <button pl-button (click)="cancel()">Cancel</button>
+        <a *ngIf="!inCalendarWeekView" 
+            target="_blank"
+            class="margin-l" 
+            routerLink="schedule/calendar/?date={{ date }}">
+            Edit Calendar
+        </a>
+    </div>
+</div>

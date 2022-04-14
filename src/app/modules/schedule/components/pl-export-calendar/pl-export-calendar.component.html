@@ -1,0 +1,57 @@
+<h4 class="header-blue padding-large" mat-dialog-title>
+    <div class="flexbox">
+        <div class="flex1 padding-r"> 
+            Export Calendar 
+        </div>
+        <pl-icon mat-dialog-close svg="close-inverted" class="pointer white"></pl-icon>
+    </div>
+</h4>
+<div mat-dialog-content>
+    <pl-alert type="warn" class="hippa-message margin-xlarge-b">
+        Please note this link is for your purposes only. Sharing is prohibited and will violate HIPAA Compliance.
+    </pl-alert>
+    <div class="margin-b">
+        <b>Export your PresenceLearning calendar into your personal calendar</b>
+    </div>
+    <div class="margin-large-b flexbox copy-input">
+        <pl-input-text class="flex1 input" [(model)]="exportDownloadUrl"></pl-input-text>
+        <button pl-button class="gray-outline x-qa-ics-copy-button" (click)="exportCopyLink()">
+            <span *ngIf="copied; else notcopied">
+                <pl-icon svg="check" scale="0.6" [verticalAlign]="'-2px'"></pl-icon>
+                Copied!
+            </span>
+            <ng-template #notcopied>
+                <span>Copy URL</span>
+            </ng-template>
+        </button>
+    </div>
+    <div class="margin-xlarge-lr margin-xlarge-b">
+        <div class="margin-b">
+            1. Copy URL.
+        </div>
+        <div class="margin-b">
+            2. Open your preferred calendar application. (For Google calendar, you can use this 
+            <a class="link" href="https://calendar.google.com/calendar/r/settings/addbyurl" target="_blank">
+                link
+            </a>.)
+        </div>
+        <div class="margin-b">
+            3. Add new calendar and paste the URL.
+        </div>
+        <div class="margin-b">
+            Note: Updates made in the PL calendar may take up to 24 hours to be reflected in the 3rd party calendar application, depending on which one you use.
+        </div>
+        <div class="margin-b">
+            For more complete instructions for commonly used calendar apps, please follow these links: 
+            <a class="link" href='https://support.google.com/calendar/answer/37100?co=GENIE.Platform%3DDesktop&hl=en' target='_blank'>
+                Google Calendar
+            </a>, 
+            <a class="link" href='https://support.office.com/en-us/article/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c' target='_blank'>
+                Microsoft Outlook
+            </a>, and 
+            <a class="link" href='https://support.apple.com/guide/calendar/subscribe-to-calendars-icl1022/mac' target='_blank'>
+                Apple Calendar
+            </a>.
+        </div>
+    </div>
+</div>

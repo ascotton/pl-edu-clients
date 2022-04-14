@@ -1,0 +1,17 @@
+<div class="pl-client-referral-delete">
+    <pl-modal-header-wrapper [headerText]="'Delete Referral'">
+        <div class="margin-b flexbox">
+            <div>
+                <div class="margin-r icon-circle"><pl-icon class="white" [svg]="'minus'" [scale]="0.6" [verticalAlign]="'-2px'"></pl-icon></div>
+            </div>
+            <div class="flex1">You are about to delete a referral. Please select a reason for deleting the referral.</div>
+        </div>
+        <div class="inputs margin-xlarge-b">
+            <pl-input-select class="form-input x-qa-reason" [(model)]="referral.reason" [options]="selectOptsReason" [placeholder]="'Select a Reason'"></pl-input-select>
+        </div>
+        <div>
+            <button pl-button class="success x-qa-delete-confirm-btn" (click)="delete()">Delete Referral</button>
+            <button pl-button class="x-qa-delete-cancel-btn" (click)="cancel()">Cancel</button>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

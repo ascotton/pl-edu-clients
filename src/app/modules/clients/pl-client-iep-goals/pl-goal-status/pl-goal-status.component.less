@@ -1,0 +1,72 @@
+@import 'core/colors.less';
+
+.pl-goal-status {
+
+  .goal-status {
+    height: 45px;
+    width: 215px;
+    .goal-status-select {
+      font-weight: bold;
+      &.normal-labels {
+        font-weight: normal;
+      }
+    }
+    .goal-status-bars {
+      border-top: 1px solid @slate-light;
+      white-space: nowrap;
+      position: relative;
+      &.no-border {
+        top: -6px;
+        border-top: none;
+      }
+      .bar {
+        display: inline-block;
+        height: 8px;
+        width: 50px;
+        margin-right: 5px;
+        position: relative;
+        &.green {
+          background-color: @green;
+        }
+        &.blue {
+          background-color: @blue-medium;
+        }
+        &.gray {
+          background-color: @gray;
+        }
+        &.yellow {
+          background-color: @yellow;
+          border: 1px solid @gray-lighter;
+          width: 48px;
+          top: 2px;
+        }
+        &.small-bars {
+          height: 8px;
+          width: 40px;
+          &.white {
+            width: 38px;
+          }
+        }
+      }
+    }
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+  .title {
+    margin-bottom: 15px;
+  }
+}

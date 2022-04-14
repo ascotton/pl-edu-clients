@@ -1,0 +1,43 @@
+@import '~@angular/material/theming';
+@import '../../../../../styles/pl-colors.scss';
+
+$background: map-get($pl-light-theme, background);
+$foreground: map-get($pl-light-theme, foreground);
+
+$fill-disabled-background: mat-color($foreground, base, 0.02);
+$underline-color: mat-color($foreground, divider, 0.42);
+$fill-background-color: mat-color($background, background);
+$label-disabled-color: mat-color($foreground, disabled-text, 0.20);
+
+.license-card {
+    width: 100%;
+    height: 115px;
+    display: flex;
+    cursor: pointer;
+    padding: 16px;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: solid 1px $underline-color;
+    justify-content: space-between;
+    &-left {
+        min-width: 40px;
+        text-align: right;
+    }
+    &.disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+        color: $label-disabled-color;
+        border-color: $label-disabled-color;
+        // background-color: $fill-disabled-background;
+    }
+    &.selected {
+        background-color: $fill-background-color;
+        border-color: #000;
+    }
+    &:hover {
+        border-width: 2px;
+        border-color: #46B1E1;
+        cursor: pointer;
+    }
+}

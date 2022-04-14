@@ -1,0 +1,33 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+:host {
+    .padding-large;
+    display: block;
+    color: @gray-darker;
+    border-radius: 4px;
+    line-height: 1.5rem;
+    .alert-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        display: inline-flex;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+    }
+    &.warn {
+        background-color: @yellow-light;
+        .alert-icon {
+            background-color: @yellow;
+        }
+    }
+    &.error {
+
+    }
+    &.info {
+
+    }
+    &.success {
+        
+    }
+}

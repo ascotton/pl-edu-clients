@@ -1,0 +1,89 @@
+<div class="padding">
+    <div class="button-container">
+        <button pl-button class="link" (click)="click($event)">Link</button>
+        <!-- <button pl-button class="link" (click)="click($event)" disabled>Link</button> -->
+    </div>
+    <div class="button-container">
+        <button pl-button class="bare" (click)="click($event)">Bare</button>
+        <button pl-button class="bare" (click)="click($event)" disabled>Bare</button>
+    </div>
+    <div class="button-container">
+        <button pl-button (click)="click($event)">Default</button>
+        <button pl-button (click)="click($event)" disabled>Default</button>
+    </div>
+    <div class="button-container dark-background">
+        <button pl-button class="reverse" (click)="click($event)">Default Reverse</button>
+        <button pl-button class="reverse" (click)="click($event)" disabled>Default Reverse</button>
+    </div>
+    <div class="button-container">
+        <button pl-button class="primary" (click)="click($event)">Primary</button>
+        <button pl-button class="primary" (click)="click($event)" disabled>Primary</button>
+    </div>
+    <div class="button-container">
+        <button pl-button class="info" (click)="click($event)">Info</button>
+        <button pl-button class="info" (click)="click($event)" disabled>Info</button>
+    </div>
+    <div class="button-container">
+        <button pl-button class="warning" (click)="click($event)">Warning</button>
+        <button pl-button class="warning" (click)="click($event)" disabled>Warning</button>
+    </div>
+    <div class="button-container">
+        <button pl-button class="danger" (click)="click($event)">Danger</button>
+        <button pl-button class="danger" (click)="click($event)" disabled>Danger</button>
+    </div>
+    <div class="button-container">
+        <button pl-button class="success" (click)="click($event)">Success</button>
+        <button pl-button class="success" (click)="click($event)" disabled>Success</button>
+    </div>
+
+    <div class="button-container">
+        <button pl-button class="large" (click)="click($event)">Large</button>
+        <button pl-button class="large" (click)="click($event)" disabled>Large</button>
+    </div>
+    <div class="button-container">
+        <button pl-button class="x-large" (click)="click($event)">X-Large</button>
+        <button pl-button class="x-large" (click)="click($event)" disabled>X-Large</button>
+    </div>
+
+    <h2>Button Group</h2>
+    <div class="button-container margin-b">
+        <pl-button-group>
+            <button pl-button>Default 1</button>
+            <button pl-button>Default 2</button>
+            <button pl-button>Default 3</button>
+        </pl-button-group>
+    </div>
+
+    <div class="button-container margin-b">
+        <pl-button-group>
+            <button pl-button class="primary">Primary</button>
+            <button pl-button class="info">Info</button>
+            <button pl-button class="warning">Warning</button>
+            <button pl-button class="danger">Danger</button>
+            <button pl-button class="success">Success</button>
+        </pl-button-group>
+    </div>
+
+    <div class="button-container margin-b">
+        <pl-button-group class="primary">
+            <button pl-button class="primary large">Primary 1</button>
+            <button pl-button class="primary large">Primary 2</button>
+        </pl-button-group>
+    </div>
+
+    <h2>Icon Buttons</h2>
+    <div class="button-container">
+        <button pl-button class="" (click)="click($event)">
+            <pl-icon [svg]="'chevron-left'"></pl-icon>
+        </button>
+        <button pl-button class="primary" (click)="click($event)">
+            <pl-icon [svg]="'chevron-right'"></pl-icon>
+        </button>
+        <button pl-button class="info" (click)="click($event)">
+            <pl-icon [svg]="'chevron-up'" [scale]="0.7" [verticalAlign]="'-2px'"></pl-icon> Up
+        </button>
+        <button pl-button class="" (click)="click($event)">
+            Down <pl-icon [svg]="'chevron-down'" [scale]="0.7" [verticalAlign]="'-2px'"></pl-icon>
+        </button>
+    </div>
+</div>

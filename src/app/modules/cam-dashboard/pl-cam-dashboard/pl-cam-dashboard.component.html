@@ -1,0 +1,18 @@
+<pl-tabs [tabs]="tabs"></pl-tabs>
+<section class="account-health">
+    <pl-schoolyear-select
+        (selectedSchoolYearChange)="handleSelectedSchoolYearChange($event)"
+        [simpleSelect]="true"
+    >
+    </pl-schoolyear-select>
+
+    <pl-cam-account-numbers *ngIf="isLoaded()" [schoolYearCode]="selectedSchoolYear.code" [schoolYearId]="selectedSchoolYear.id">
+    </pl-cam-account-numbers>
+
+    <pl-cam-accounts
+        *ngIf="isLoaded()"
+        [schoolYearCode]="selectedSchoolYearCode"
+        [currentUser]="currentUser"
+    >
+    </pl-cam-accounts>
+</section>

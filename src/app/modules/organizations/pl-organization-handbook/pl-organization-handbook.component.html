@@ -1,0 +1,31 @@
+<!-- On Load -->
+<div *ngIf="isLoading && !isOkForRender">
+    <pl-dot-loader></pl-dot-loader>
+</div>
+
+<!-- On Success -->
+<div [hidden]="!isOkForRender" class="pl-organization-handbook">
+    <pl-schoolyear-select [disableSchoolYears]="disableSchoolYears" [simpleSelect]="true" [(selectedSchoolYear)]="selectedSchoolYear"
+        (onYearSelected)="onYearSelected($event)"></pl-schoolyear-select>
+
+    <div class="flexbox margin-t">
+        <pl-handbook-contents [handbookInfo]="handbookInfo" (contentsEvent)="contentsEvent($event)">
+        </pl-handbook-contents>
+
+        <div class="flex1 margin-xlarge-l">
+            <pl-handbook-text-editor [contentToLoad]="contentToLoad" [tinyConfiguration]="tinyConfiguration"
+                [timeoutTime]='timeoutTime' [intervalTime]='intervalTime' (isEditorBeingEdited)="isEditorBeingEdited($event)">
+            </pl-handbook-text-editor>
+        </div>
+    </div>
+</div>
+
+<!-- On Error -->
+<div *ngIf="!isLoading && !isOkForRender" class="center">
+    <hr>
+    <pl-icon class="margin-nl-t" [svg]="'robin'" [height]="125" [width]="300"></pl-icon>
+    <p>
+        There was an error while loading the information, please reload this page and if the issue continues; contact Tech Support at
+        <a>{{ supportEmail }}</a>
+    </p>
+</div>

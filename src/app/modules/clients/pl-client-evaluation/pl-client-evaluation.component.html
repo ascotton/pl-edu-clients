@@ -1,0 +1,119 @@
+<pl-client-services-expandable-row
+    [rowId]="service.id"
+    [queryParam]="'service_id'">
+    <div class="pl-client-evaluation" [ngClass]="classesContainer">
+        <div class="header flexbox">
+            <div class="expand-button" (click)="toggleExpand()" #expandButton>
+                <pl-icon *ngIf="!expanded" [svg]="'expand'" [scale]="0.75" [verticalAlign]="'-2px'"></pl-icon>
+                <pl-icon *ngIf="expanded" [svg]="'collapse'" [scale]="0.75" [verticalAlign]="'-2px'"></pl-icon>
+            </div>
+            <div class="flex2 service-type" (click)="toggleExpand()">
+                <b>{{ serviceFormatted.xName }}</b>
+                <pl-icon *ngIf="hasNotes" class="margin-l" [svg]="'message-box'"></pl-icon>
+            </div>
+            <div class="flex1 created"><b>Service Creation Date:</b> {{ serviceFormatted.xCreated }}</div>
+            <div class="flex1 created"><b>School Year:</b> {{ serviceFormatted.referrals && serviceFormatted.referrals.schoolYear && serviceFormatted.referrals.schoolYear.name.replace(' School Year', '') }} </div>
+            <div class="flex1">
+                <pl-status-dot  *ngIf="service && service.status" class="margin-r"
+                    [status]="'Evaluation_' + service.status.toUpperCase()">
+                </pl-status-dot>
+                <span>{{ serviceFormatted.statusDisplay }}</span>
+            </div>
+        </div>
+        <div [hidden]="!expanded" class="service-details margin-t">
+            <div class="section-header">
+                <b class='margin-r'>Service Plan</b> <a *ngIf="mayEditService" class="x-qa-edit-evaluation-service-plan" [routerLink]="['/service-save']" [queryParams]="{ client: client.id, service: service.id }">Edit</a>
+            </div>
+            <div *ngFor="let field of planData" class="service-field inline-block">
+                <div class="flexbox">
+                    <div class="bold margin-r">{{ field.label }}</div>
+                    <div class="service-field-value">{{ field.value }}</div>
+                </div>
+            </div>
+            <div class="service-field inline-block">
+                <div class="flexbox">
+                    <div class="bold margin-r">Assigned Provider(s)</div>
+                    <div class="service-field-value">
+                        {{ serviceFormatted.xAssignedTo }}
+                        <button *ngIf="showReassignLink" pl-button class="link" (click)="rematch()">Reassign</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <b class='margin-r'>Service Details</b> <a *ngIf="mayEditService" [routerLink]="['/service-save']" [queryParams]="{ client: client.id, service: service.id }">Edit</a>
+            </div>
+
+            <div class="service-field inline-block" *ngIf="serviceFormatted.xAreasOfConcern">
+                <div class="flexbox">
+                    <div class="bold margin-r">Areas of Concern</div>
+                    <div class="service-field-value">{{ serviceFormatted.xAreasOfConcern }}</div>
+                </div>
+            </div>
+            <div class="service-field inline-block" *ngIf="serviceFormatted.xAssessments">
+                <div class="flexbox">
+                    <div class="bold margin-r">Assessments</div>
+                    <div class="service-field-value">{{ serviceFormatted.xAssessments }}</div>
+                </div>
+            </div>
+            <div class="service-field inline-block">
+                <div class="flexbox">
+                    <div class="bold margin-r">Identified as Bilingual</div>
+                    <div class="service-field-value">
+                        <span *ngIf="serviceFormatted.bilingual">Yes</span>
+                        <span *ngIf="!serviceFormatted.bilingual">No</span>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="serviceFormatted.xStage && isEvalWithAssessments()"
+                class="service-field inline-block">
+                <div class="flexbox">
+                    <div class="bold margin-r">Stage</div>
+                    <div class="service-field-value">
+                        <div class="service-field-value">{{ serviceFormatted.xStage }}</div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="serviceFormatted.xMeetingDate && isEvalWithAssessments()"
+                class="service-field inline-block">
+                <div class="flexbox">
+                    <div class="bold margin-r">Meeting Date</div>
+                    <div class="service-field-value">
+                        <div class="service-field-value">{{ serviceFormatted.xMeetingDate }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="service-field inline-block" *ngIf="serviceFormatted.assessmentPlanSignedOn && isEvalWithAssessments()">
+                <div class="flexbox">
+                    <div class="bold margin-r">School Assessment Plan Date of Signature</div>
+                    <div class="service-field-value">
+                        {{ serviceFormatted.assessmentPlanSignedOn | date:"MM/dd/yyyy" }}
+                    </div>
+                </div>
+            </div>
+            <div class="section-header" *ngIf="expanded && service?.referrals?.length > 0">
+                <b class='margin-r'>Notes</b>
+            </div>
+            <div class="flexbox" *ngIf="expanded && service?.referrals?.length > 0">
+                <div class="flex1 margin-tb">
+                    <pl-referral-notes
+                        [currentUser]="currentUser"
+                        [referralId]="service.referrals[0].id"
+                        [clientId]="client.id"
+                        [locationId]="locationId"
+                        [mayEditNotes]="mayEditService"
+                        (noteCreated)="handleNoteCreated($event)">
+                    </pl-referral-notes>
+                </div>
+            </div>
+            <div class="margin-b" *ngIf="serviceFormatted?.referrals?.length > 0">
+                <pl-client-converted-referral-list
+                    [referrals]="serviceFormatted.referrals"
+                    [productType]="'Evaluation'"
+                    [client]="client"
+                >
+                </pl-client-converted-referral-list>
+            </div>
+        </div>
+    </div>
+</pl-client-services-expandable-row>

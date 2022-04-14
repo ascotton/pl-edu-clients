@@ -1,0 +1,34 @@
+<div class="pl-location" *ngIf="state.initialized && allLoaded">
+    <div *ngIf="!mayViewLocation" class="padding-large">
+        <pl-permissions-denied [code]="permissionCode"></pl-permissions-denied>
+    </div>
+    <div [hidden]="!mayViewLocation" *ngIf="state.renderToggle.toggle" [@enterAnimation]>
+        <div class="outer-container">
+            <div class="header-container">
+                <div class="profile-container">
+                    <div class="profile-wrapper">
+                        <pl-location-profile-header *ngIf="!util.isFullScreenRoute()" class="header" [location]="location">
+                        </pl-location-profile-header>
+                    </div>
+                </div>
+                <div class="tabs-container" *ngIf="mayViewPhi">
+                    <div class="tabs-wrapper">
+                        <pl-tabs *ngIf="!util.isFullScreenRoute()" [tabs]="tabs" [updatePageTabTitleBasedOnActiveLink]="true">
+                        </pl-tabs>
+                    </div>
+                </div>
+            </div>
+            <div class="location-content-container">
+                <div class="inner">
+                    <div *ngIf="mayViewPhi">
+                        <div [@fade]="transition$ | async" class="padding-large">
+                            <router-outlet></router-outlet>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+</div>

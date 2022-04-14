@@ -1,0 +1,48 @@
+<div class="pl-invoice-documentation-view">
+
+  <div class="container">
+    <ng-progress ref="'ida'" [min]="15" [max]="100" [speed]="200" [spinner]="false"
+      [color]="'black'" [trickleSpeed]="250" [thick]="true" [ease]="'linear'"></ng-progress>
+    <h2>
+      <span class="left">&nbsp; Documentation Assistant</span>
+      <span class="right" *ngIf="BO.isDataLoaded()">Period Ending ⇢ <span>{{BO.data.invoicePeriod.displayPeriodEnding}}</span></span>
+    </h2>
+    <div id="iaConsole" [hidden]="true" class="ia-console">
+      <div *ngFor="let msg of BO.state.consoleContent">
+        {{msg.message}} {{msg.errMessage}}
+      </div>
+    </div>
+    <div class="pl-task-list">
+      <div class="pl-list">
+        <pl-invoice-documentation-list></pl-invoice-documentation-list>
+      </div>
+      <div class="pl-detail" *ngIf="BO.selectedAppointment && BO.shouldShowList()">
+        <pl-invoice-documentation-detail></pl-invoice-documentation-detail>
+      </div>
+      <div class="pl-progressive-load" *ngIf="!BO.selectedAppointment || !BO.shouldShowList()">
+        <div class="loading-data-message" *ngIf="!BO.isDataLoaded()">
+          Loading Appointment Information
+          <br/>
+          Please wait...
+        </div>
+
+        <div class="loading-data-message" *ngIf="BO.isDataLoaded()">
+          <div class="work-complete">
+            <div class="message">
+              Yay! All events are signed!
+            </div>
+            <div class="link">
+              <a href="{{ plUrls.urls.billingFE + '/billings' }}">
+                <button pl-button class="primary">Go to Billing</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="version-string">
+      Documentation Assistant {{BO.getVersionString()}}
+    </div>
+  </div>
+
+</div>

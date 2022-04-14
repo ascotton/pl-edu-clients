@@ -1,0 +1,63 @@
+@import 'app/main.less';
+
+.pl-notes-list-container {
+    padding: 16px;
+    background-color: @white;
+
+    .note-header {
+        color: @gray-darker;
+
+        &-action {
+            margin-left: 5px;
+        }
+    }
+
+    .new-note {
+        padding: 8px;
+        background-color: @orange-light;
+    }
+
+    .new-note-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .divider-line {
+        height: 1px;
+        background-color: @gray-lighter;
+        .margin-tb;
+    }
+
+    .new-note-header-actions {
+        button {
+            margin-left: 5px;
+        }
+    }
+
+    .note-body {
+        p {
+            margin-bottom: 6px;
+            line-height: 1.6em;
+        }
+
+        ol, ul {
+            padding-left: 20px;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        span {
+            text-decoration: underline;
+        }
+
+        .mention {
+            padding: 0 2px;
+            border-radius: 4px;
+            background-color: @gray-lighter;
+            text-decoration: none;
+        }
+    }
+}

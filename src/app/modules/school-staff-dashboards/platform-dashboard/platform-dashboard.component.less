@@ -1,0 +1,78 @@
+@import 'core/colors.less';
+
+h2 {
+    display: flex;
+}
+
+.left-nav {
+    margin-left: auto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+@progress-bar-height: 28px;
+
+.pl-license {
+    &-legends {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    &-type {
+        top: 0;
+        width: 100%;
+        color: white;
+        position: absolute;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &-container {
+            position: relative;
+            .mat-progress-bar {
+                border-radius: @progress-bar-height / 2;
+                height: @progress-bar-height !important;
+            }
+            .mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+            }
+        }
+        &-name {
+            text-align: center;
+        }
+        &-value {
+            line-height: @progress-bar-height;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+    }
+}
+
+.pl-provider-type {
+    &-value {
+        text-align: right;
+        min-width: 25px;
+    }
+}
+
+.legend {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    &-checkbox {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        &.assigned {
+            background-color: @slate-darker;
+        }
+        &.available {
+            background-color: @gray-light;
+        }
+    }
+}

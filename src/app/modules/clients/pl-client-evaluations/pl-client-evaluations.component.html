@@ -1,0 +1,17 @@
+<div class="pl-client-evaluations">
+    <h4 class="section-header section-header-with-help">
+        <div>Evaluations</div>
+        <button pl-button class="bare learn-more" (click)="displayLearnMore()">
+            <span>Learn More</span>
+            <pl-icon [svg]="'info'" [width]="16" [height]="16"></pl-icon>
+        </button>
+    </h4>
+    <pl-dot-loader [hidden]="!loadingServices" [align]="'left'"></pl-dot-loader>
+    <div class="services">
+        <div *ngFor="let service of evaluations" class="{{'service x-qa-service-'+(service.uuid ? service.uuid : service.id)}}">
+            <pl-client-direct-referral *ngIf="service.xType === 'evaluationReferral'" [referral]="service" [client]="client" [currentUser]="currentUser"></pl-client-direct-referral>
+            <pl-client-evaluation *ngIf="service.xType === 'evaluationService'" [service]="service" [client]="client" [currentUser]="currentUser"></pl-client-evaluation>
+        </div>
+        <div *ngIf="!loadingServices && !evaluations.length" class="center padding-large no-results">No Results Available</div>
+    </div>
+</div>

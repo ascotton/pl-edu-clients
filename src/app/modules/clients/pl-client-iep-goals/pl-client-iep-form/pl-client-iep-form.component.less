@@ -1,0 +1,91 @@
+@import 'core/colors.less';
+
+.pl-client-iep-form {
+  padding: 10px;
+  margin-bottom: 25px;
+
+  .container {
+    display: inline-block;
+    background-color: @gray-lightest; /*#F5F5F5*/
+    padding: 40px;
+    margin: 20px 40px;
+    border-radius: 4px;
+    border: 1px solid @gray-lighter;
+    width: 700px;
+
+    .instructions {
+      margin-top: 10px;
+    }
+
+    .banner {
+      border-radius: 5px;
+      padding: 10px 15px;
+      background-color: @blue-lightest;
+      display: inline-block;
+      white-space: no-wrap;
+      border: 1px solid @gray-lighter;
+      .icon {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 20px;
+        background-color: @blue;
+        text-align: center;
+        .text {
+          position: relative;
+          top: 0;
+          font-weight: bold;
+          color: white;
+          font-size: 15px;
+        }
+      }
+      .banner-text {
+        .message {
+          padding-left: 10px;
+          padding-right: 5px;
+        }
+      }
+    }
+
+    .form-section {
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    .date-fields {
+      white-space: nowrap;
+      .validation-message {
+        height: 16px;
+        padding-top: 3px;
+        font-weight: bold;
+        color: red;
+        font-size: 11px;
+      }
+    }
+
+    .date-input {
+        width: 300px;
+        vertical-align: top;
+    }
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+  .title {
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+}

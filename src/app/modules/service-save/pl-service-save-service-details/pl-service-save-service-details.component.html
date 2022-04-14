@@ -1,0 +1,13 @@
+<div class="pl-service-save-service-details">
+    <form [formGroup]="formCtrl">
+        <h4 class="section-header">Areas of Concern <span aria-hidden="true">*</span></h4>
+        <div class="section-body margin-b">
+            <pl-input-checkbox-group class="form-input" [formCtrl]="formCtrl" [(model)]="serviceFormVals.areasOfConcernIds" [options]="areasOfConcernOpts"  [horizontal]="true" (onChange)="validate($event)" [required]="true"></pl-input-checkbox-group>
+        </div>
+
+        <h4 class="section-header">Assessments</h4>
+        <div class="section-body margin-b">
+            <pl-input-multi-select class="form-input" [formCtrl]="formCtrl" [label]="'Selected assessments may be changed at any time.'" [(model)]="serviceFormVals.assessmentsUsedIds" [options]="assessmentsUsedOpts"></pl-input-multi-select>
+        </div>
+    </form>
+</div>

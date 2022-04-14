@@ -1,0 +1,198 @@
+<pl-modal-header-wrapper [headerText]="headerText">
+    <div class="pl-account-contacts-form" *ngIf="editMode !== contactEditMode.None">
+        <form [formGroup]="contactFormGroup">
+            <div *ngIf="editMode === contactEditMode.New || editMode === contactEditMode.EditDetails">
+                <pl-input-text
+                    class="form-input"
+                    [label]="'Email'"
+                    [formCtrl]="contactFormGroup"
+                    [type]="'email'"
+                    [(model)]="selectedContact.email"
+                    [required]="true"
+                >
+                </pl-input-text>
+                <div class="row">
+                    <div class="column">
+                        <pl-input-text
+                            class="form-input"
+                            [label]="'First Name'"
+                            [formCtrl]="contactFormGroup"
+                            [(model)]="selectedContact.firstName"
+                            [required]="true"
+                        >
+                        </pl-input-text>
+                    </div>
+                    <div class="column">
+                        <pl-input-text
+                            class="form-input"
+                            [label]="'Last Name'"
+                            [formCtrl]="contactFormGroup"
+                            [(model)]="selectedContact.lastName"
+                            [required]="true"
+                        >
+                        </pl-input-text>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <pl-input-text
+                            class="form-input"
+                            [label]="'Phone'"
+                            [formCtrl]="contactFormGroup"
+                            [pattern]="
+                                '^[\+]?[ ]?[0-9]{0,3}[ ]?[(]?[0-9]{3}[)]?[- \.]?[0-9]{3}[- \.]?[0-9]{4,6}[ ,]{0,2}(x|ex|ext)?[ \.]?[0-9]*$'
+                            "
+                            [validationMessages]="{ pattern: 'Must be a valid phone number' }"
+                            [(model)]="selectedContact.phone"
+                            [required]="true"
+                        >
+                        </pl-input-text>
+                    </div>
+                    <div class="column">
+                        <pl-input-text
+                            class="form-input"
+                            [label]="'Title'"
+                            [formCtrl]="contactFormGroup"
+                            [(model)]="selectedContact.title"
+                            [required]="true"
+                        >
+                        </pl-input-text>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                *ngIf="
+                    editMode === contactEditMode.New ||
+                    editMode === contactEditMode.AddRole ||
+                    editMode === contactEditMode.AddPlatformRole
+                "
+            >
+                <div *ngIf="editMode === contactEditMode.AddPlatformRole" class="margin-large-b">
+                    <i>
+                        All users must have legitimate educational interests and permissions under the Family
+                        Educational Rights and Privacy Act to have access to student information. Giving this person
+                        platform access will grant access to student schedules and records.
+                    </i>
+                </div>
+
+                <pl-input-select
+                    *ngIf="editMode === contactEditMode.New || editMode === contactEditMode.AddRole"
+                    class="form-input"
+                    [label]="'Role'"
+                    [options]="roleSelectOpts"
+                    [formCtrl]="contactFormGroup"
+                    (modelChange)="onChangeRole($event)"
+                    [(model)]="role"
+                    [required]="true"
+                >
+                </pl-input-select>
+
+                <pl-input-select
+                    *ngIf="editMode === contactEditMode.AddPlatformRole"
+                    class="form-input"
+                    [label]="'Access Level'"
+                    [options]="platformRoleSelectOpts"
+                    [formCtrl]="contactFormGroup"
+                    (modelChange)="onChangeRole($event)"
+                    [(model)]="platformRole"
+                    [required]="true"
+                >
+                </pl-input-select>
+
+                <div *ngIf="role || platformRole">
+                    <div *ngIf="locations.length > 0">
+                        <label class="label">
+                            Level *
+                        </label>
+                        <br *ngIf="canSelectOrg" />
+                        <pl-input-radio
+                            *ngIf="canSelectOrg"
+                            [label]="'Organization Level (all locations)'"
+                            [value]="orgOrLocationEditMode.Organization"
+                            [(model)]="orgOrLocation"
+                            [name]="'orgOrLocation'"
+                            (click)="onClickOrgLocation()"
+                        ></pl-input-radio>
+                        <br *ngIf="canSelectLocation" />
+                        <pl-input-radio
+                            *ngIf="canSelectLocation"
+                            [label]="'Location Level (specific locations)'"
+                            [value]="orgOrLocationEditMode.Location"
+                            [(model)]="orgOrLocation"
+                            [name]="'orgOrLocation'"
+                            (click)="onClickOrgLocation()"
+                        ></pl-input-radio>
+                    </div>
+
+                    <div
+                        *ngIf="this.orgOrLocation === orgOrLocationEditMode.Location"
+                        class="margin-small-t margin-large-b"
+                    >
+                        <pl-input-multi-select
+                            [label]="'Locations'"
+                            [(model)]="selectedLocations"
+                            [options]="locationOpts"
+                            [placeholder]="'Select Location(s)'"
+                        >
+                        </pl-input-multi-select>
+                    </div>
+
+                    <div class="margin-small-t margin-large-b">
+                        <div 
+                            *ngIf="!canSelectRole"
+                            class="info-bar margin-small-t warning"
+                        >
+                            <pl-icon [svg]="'info'" class="margin-r"></pl-icon>
+                            <span class="title">
+                                Contact already has a <b>different access level</b> at another organization or location.
+                            </span>
+                        </div>
+                        <div 
+                            *ngIf="canSelectRole && !canSelectOrg && !canSelectLocation" 
+                            class="info-bar margin-small-t warning"
+                        >
+                            <pl-icon [svg]="'info'" class="margin-r"></pl-icon>
+                            <span class="title">
+                                Contact already has
+                                <span *ngIf="role">this role</span>
+                                <span *ngIf="platformRole">access</span>
+                                at
+                                <span *ngIf="this.locations.length > 0"><b>ALL</b> locations at this organization.</span>
+                                <span *ngIf="this.locations.length === 0"><b>this location</b>.</span>
+                            </span>
+                        </div>
+
+                        <div
+                            *ngIf="this.orgOrLocation === orgOrLocationEditMode.Organization" 
+                            class="info-bar"
+                        >
+                            <pl-icon [svg]="'info'" class="blue margin-r"></pl-icon>
+                            <span class="title">
+                                NOTE: contact will have this
+                                <span *ngIf="role">role</span>
+                                <span *ngIf="platformRole">access level</span>
+                                at <b>ALL</b> locations at this organization.
+                            </span>
+                        </div>
+
+                        <div
+                            *ngIf="this.orgOrLocation === orgOrLocationEditMode.Location && locationsAssigned > 0"
+                            class="info-bar"
+                        >
+                            <pl-icon [svg]="'info'" class="blue margin-r"></pl-icon>
+                            <span class="title">
+                                NOTE: contact currently has
+                                <span *ngIf="role">this role at</span>
+                                <span *ngIf="platformRole">access to</span>
+                                <b>{{ locationsAssigned }}</b> locations at this organization.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <button pl-button class="success" (click)="onClickSave()" [disabled]="!canSave()">Save</button>
+        <button pl-button class="gray-outline" (click)="onClickCancel()">Cancel</button>
+    </div>
+</pl-modal-header-wrapper>

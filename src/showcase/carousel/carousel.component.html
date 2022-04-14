@@ -1,0 +1,9 @@
+<div class="carousel padding">
+    <pl-carousel-scroller [items]="items" [styleArrowColor]="'transparent'" [styleArrowContColor]="'#D0021B'">
+        <pl-carousel-scroller-item *ngFor="let item of items" [item]="item">
+            <div class="item">
+                Title: {{ item.title }}
+            </div>
+        </pl-carousel-scroller-item>
+    </pl-carousel-scroller>
+</div>

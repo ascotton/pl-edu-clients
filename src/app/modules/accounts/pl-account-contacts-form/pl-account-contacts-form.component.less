@@ -1,0 +1,42 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-account-contacts-form {
+    width: 550px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+
+    .column {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex: 1;
+        .margin-large-r;
+    }
+
+    .column:last-child {
+        margin-right: 0;
+    }
+}
+
+.info-bar {
+    background-color: @blue-lightest;
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 13px;
+
+    &.warning {
+        background-color: #f8f3e0; // rg todo: get variable
+
+        .pl-icon-svg {
+            opacity: .75;
+        }
+    }
+}

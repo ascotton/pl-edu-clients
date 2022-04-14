@@ -1,0 +1,53 @@
+<section>
+    <header>
+        <h2>Account Health</h2>
+    </header>
+    <div class="table-wrapper">
+        <pl-table-wrapper (onQuery)="onQuery($event.query)">
+            <pl-table-filter-set [(model)]="hiddenFilterValues" [filters]="hiddenFilters"></pl-table-filter-set>
+            <pl-table-filters-top
+                [filterSelectOpts]="filterSelectOpts"
+                [filtersFixed]="true"
+                [total]="total"
+                [totalLabel]="'Organizations'"
+                (onSearch)="filtersSearch($event)"
+                (onSetModelOptions)="filtersSetModelOptions($event)"
+            ></pl-table-filters-top>
+            <pl-table-header>
+                <pl-table-header-cell>Organization</pl-table-header-cell>
+                <pl-table-header-cell>PTSD</pl-table-header-cell>
+                <pl-table-header-cell>Fulfillment</pl-table-header-cell>
+                <pl-table-header-cell>Matched / Referrals</pl-table-header-cell>
+            </pl-table-header>
+            <ng-container *ngFor="let summary of accountSummaries">
+                <pl-table-row [isExpanded]="isRowExpanded(summary) && isRowLoaded(summary)">
+                    <pl-table-cell>
+                        <a class="table-row-org-name" (click)="toggleExpanded(summary)">
+                            <pl-icon *ngIf="isRowExpanded(summary)" class="blue-light margin-small-l nowrap" [svg]="'chevron-down'" [scale]="0.6" [verticalAlign]="'-2px'"></pl-icon>
+                            <pl-icon *ngIf="!isRowExpanded(summary)" class="blue-light margin-small-l nowrap" [svg]="'chevron-right'" [scale]="0.6" [verticalAlign]="'-2px'"></pl-icon>
+                            {{ summary.orgName }}
+                        </a>
+                    </pl-table-cell>
+                    <pl-table-cell>{{ summary.projectedTherapyStartDate | date:"MM/dd/yyyy" }}</pl-table-cell>
+                    <!-- TODO PL-764 remove when implemented -->
+                    <pl-table-cell>{{ summary.fulfillmentPercentage }}%</pl-table-cell>
+                    <pl-table-cell>{{ summary.matchedReferralCount }} / {{ summary.referralCount }}</pl-table-cell>
+                    <pl-table-cell expandable *ngIf="isRowInDom(summary)">
+                        <pl-cam-account-details
+                            [orgName]="summary.orgName"
+                            [orgId]="summary.orgId"
+                            [schoolYearCode]="this.schoolYearCode"
+                            (dataLoaded)="onAccountDetailsLoaded(summary)"
+                        ></pl-cam-account-details>
+                    </pl-table-cell>
+                </pl-table-row>
+            </ng-container>
+            <div *ngIf="loading" class="padding-xlarge-tb">
+                <pl-dot-loader></pl-dot-loader>
+            </div>
+            <div *ngIf="!accountSummaries.length && !loading" class="center padding-xlarge-tb">
+                No organizations.
+            </div>
+        </pl-table-wrapper>
+    </div>
+</section>

@@ -1,0 +1,52 @@
+<div class="pl-organization-locations">
+    <pl-dot-loader *ngIf="!org"></pl-dot-loader>
+    <pl-account-overview
+        *ngIf="org"
+        [account]="org"
+        [organization]="org"
+        [canEditDates]="true"
+    >
+    </pl-account-overview>
+    <div *ngIf="org" class="card-section">
+        <div class="card locations-card">
+            <div class="card-header">
+                Locations
+            </div>
+            <div class="card-body">
+                <pl-table-wrapper
+                    (onQuery)="onQuery($event)"
+                    [orderKey]="'orderBy'"
+                    [pageSizeKey]="'first'"
+                    [stateName]="'l'"
+                >
+                    <pl-table-filters-top
+                        [filterSelectOpts]="filterSelectOpts"
+                        [filtersFixed]="true"
+                        [total]="filteredLocationsTotal"
+                    ></pl-table-filters-top>
+                    <pl-table-header>
+                        <pl-table-header-cell [orderKey]="'name'" [orderDirection]="'ascending'"
+                            >Location</pl-table-header-cell
+                        >
+                        <pl-table-header-cell>Students in Service</pl-table-header-cell>
+                    </pl-table-header>
+                    <div *ngIf="locationsLoading" class="padding-xlarge-tb">
+                        <pl-dot-loader></pl-dot-loader>
+                    </div>
+                    <div *ngIf="locations.length === 0 && !locationsLoading" class="center padding-xlarge-tb">
+                        No locations.
+                    </div>
+                    <pl-table-row *ngFor="let location of locations">
+                        <pl-table-cell>
+                            <a [routerLink]="['/location', location.id]" [title]="location.name + ' Overview'">{{
+                                location.name
+                            }}</a>
+                        </pl-table-cell>
+                        <pl-table-cell>{{ location.clientsInService }}</pl-table-cell>
+                    </pl-table-row>
+                    <pl-table-footer [total]="filteredLocationsTotal"></pl-table-footer>
+                </pl-table-wrapper>
+            </div>
+        </div>
+    </div>
+</div>

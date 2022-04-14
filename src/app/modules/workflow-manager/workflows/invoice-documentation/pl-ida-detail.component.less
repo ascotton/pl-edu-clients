@@ -1,0 +1,639 @@
+@import 'core/colors.less';
+
+@signed-color: @green-light;
+.pl-invoice-documentation-detail {
+  box-sizing: border-box;
+  border: 4px solid @slate-darkest;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  background-color: @white;
+
+  // iDA-specific height
+  height: calc(~"100vh - 129px");
+  .detail-outer, .edit-date-time {
+      height: calc(~"100vh - 129px");
+      overflow: auto;
+  }
+
+  // calendar popup height
+  &.standalone {
+    height: calc(~"100vh - 34px");
+    .detail-outer, .edit-date-time {
+        height: calc(~"100vh - 34px");
+    }
+  }
+
+  .required-field-text {
+    font-weight: bold;
+    margin-left: 5px;
+    font-size: 13px;
+  }
+
+  .general-error {
+    background-color: @red-light;
+    font-weight: 400;
+    padding: 20px;
+
+    pl-icon {
+      margin-right: 5px;
+    }
+
+    span {
+      color: @gray-darkest;
+    }
+  }
+
+  .title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: @slate-darkest;
+  }
+
+  .amending-title {
+    background-color: lighten(@purple, 20%);
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    &.add-event {
+      background-color: lighten(@yellow, 10%);
+    }
+  }
+
+  .detail-error {
+    padding: 10px;
+
+    .client-link {
+      color: @blue;
+      display: block;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  .save-date-time {
+    margin-left: 0;
+  }
+
+  #invoice-student-header {
+    background-color: @slate-darkest;
+    padding: 10px 10px 15px 20px;
+    display: flex;
+    flex-flow: row;
+    flex: 0 0 auto;
+    position: relative;
+
+    .details {
+        display: table-cell;
+        width: 100%;
+    }
+
+    .close-button {
+        display: table-cell;
+        position: relative;
+        top: 5px;
+    }
+
+    .signed {
+      color: @signed-color;
+      &.signed-mark {
+        margin-right: 5px;
+      }
+    }
+
+    .dot-container {
+      position: absolute;
+      bottom: 6px; left: 22px;
+      .hidden {
+          display: none;
+      }
+      .dot {
+        display: inline-block;
+        border-radius: 5px;
+        &.group-past {
+          background-color: @blue-medium;
+          height: 50px;
+          width: 2px;
+        }
+        &.group-today {
+          background-color: @orange;
+          height: 50px;
+          width: 2px;
+        }
+        &.group-future {
+          background-color: @gray-lightest;
+          height: 50px;
+          width: 2px;
+        }
+      }
+    }
+
+    .name,
+    .location,
+    .datetime {
+      color: @gray-lightest;
+    }
+
+    .name,
+    .datetime {
+      margin-left: 15px;
+      margin-right: 10px;
+      &.standalone-appointment {
+          margin-left: 0;
+      }
+    }
+
+    .name {
+      margin-bottom: 5px;
+      .location {
+        font-size: 14px;
+      }
+    }
+
+    .debug-type {
+      position: absolute;
+      top:10px; right:10px;
+      font-size: 13px;
+      color: @blue-medium;
+    }
+
+    .debug-row {
+      position: absolute;
+      bottom:10px; right:10px;
+      font-size: 13px;
+      color: @orange;
+    }
+
+    .change-date-time {
+        position: relative;
+        font-size: 14px;
+        cursor: pointer;
+        color: @blue-medium;
+    }
+  } // end / HEADER
+
+  .edit-date-time {
+    padding: 20px;
+  }
+
+
+  .detail-container {
+    padding-top: 10px;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s;
+    &.visible {
+      opacity: 1;
+      transition: visibility 0s, opacity 0.2s ease-in;
+    }
+    padding: 0 10px 10px 10px;
+    flex: 1 1 auto;
+
+    #warning {
+      background-color: @yellow-light;
+      border-radius: 3px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+    }
+
+    .sub-title {
+      font-weight: 400;
+    }
+
+    #telemetry {
+      fieldset {
+          border: 1px solid silver;
+          border-radius: 5px;
+          padding: 5px;
+          margin: 20px;
+        }
+      .telemetry-info {
+        padding: 5px;
+      }
+    }
+
+    .edit-amendable {
+        &:hover {
+          cursor: pointer;
+        }
+    }
+
+    #billing-info {
+      #tracking-type {
+        pl-input-select {
+          width: 100%;
+        }
+      }
+      #details,
+      #details,
+      .details {
+        display: flex;
+        padding: 10px 0 15px 13px;
+
+        .third {
+          width: 33%;
+          max-width: 350px;
+          margin-right: 10px;
+        }
+
+        .half {
+            width: 47%;
+            max-width: 400px;
+            margin-right: 18px;
+        }
+
+        h5.textarea-label {
+          background-color: red;
+          margin-bottom: 2px;
+        }
+      }
+      .no-selected-client-service {
+        color: @orange-dark;
+      }
+    }
+
+    #clinical-info {
+      #details {
+        padding: 0 13px;
+
+        .header {
+            vertical-align: bottom;
+        }
+
+        h5 {
+          margin: 10px 0;
+
+          .incomplete {
+            color: @gray-dark;
+            margin-left: 10px;
+          }
+
+          .hasCompleteSoapNotes {
+            display: none;
+          }
+        }
+
+        #session-notes, #general-notes {
+            display: inline-block;
+            width: 48%;
+            &.wide-format {
+                display: block;
+                width: auto;
+            }
+            pl-input-textarea {
+              border-radius: 4px;
+            }
+        }
+
+        .note-tabs {
+          span.soap-tab {
+            display: inline-block;
+            color: @gray-darker;
+            border: 2px solid @gray-light;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin: 0 5px 5px 0;
+            position: relative;
+
+            &.active {
+              color: @blue-medium;
+              border-color: @blue-medium;
+            }
+
+            &.missingNotes {
+              background-color: @gray-lightest;
+            }
+
+            &:hover {
+              cursor: pointer;
+            }
+            .lock-icon {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+          }
+        }
+
+        #concern-areas {
+          margin: 20px 0;
+          .items {
+            display: flex;
+            .concern-column {
+              width: 33%;
+            }
+            .pl-areas-of-concern {
+              padding: 5px 0;
+              .option {
+                min-width: 250px;
+                display: inline-block;
+              }
+            }
+          }
+        }
+
+        #assessments, #status {
+          width: 33%;
+        }
+
+        .validation-error-container {
+          text-align: center;
+        }
+        .validation-error-message {
+          color: @red;
+          font-weight: 400;
+          background-color: @red-light;
+          border-radius: 4px;
+          padding: 5px 10px;
+          display: inline-block;
+        }
+
+        .eval-components {
+          margin: 20px 0;
+          .eval-components-container {
+            border: 1px solid @gray-light;
+            border-radius: 4px;
+            padding: 15px;
+            padding-bottom: 25px;
+          }
+
+          .pl-button.save-activity-component {
+            margin-left: 0;
+          }
+          .pl-button.add-activity-component {
+            margin-left: 0;
+          }
+
+          .inset {
+            padding: 0 0 0 20px;
+          }
+
+          .description {
+            margin: 10px 0px;
+            font-size: 14px;
+            padding: 20px;
+            background-color: lighten(@yellow-light, 5%);
+            border-radius: 5px;
+            border: 1px solid @gray;
+          }
+
+          .activity-detail-list {
+            margin-top: 20px;
+          }
+
+          .saved-activities {
+            .inset {
+              margin-top: 10px;
+            }
+            .saved-activities-list {
+              font-size: 12px;
+              padding-top: 10px;
+              .saved-activity-header {
+                margin-top: 10px;
+                border: 1px solid @gray;
+                border-radius: 5px 5px 0 0;
+                padding: 5px;
+                font-weight: 400;
+                background-color: @gray-lightest;
+                border-bottom: 0;
+                .title {
+                  width: 100%;
+                }
+                .actions {
+                  padding: 0;
+                  .bare {
+                    margin: 0;
+                    margin-right: 5px;
+                    line-height: inherit;
+                  }
+                }
+              }
+              .saved-activity-detail {
+                border: 1px solid @gray;
+                border-radius: 0 0 5px 5px;
+                border-top: 0;
+                padding: 5px 5px 15px 30px;
+                .detail-row {
+                  padding-top: 10px;
+                  .label {
+                    font-weight: 600;
+                    width: 120px;
+                    white-space: nowrap;
+                  }
+                  .value {}
+                  .select-status {
+                    display: inline-block;
+                    width: 120px;
+                  }
+                }
+              }
+            }
+          }
+
+          .activity-component-buttons {
+            margin: 10px 0 20px 0;
+          }
+        }
+      }
+    }
+
+    .saving-errors {
+      fieldset {
+        border: 2px solid silver;
+        border-radius: 7px;
+        margin: 10px 20px;
+        padding: 5px 20px 20px 20px;
+        margin: 10px auto;
+        width: 720px;
+
+        legend {
+          padding: 0 10px;
+          font-size: 20px;
+          font-weight: bold;
+          text-align: center;
+        }
+
+        .button-copy-to-clipboard {
+          width: 100%;
+          text-align: center;
+        }
+
+        ul.error-info {
+          max-width: 700px;
+          overflow-x: scroll;
+          padding: 10px;
+        }
+
+        li {
+          list-style: none;
+        }
+        .saving-errors-header {
+          margin: 0 5px 0 5px;
+          font-size: 16px;
+          .provider-info {
+            margin-top: 10px;
+            margin-left: 5px;
+            .username {
+              font-weight: bold;
+              margin-right: 10px;
+            }
+            .uuid {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #actions {
+    padding: 10px 10px;
+
+    &.already-signed-message {
+      padding-top: 5px;
+    }
+
+    .saving-text {
+      font-weight: bold;
+    }
+    #errors {
+      padding-left: 20px;
+      color: brown;
+    }
+  }
+
+  .data-parse-errors {
+    .header-title {
+      font-size: 18px;
+    }
+
+    ul {
+      margin-top: 20px;
+      li {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .header {
+    display: flex;
+    padding: 10px 0 8px 13px;
+    background-color: @white;
+    color: @slate-darkest;
+    font-weight: bold;
+
+    .header-title {
+      width: 100%;
+    }
+  }
+
+  &.verify-signoff {
+    margin: 10px 0;
+  }
+
+  .signoff {
+    margin-left: 13px;
+    fieldset {
+      display: inline-block;
+      border: 1px solid silver;
+      border-radius: 5px;
+      padding: 5px 10px;
+      background-color: @gray-lighter;
+      font-style: italic;
+      width: 310px;
+    }
+    fieldset.signed {
+      background-color: @green-light;
+      font-weight: bold;
+      font-style: normal;
+      border-color: @gray-light;
+      padding: 5px 9px 5px 8px;
+    }
+  }
+
+  .edit-date-time .signoff {
+    margin-left: 0;
+  }
+
+  .locked-banner {
+    background-color: @red-light;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .blackout-day-banner {
+    background-color: @slate-light;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    color: @slate-darkest;
+    .header-text {
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+
+  .edit-date-time .amendment-info {
+    margin: 30px 13px 10px 0;
+  }
+  .amendment-info {
+    margin: 30px 13px 10px 13px;
+    border: 2px solid lighten(@purple, 10%);
+    border-radius: 5px;
+
+    .amendment-title {
+      margin: 20px 0 0 20px;
+    }
+    .details {
+      padding: 20px;
+    }
+    .flex-columns {
+      display: flex;
+      margin-bottom: 15px;
+      .column {
+        flex: 1;
+        background-color: lighten(@purple, 30%);
+        padding: 10px;
+        border-radius: 4px;
+      }
+      .middle {
+        margin: auto 12px;
+        flex: 0 0 15px;
+      }
+      .datetime-field-label {
+        display: inline-block;
+        min-width: 40px;
+        margin-right: 10px;
+        text-align: right;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .amendment-reason-container {
+    margin: 10px 13px;
+  }
+
+  .edit-date-time .amendment-reason-container {
+    margin: 10px 0;
+  }
+
+  .table-cell {
+    display: table-cell;
+  }
+
+  ::ng-deep {
+    #assessments-document-upload {
+      pl-icon {
+        margin: 0 auto;
+      }
+    }
+    .signoff label {
+        margin-top: 0.15rem !important;
+    }
+    .pl-input-textarea.border {
+      border-radius: 4px;
+    }
+  }
+}

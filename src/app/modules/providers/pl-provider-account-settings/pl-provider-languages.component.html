@@ -1,0 +1,13 @@
+<pl-modal-header-wrapper [headerText]="'Edit Languages'">
+    <div class="pl-provider-languages">
+        <div class="list">
+            <pl-input-checkbox-group
+                [(model)]="selectedLanguageCodes"
+                [options]="languageOptions"
+                [col3]="true"
+            ></pl-input-checkbox-group>
+        </div>
+        <hr />
+        <button pl-button class="success" (click)="onClickSave()">Save</button>
+    </div>
+</pl-modal-header-wrapper>

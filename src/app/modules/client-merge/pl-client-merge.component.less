@@ -1,0 +1,121 @@
+@import 'core/colors.less';
+
+.pl-client-merge {
+    .navigation {
+        display: flex;
+        justify-content: space-between;
+        pl-steps {
+            width: 33%;
+        }
+    }
+
+    .steps-spacer {
+        height: 100px;
+    }
+
+    .steps-buttons-container {
+        border: solid 1px @gray-lightest;
+        background-color: rgba(247, 248, 249, 0.9);
+        width: 100%;
+        height: 120px;
+        box-sizing : border-box;
+        position: fixed;
+        bottom: 0px;
+        margin-left: -16px;
+        z-index: 100;
+
+        display: flex;
+        align-items: center;
+
+        .selection-preview {
+
+            .selection-status {
+                font-weight: bold;
+                margin: 5px 0px 5px 0px;
+            }
+
+            .preview-boxes {
+                display: flex;
+
+                .preview-box {
+                    width: 200px;
+                    height: 60px;
+                    border: solid 1px @gray-light;
+                    margin-right:10px;
+                    display: flex;
+                    justify-content: space-between;
+
+                    &.no-client-selected {
+                        background-color: @gray-dark;
+                    }
+
+                    &.client-selected {
+                        background-color: @white;
+
+                        .unselect-button {
+                            color: @gray-darker;
+                            cursor: pointer;
+                            margin-right: 5px;
+                        }
+
+                        .client-selected-text {
+                            margin-left:16px;
+                            align-self: center;
+                            .selected-clients-names {
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    .banner {
+        border-radius: 5px;
+        padding: 10px 10px 8px 10px;
+        background-color: @blue-lighter;
+        white-space: no-wrap;
+        &.info {
+            background-color: @yellow-light;
+            .icon {
+            background-color: @yellow;
+            }
+        }
+        .icon {
+            display: inline-block;
+            border-radius: 20px;
+            background-color: @blue-lightest;
+            text-align: center;
+            .text {
+                position: relative;
+                top: 0;
+                font-weight: bold;
+                color: white;
+                font-size: 15px;
+            }
+        }
+        .banner-message {
+            padding-left: 10px;
+            padding-right: 5px;
+            font-size: 13px;
+        }
+    }
+
+    &.debug-show-div {
+        @debug-color: rgb(0, 183, 255);
+        border: 3px solid @debug-color;
+        padding: 20px;
+        position: relative;
+        .debug-component-name {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 11px;
+            padding: 2px;
+            background-color: @debug-color;
+            color: white;
+        }
+    }
+}

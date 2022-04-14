@@ -1,0 +1,11 @@
+<div class="pl-schoolyear-select">
+    <span *ngIf="!simpleSelect" class="clients-label">
+        <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display>s
+    </span>
+    <div class="year-container">
+        <pl-input-select class="school-year-select" [(model)]="selectedSchoolYear" [options]="schoolYearOpts" [styleInline]="true"
+            [iconScale]="0.6" [iconVerticalAlign]="'0px'" [dropdownMinWidth]="250" (onChange)="yearSelected($event)"
+            [highlightSelected]="true" [disabled]="this.disableSchoolYears">
+        </pl-input-select>
+    </div>
+</div>

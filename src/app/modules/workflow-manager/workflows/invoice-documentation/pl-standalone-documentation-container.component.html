@@ -1,0 +1,38 @@
+<div mat-dialog-content class="pl-standalone-documentation-container"
+    [ngClass]="{'with-client-list': shouldShowClientList()}">
+    <div *ngIf="BO.selectedAppointment && BO.isStandaloneAppointmentReady() && isLoaded; else loading">
+        <div class="pl-detail">
+            <div class="list" *ngIf="shouldShowClientList()">
+                <div class="row-outer">
+                    <div class="list-header">({{BO.appointmentsList.length}}) Students</div>
+                    <div class="row-container">
+                        <div class="pl-row" *ngFor="let appt of BO.appointmentsList"
+                            (click)="onClickClient(appt)">
+                            <div class="label" [ngClass]="{'selected': BO.isSelected(appt)}">
+                                <span *ngIf="BO.isSigned(appt)" class="margin-small-r">
+                                    <pl-icon [svg]="'check'" [width]="14" [height]="15" class="green"></pl-icon>
+                                </span>
+                                <span class="name">{{appt.itemName}}</span>
+                                <br />- {{appt.location.name}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail">
+                <pl-invoice-documentation-detail *ngIf="isLoaded && !isReadOnlyView"
+                    (closeDocumentation)="onCloseDocumentation()">
+                </pl-invoice-documentation-detail>
+
+                <pl-invoice-documentation-readonly *ngIf="isLoaded && isReadOnlyView"
+                    (closeDocumentation)="onCloseDocumentation()">
+                </pl-invoice-documentation-readonly>
+            </div>
+        </div>
+    </div>
+    <ng-template #loading>
+        <div *ngIf="!BO.isDataLoaded()" class="loading">
+            <pl-dot-loader [overlay]="true"></pl-dot-loader>
+        </div>
+    </ng-template>
+</div>

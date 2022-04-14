@@ -1,0 +1,55 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-client-referral-save-referral {
+    .section-body {
+        padding-bottom: 80px;
+    }
+
+    .client-info {
+        background-color: @green-light;
+    }
+
+    .grade-input {
+        width: 15em;
+    }
+
+    .time-inputs {
+        align-items: flex-start;
+        display: flex;
+
+        span {
+            padding-top: 1.8em;
+        }
+
+        .frequency-input {
+            width: 6em;
+        }
+
+        .interval-input {
+            width: 11em;
+        }
+
+        .duration-input {
+            width: 6em;
+        }
+
+        & > * {
+            margin-right: 1ch;
+        }
+    }
+
+    .rounded {
+        border-radius: 4px;
+    }
+
+    .input-width {
+        max-width: 30em;
+    }
+
+    .year-input {
+        pl-input-select {
+            width: 380px;
+        }
+    }
+}

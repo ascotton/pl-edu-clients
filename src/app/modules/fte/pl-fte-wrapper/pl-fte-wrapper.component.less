@@ -1,0 +1,53 @@
+@import "core/colors.less";
+@import "core/spacing.less";
+
+.pl-fte-wrapper {
+  .grid-item {
+    margin-bottom: 24px;
+
+    display: flex;
+    flex-flow: column;
+    flex: 1;
+    background-color: @slate-lightest;
+    box-shadow: 0px 2px 4px 0px @gray-dark;
+
+    .card {
+      .padding-large;
+      height: 100%;
+
+      .link-list {
+        .link-item {
+          margin-bottom: 10px;
+        }
+      }
+    }
+
+    &.hideCard {
+      display: none;
+    }
+
+    .info-tip {
+      background-color: @white;
+      font-size: smaller;
+      text-align: justify;
+    }
+
+    .section-header {
+      font-size: 18px;
+      color: @gray-darkest;
+      background-color: @slate-lightest;
+      border-bottom: solid 1px @gray;
+
+      span {
+        &.subheader {
+          font-size: 12px;
+          margin-left: 0;
+        }
+      }
+    }
+
+    .text-header-in-calendar {
+      text-align: center;
+    }
+  }
+}

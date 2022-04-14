@@ -1,0 +1,94 @@
+<section *ngIf="accountNumbers" class="pl-cam-account-numbers">
+    <div class="box referrals">
+        <h2>Referrals</h2>
+        <ul>
+            <li>
+                <span class="value">{{ accountNumbers.referralsTotalCount }}</span>
+                <span class="label">Total</span>
+            </li>
+            <li>
+                <a
+                    class="referrals-unmatched"
+                    [routerLink]="referralManagerRoute"
+                    [queryParams]="referralsUnmatchedRouteQueryParams()"
+                >
+                    <span class="value">{{ accountNumbers.referralsUnmatchedCount }}</span>
+                    <span class="label">Unmatched</span>
+                </a>
+            </li>
+            <li>
+                <a
+                    class="referrals-matched"
+                    [routerLink]="referralManagerRoute"
+                    [queryParams]="referralsMatchedRouteQueryParams()"
+                >
+                    <span class="value">{{ accountNumbers.referralsToConvertCount }}</span>
+                    <span class="label">Matched (created over 1 week ago)</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="box assignments">
+        <h2>Assignments</h2>
+        <ul>
+            <li>
+                <a
+                    [routerLink]="assignmentManagerRoute"
+                    [queryParams]="assignmentManagerUnfulfilledRouteQueryParams()"
+                >
+                    <span class="value">{{ accountNumbers.accountsUnfulfilledCount }}</span>
+                    <span class="label">Orgs not fulfilled</span>
+                </a>
+            </li>
+            <li>
+                <a
+                    [routerLink]="assignmentManagerRoute"
+                    [queryParams]="assignmentManagerPendingRouteQueryParams()"
+                >
+                    <span class="value">{{ accountNumbers.assignmentsPendingCount }}</span>
+                    <span class="label">Pending</span>
+                </a>
+            </li>
+            <li>
+                <a
+                    [routerLink]="assignmentManagerRoute"
+                    [queryParams]="assignmentManagerProposedRouteQueryParams()"
+                >
+                    <span class="value">{{ accountNumbers.assignmentsProposedCount }}</span>
+                    <span class="label">Proposed</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="box scheduling">
+        <h2>Scheduling</h2>
+        <ul>
+            <li>
+                <a [routerLink]="'/cam-dashboard/locations-scheduling-status'" [queryParams]="locationsSchedulingStatusRouteQueryParams()">
+                    <span class="value">{{ accountNumbers.locationsRequiringSchedulingCount }}</span>
+                    <span class="label">Locations needing scheduling</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="box services">
+        <h2>Services</h2>
+        <ul>
+            <li>
+                <span class="value">{{ accountNumbers.servicesTotalCount }}</span>
+                <span class="label">Total</span>
+            </li>
+            <li>
+                <span class="value">{{ accountNumbers.servicesUndocumentedBeyondStartDate }}</span>
+                <span class="label">Past start date</span>
+            </li>
+            <li>
+                <span class="value">{{ accountNumbers.servicesEvalsPastDue }}</span>
+                <span class="label">Evals past due</span>
+            </li>
+        </ul>
+    </div>
+</section>

@@ -1,0 +1,333 @@
+<pl-tabs [tabs]="tabs"></pl-tabs>
+<h2 *ngIf="!initialized" class="page-loading" style="text-align: center">
+    Loading<br/> <pl-dot-loader></pl-dot-loader>
+</h2>
+<div class="pl-assignment-manager hidden" [ngClass]="{'visible': initialized}">
+
+  <div class="container" [ngClass]="">
+    <pl-table-wrapper class="x-qa-table" (onQuery)="onQuery($event)" [stateName]="tableStateName">
+
+      <pl-table-header-cell *ngIf="isDataLoaded" [hidden]="true">name</pl-table-header-cell>
+
+      <div class="cols">
+        <div class="col col1">
+          <div class="sticky-container side" [style.z-index]="99">
+            <div class="schoolyear-container">
+                <pl-schoolyear-select
+                    [(selectedSchoolYear)]="selectedSchoolYear"
+                    [simpleSelect]="true"
+                    [useValueId]="true"
+                    (onYearSelected)="onChangeSchoolYear($event)">
+                </pl-schoolyear-select>
+            </div>
+            <div [hidden]="!filtersVisible" class="filters-container">
+              <pl-table-filters-side
+                [filters]="filters"
+                [filtersVisible]="filtersVisible"
+                [canCloseFilters]="false"
+                [queryOnChanges]="true"
+              ></pl-table-filters-side>
+            </div>
+            <div *ngIf="onQueryElapsed" class="margin-t margin-large-l padding-l" style="font-size: 0.8rem; font-weight: 400;">
+                /demand query: <span style="font-weight: 600">{{ onQueryElapsed | number }}</span> ms
+                <br/>
+                queryId: <span style="font-weight: 600">{{ lastQueryId }}</span>
+                <br/>
+                <br/>
+                result count: <b>{{ orgDemandList.length }}</b>
+                <div *ngIf="!useFixedPageSize">
+                    --{{useFixedPageSize}}--
+                    pageSize: <b>
+                        {{pageSize}}
+                        <span *ngIf="pageSize === 25"> / 5</span>
+                        <span *ngIf="pageSize === 20"> / 4</span>
+                        <span *ngIf="pageSize === 15"> / 3</span>
+                        <span *ngIf="pageSize === 10"> / 5</span>
+                    </b>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col col2">
+          <div id="pageTop"></div>
+          <div class="sticky-container">
+            <div class="button-container">
+                <div>
+                    <div class="actions-container">
+                        <button
+                            pl-button
+                            class="action approve info"
+                            [ngClass]="{ 'active': canClickApprove() }"
+                            [disabled]="!canClickApprove()"
+                            (click)="onClickApprove()"
+                        >
+                            Approve <b>{{selectedCount() || ''}}</b> Selected
+                        </button>
+                        <button
+                            pl-button
+                            class="action reject danger"
+                            [ngClass]="{ 'active': canClickReject() }"
+                            [disabled]="!canClickReject()"
+                            (click)="onClickReject()"
+                        >
+                            Reject <b *ngIf="isOneSelected()">1</b> Selected
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <div class="button-item">
+                        <pl-input-checkbox [(model)]="includeProposedInTotals" (click)="onClickTotalsType()" label="Include Proposed/Locked"></pl-input-checkbox>
+                    </div>
+                    <div class="button-item">
+                        <pl-input-checkbox *ngIf="canToggleCapacityPlanning()" [(model)]="includeCapacityInTotals" (click)="onClickTotalsType()" label="Include Proposed Capacity Planning"></pl-input-checkbox>
+                    </div>
+                    <button pl-button class="xqa-btn-refresh-page refresh-page nowrap" (click)="onClickRefreshPage()" [disabled]="buttonRefresh || loading">
+                        <pl-icon [svg]="'rotate'" [scale]="0.6" [verticalAlign]="'-1px'" class="margin-small-r"></pl-icon> Refresh
+                    </button>
+                    <div style="display: none;"> <!-- hiding temporarily in case CAMs want it back -->
+                        <button *ngIf="isSelectAllPage()" pl-button class="xqa-btn-select-all select-all reverse active nowrap" style="background-color: #2D3A45"
+                            (click)="onClickSelectAllPage()">
+                            <pl-icon [svg]="'minus'" [scale]="0.6" [verticalAlign]="'-1px'" class="margin-small-r"></pl-icon> De-Select All On Page
+                        </button>
+                        <button *ngIf="!isSelectAllPage()" pl-button class="xqa-btn-select-all select-all nowrap" (click)="onClickSelectAllPage()">
+                            <pl-icon [svg]="'check'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon> Select All On Page
+                        </button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="table-container" style="position: relative;">
+            <pl-floating-loader *ngIf="(!isDataLoaded || loading)"></pl-floating-loader>
+            <div *ngIf="isDataLoaded && !loading && !orgDemandList.length" class="padding-xlarge-tb">
+                <h2 [style.text-align]="center">
+                There are no assignments matching the filter criteria
+                </h2>
+            </div>
+            <div *ngFor="let orgDemandItem of orgDemandList" class="org-container" [ngClass]="{ 'loading': loading }">
+              <div class="org-header">
+                <div class="org-title">
+                    <span class="org-name slate-dark">
+                        <a href="{{ service.getAccountDashboardUrl(orgDemandItem.orgName) }}" target="_blank">{{orgDemandItem.orgName}}</a>
+                         &nbsp;
+                    </span>
+                    <span *ngIf="orgDemandItem.cam" class="fulfillment-headline">
+                        {{ orgDemandItem.cam }}
+                    </span>
+                    <span *ngIf="!orgDemandItem.cam" class="fulfillment-headline missing">
+                        MISSING CAM ON THIS ACCOUNT!
+                    </span>
+                    <span class="fulfillment-headline">
+                        <b>{{getFulfillmentPercent(orgDemandItem)}}%</b> FULFILLED
+                    </span>
+                </div>
+              </div>
+
+              <div class="rows-container">
+                <div *ngIf="hasOpptyDemand(orgDemandItem)" class="row-list">
+                    <div class="row table-header">
+                        <div class="checkbox" [style.top]="'2px'" *ngIf="hasProposedItem(orgDemandItem)">
+                            <pl-input-checkbox [(model)]="orgDemandItem._checked" (onChange)="onChangeSelectAllInOrg(orgDemandItem)"></pl-input-checkbox>
+                        </div>
+                        <pl-table-header>
+                            <pl-table-header-cell [style.padding-left]="'40px'">Provider</pl-table-header-cell>
+                            <pl-table-header-cell>Hours</pl-table-header-cell>
+                            <pl-table-header-cell>Criteria</pl-table-header-cell>
+                            <pl-table-header-cell>Status</pl-table-header-cell>
+                        </pl-table-header>
+                    </div>
+                    <!-- Oppty Demands-->
+                    <div class="oppty-demand-item" *ngFor="let opptyDemandItem of orgDemandItem.opptyDemandList; index as idx">
+                        <div>
+                            <div class="oppty-demand-item-header-row">
+                                <div class="oppty-demand-item-header-content">
+                                    <div class="oppty-name left">
+                                        {{ opptyDemandItem.serviceGroupName }}
+                                    </div>
+
+                                    <div class="oppty-row right">
+                                        <span class="col ">
+                                            <span class="service-type-label">
+                                                <span class="slate-dark">{{ getMeterInfo(orgDemandItem, opptyDemandItem).percent }}</span>%
+                                            </span>
+                                        </span>
+                                        <span class="col">
+                                            <span class="meter">
+                                                <pl-simple-meter [text]="getMeterInfo(orgDemandItem, opptyDemandItem).ratio"
+                                                    [value]="getMeterInfo(orgDemandItem, opptyDemandItem).value" [width]="160" [color]="meterColor" [bgColor]="meterBackgroundColor">
+                                                </pl-simple-meter>
+                                            </span>
+                                        </span>
+                                        <span class="col">
+                                            <span class="add-assignment-button">
+                                                <button pl-button class="bare" (click)="onClickAddEdit(opptyDemandItem, orgDemandItem)">
+                                                    +Add
+                                                </button>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="!opptyDemandItem.providerSupplyList.length" class="empty-supply"></div>
+                            <div
+                                *ngFor="let supply of opptyDemandItem.providerSupplyList"
+                                class="row assignment"
+                                [ngClass]="{ 'selected': supply._checked }"
+                            >
+                                <!-- provider supply assignment proposals -->
+                                <div class="checkbox">
+                                    <span *ngIf="supply.statusCode === 'proposed' && canLockOrReserve(opptyDemandItem); else disabledCheckbox">
+                                        <pl-input-checkbox [(model)]="supply._checked" (onChange)="onChangeSelectRow(supply, orgDemandItem)"></pl-input-checkbox>
+                                    </span>
+                                    <ng-template #disabledCheckbox >
+                                        <span class="disabled-checkbox">
+                                            <div class="accent-dot"></div>
+                                        </span>
+                                    </ng-template>
+                                </div>
+                                <pl-table-row
+                                    class="row-data"
+                                    [ngClass]="{ 'selected': supply._checked }"
+                                    [isExpanded]="isExpanded(supply)"
+                                >
+                                    <pl-table-cell
+                                        class="cell-data provider-name"
+                                        [style.line-height]="'25px'"
+                                        [style.marginLeft]="'40px'"
+                                    >
+                                        <a href="{{ service.getProviderDashboardUrl(supply.providerUuid) }}" target="_blank">
+                                            {{ supply.provider }}
+                                        </a>
+                                        <div *ngIf="supply.separationDate" class="separating">
+                                            <span *ngIf="supply.isSeparating">Separating</span>
+                                            <span *ngIf="supply.isSeparated">Separated</span>
+                                            &middot; {{ supply.separationDate }}
+                                        </div>
+                                    </pl-table-cell>
+                                    <pl-table-cell class="cell-data" [style.line-height]="'25px'">
+                                        <a *ngIf="service.isEditable(supply)" [routerLink]="" (click)="onClickAddEdit(opptyDemandItem, orgDemandItem, supply)">
+                                            <div class="supply-hours">{{supply.supplyHours | number: '1.1'}}</div>
+                                        </a>
+                                        <div *ngIf="!service.isEditable(supply)" class="supply-hours">{{supply.supplyHours | number: '1.1'}}</div>
+                                    </pl-table-cell>
+                                    <pl-table-cell [style.line-height]="'25px'" [style.z-index]="9">
+                                        <a class="requirements" href="javascript:void(0)" (click)="expandCollapseRow($event, supply)">
+                                            <span *ngIf="supply.unmetRequirementsCount === null">
+                                                UNKNOWN - CONTACT TECH
+                                            </span>
+                                            <span *ngIf="supply.unmetRequirementsCount !== null && supply.unmetRequirementsCount === 0">
+                                                All Qualifications Met
+                                            </span>
+                                            <span *ngIf="supply.unmetRequirementsCount !== null && supply.unmetRequirementsCount > 0">
+                                                Missing <b>{{supply.unmetRequirementsCount}}</b>
+                                                Qualification<span *ngIf="supply.unmetRequirementsCount > 1">s</span>
+                                            </span>
+                                            <pl-icon *ngIf="!isExpanded(supply)" class="blue-light margin-small-l nowrap" [svg]="'chevron-down'" [scale]="0.6"
+                                                [verticalAlign]="'-2px'"></pl-icon>
+                                            <pl-icon *ngIf="isExpanded(supply)" class="blue-light margin-small-l nowrap" [svg]="'chevron-up'" [scale]="0.6"
+                                                [verticalAlign]="'-2px'"></pl-icon>
+                                        </a>
+                                    </pl-table-cell>
+                                    <pl-table-cell
+                                        class="cell-data"
+                                        [style.line-height]="'25px'"
+                                        [style.overflow-x]="'unset'"
+                                        [style.overflow-y]="'unset'"
+                                    >
+                                        <span class="assignment-status" [ngClass]="supply.statusCode">
+                                            <span *ngIf="!supply.showEndDate">
+                                                {{supply.statusLabel}}
+                                            </span>
+                                            <span *ngIf="supply.showEndDate">
+                                                <span *ngIf="!supply.showCompletingOnEndDate">
+                                                    Completed
+                                                </span>
+                                                <span *ngIf="supply.showCompletingOnEndDate">
+                                                    Completing on
+                                                </span>
+                                                {{ supply.endDate }}
+                                            </span>
+                                            <span class="status-date">&middot; {{ supply.modified }}</span>
+                                        </span>
+                                        <br />
+                                        <div *ngIf="supply.statusLabelDetail" class="assignment-status-detail">{{ supply.statusLabelDetail }}</div>
+                                    </pl-table-cell>
+                                    <pl-table-cell expandable>
+                                        <div class="row-expand-content" *ngIf="isExpanded(supply)">
+                                            <div *ngIf="supply._loading">
+                                                <pl-dot-loader></pl-dot-loader>
+                                            </div>
+                                            <div *ngIf="!supply._loading">
+                                                <div *ngIf="!supply.numRequirements">
+                                                    <div class="gray-dark">No Additional Qualifications Required</div>
+                                                </div>
+                                                <div *ngIf="supply.numRequirements">
+                                                    <div class="margin-large-b" *ngIf="supply.metRequirements.length">
+                                                        <h4 class="margin-b">
+                                                            Qualifications On File
+                                                        </h4>
+                                                        <ul *ngFor="let item of supply.metRequirements">
+                                                            <div>
+                                                                <pl-icon class="green" [svg]="'check'" width="16"></pl-icon>
+                                                                <span class="margin-l gray-darker">{{ item.qualification }}</span>
+                                                            </div>
+                                                        </ul>
+                                                    </div>
+                                                    <div *ngIf="supply.unmetRequirements.length">
+                                                        <h4 class="margin-b">
+                                                            Additional Credentials Needed : {{supply.unmetRequirements.length}}
+                                                        </h4>
+                                                        <ul *ngFor="let item of supply.unmetRequirements">
+                                                            <div>
+                                                                <div class="columns">
+                                                                    <div class="col left">
+                                                                        <pl-icon *ngIf="item.pending" class="yellow" [svg]="'alert'" width="16"></pl-icon>
+                                                                        <pl-icon *ngIf="!item.pending" class="red" [svg]="'alert'" width="16"></pl-icon>
+                                                                    </div>
+                                                                    <div class="col right">
+                                                                        <div *ngIf="item.pending">
+                                                                            <b>Pending</b>
+                                                                            <span *ngIf="item.estimated_met_date">(estimated {{ item.estimated_met_date }})</span>
+                                                                        </div>
+                                                                        <div
+                                                                            class="gray-darker unmet-requirement"
+                                                                            *ngFor="let option of item.options">
+                                                                            {{option}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </pl-table-cell>
+                                </pl-table-row>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <pl-table-footer
+            [hidden]="!orgDemandList.length"
+            [total]="total"
+            [currentPage]="currentPage"
+            [currentPageForce]="currentPage"
+            [useFixedPageSize]="useFixedPageSize"
+            [pageSize]="pageSize"
+            currentPageEnableForceUpdates="true"
+            class="table-footer padding-small-l"
+        ></pl-table-footer>
+
+        </div>
+      </div>
+    </pl-table-wrapper>
+  </div>
+
+</div>

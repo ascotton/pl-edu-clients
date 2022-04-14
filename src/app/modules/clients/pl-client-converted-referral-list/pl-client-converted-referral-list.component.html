@@ -1,0 +1,41 @@
+<div class="pl-client-converted-referral-list">
+    <div class="section-header">
+        <strong>{{ heading() }}</strong>
+    </div>
+    <div class="referrals">
+        <div class="referral" *ngFor="let referral of orderedReferrals()">
+            <dl>
+                <dt>Created By</dt>
+                <dd>
+                    {{ referral.createdBy.firstName }}
+                    {{ referral.createdBy.lastName }} on
+                    {{ referral.created | date:'shortDate' }}
+                </dd>
+                <ng-container *ngIf="!isDirectService">
+                    <dt>Language of Service</dt>
+                    <dd>{{ referral.language ? referral.language.name : client.primaryLanguage.name }}</dd>
+                    <dt>Short Term Coverage</dt>
+                    <dd>{{ referral.isShortTerm | plYesNoEmpty }}</dd>
+                </ng-container>
+                <ng-container *ngIf="isDirectService">
+                    <dt>Grade</dt>
+                    <dd>{{ referral.grade }}</dd>
+                    <dt>Language of Service</dt>
+                    <dd>{{ referral.language ? referral.language.name : client.primaryLanguage.name }}</dd>
+                    <dt>Duration</dt>
+                    <dd>{{ referral.duration | i18nPlural : durationPluralization }}</dd>
+                    <dt>Frequency</dt>
+                    <dd> {{ getFrequencyLabel(referral.frequency) }} </dd>
+                    <dt>Interval</dt>
+                    <dd>{{ referral.interval | plOptions : intervalOptions }}</dd>
+                    <dt>Group/Individual</dt>
+                    <dd>{{ referral.grouping | plOptions : groupingOptions }}</dd>
+                    <dt>ESY</dt>
+                    <dd>{{ referral.esy | plYesNoEmpty }}</dd>
+                    <dt>Short Term Coverage</dt>
+                    <dd>{{ referral.isShortTerm | plYesNoEmpty }}</dd>
+                </ng-container>
+            </dl>
+        </div>
+    </div>
+</div>

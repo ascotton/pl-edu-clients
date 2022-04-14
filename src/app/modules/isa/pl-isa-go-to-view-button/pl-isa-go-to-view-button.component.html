@@ -1,0 +1,14 @@
+<div class="pl-go-to-isa-view-button" *ngIf="displayComponentInUI()">
+    <div>Independent Service Agreements</div>
+    <button pl-button class="primary"
+        [disabled]="unsignedISAs === 0"
+        (click)="onClickRouteTo(isaTableMode.manageISA)">
+        Process ISAs ({{ unsignedISAs }})
+    </button>
+
+    <button pl-button class="secondary-isa-button"
+        [disabled]="signedISAs === 0"
+        (click)="onClickRouteTo(isaTableMode.readOnlyISA)">
+        Review Signed ISAs ({{ signedISAs }})
+    </button>
+</div>

@@ -1,0 +1,24 @@
+<div class="pl-permissions-denied">
+    <div class="margin-b">
+        <div class="icon-bg inline-block margin-r">
+            <pl-icon class="white" [svg]="'cross'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon>
+        </div>
+        <div class="inline-block"><h1>Sorry</h1></div>
+    </div>
+    <!-- If there is projected message content, then render it; otherwise fall back to codes -->
+    <div #message class="margin-large-b"><ng-content></ng-content></div>
+    <ng-container *ngIf="message.children.length === 0">
+       <div class="margin-large-b" *ngIf="code === 403">
+           You do not have permission to access this. If you need access to view this information, please
+           contact <a href="mailto:{{supportEmail}}" target="_blank">Customer Support</a>.
+       </div>
+       <div class="margin-large-b" *ngIf="code === 404">
+           We could not find what you were looking for. Please contact
+           <a href="mailto:{{supportEmail}}" target="_blank">Customer Support</a> if you
+           need assistance.
+       </div>
+    </ng-container>
+    <button pl-button class="primary" (click)="goBack()">
+        <pl-icon [svg]="'chevron-left'" [scale]="0.7" [verticalAlign]="'-2px'"></pl-icon> Back to Previous Page
+    </button>
+</div>

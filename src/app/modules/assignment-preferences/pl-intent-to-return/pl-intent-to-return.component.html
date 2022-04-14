@@ -1,0 +1,25 @@
+<div class="pl-intent-to-return">
+    <h1 class="margin-b">Intent to Return</h1>
+
+    <div class="margin-large-b">
+        PresenceLearning values your commitment to the kiddos you help!<br />
+    </div>
+
+    <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+
+    <div *ngIf="!isIntentComplete && !loading">
+        <pl-input-select class="form-input" [label]="'Are you planning to return to PL next school year?'" [(model)]="intentToReturn" [placeholder]="'Select'" [options]="returnOpts" [required]="true"></pl-input-select><br />
+        <!-- /* as per clinical, removing for now */ <pl-input-select class="form-input" [label]="'What is the most important factor in deciding to return to PL?'" [(model)]="mostImportantFactor" [placeholder]="'Select'" [options]="factorOpts" [required]="true"></pl-input-select><br />-->
+        <div *ngIf="this.states.length > 0">
+            <pl-input-multi-select class="form-input" [label]="'Are there any state licenses you DO NOT plan to renew this year?'" [(model)]="exemptStates" [options]="states"></pl-input-multi-select><br />
+        </div>
+        <pl-input-select class="form-input" [label]="'Would you be interested in a full time, salaried role with benefits, if it was available?'" [(model)]="fulltimeRole" [placeholder]="'Select'" [options]="yesNoOpts" [required]="true"></pl-input-select><br />
+        <pl-input-textarea [(model)]="comments" [label]="'Comments (Optional)'"></pl-input-textarea>
+        <button pl-button class="pl-button primary" [disabled]="!canSave()" (click)="saveIntent()">Save Response</button>
+    </div>
+
+    <div *ngIf="isIntentComplete && !loading">
+        <div class="complete">Thank you for your feedback. Your Clinical Account Manager will follow up as necessary.</div>
+        <button pl-button class="pl-button primary" (click)="toDashboard()">Go to Dashboard</button>
+    </div>
+</div>

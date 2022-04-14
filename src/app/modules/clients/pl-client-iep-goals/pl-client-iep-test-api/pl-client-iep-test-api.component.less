@@ -1,0 +1,61 @@
+@import 'core/colors.less';
+
+.pl-client-iep-test-api {
+
+  .divider-line {
+    height: 1px;
+    border-top: 1px solid @gray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    &.small {
+      width: 50%;
+      border-top: 1px solid @black;
+      margin-left: 10px;
+    }
+  }
+  .checkmark {
+    font-size: 15px;
+    color: green;
+  }
+  .client-id {
+    font-size: 14px;
+  }
+  button.primary {
+    background-color: @blue-medium;
+    border-color: @blue;
+  }
+  fieldset {
+    border: 2px solid @slate;
+    background-color: @slate-lighter;
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    legend {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 0 10px;
+    }
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+  .title {
+    margin-bottom: 15px;
+  }
+}
+

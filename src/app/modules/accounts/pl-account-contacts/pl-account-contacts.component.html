@@ -1,0 +1,142 @@
+<div class="pl-account-contacts">
+    <div *ngIf="isSaving" class="block">
+        <pl-dot-loader class="centered"></pl-dot-loader>
+    </div>
+
+    <div *ngIf="isAddContactButtonVisible()">
+        <button pl-button class="gray-outline" (click)="onClickNewContact()">
+            <pl-icon [svg]="'user-add'" class="margin-small-r" style="position:relative;top:-2px;"></pl-icon>
+            New Contact
+        </button>
+    </div>
+    <pl-table-wrapper (onQuery)="onQuery($event)" [orderKey]="orderKey" [pageSizeKey]="pageSizeKey">
+        <pl-table-filters-top
+            [filterSelectOpts]="filterSelectOpts"
+            [total]="total"
+            [filtersFixed]="true"
+        ></pl-table-filters-top>
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'lastName'" [orderDirection]="'ascending'">
+                Last Name
+            </pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'firstName'">First Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'title'">Title</pl-table-header-cell>
+            <pl-table-header-cell>Email</pl-table-header-cell>
+            <pl-table-header-cell>Phone</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!contacts.length && !loading" class="padding-large center">No contacts to show.</div>
+        <div
+            *ngFor="let contact of contacts; let idx = index"
+            [class.selected-contact]="contact.isOpen"
+            [class.selected-contact-visible]="contact.isOpen && contact.isAnimationComplete"
+        >
+            <pl-table-row class="pointer row" (click)="onSelectContact(contact)" [class.zebra]="idx % 2 === 1">
+                <pl-table-cell class="linkish">
+                    <pl-icon [width]="12" [svg]="'chevron-down'" *ngIf="!contact.isOpen"></pl-icon>
+                    <pl-icon [width]="12" [svg]="'chevron-up'" *ngIf="contact.isOpen"></pl-icon>
+                    &nbsp;
+                    {{ contact.lastName }}
+                </pl-table-cell>
+                <pl-table-cell>{{ contact.firstName }}</pl-table-cell>
+                <pl-table-cell>{{ contact.title }}</pl-table-cell>
+                <pl-table-cell>{{ contact.email }}</pl-table-cell>
+                <pl-table-cell>{{ contact.phone | plPhone }}</pl-table-cell>
+            </pl-table-row>
+
+            <div *ngIf="contact.isOpen && contact.isLoading" class="row-loader">
+                <pl-dot-loader></pl-dot-loader>
+            </div>
+
+            <div
+                *ngIf="contact.isOpen && !contact.isLoading"
+                class="inner"
+                [@inOutAnimation]
+                (@inOutAnimation.done)="onAnimationDone(contact, $event)"
+            >
+                <div>
+                    <button
+                        pl-button
+                        class="gray-outline"
+                        *ngIf="canEditContactDetails(contact)"
+                        (click)="onClickEditContact(contact)"
+                    >
+                        Edit Details
+                    </button>
+                    <button
+                        pl-button
+                        class="gray-outline"
+                        *ngIf="canAddRole(contact)"
+                        (click)="onClickAddRole(contact)"
+                    >
+                        Add Role
+                    </button>
+                    <button
+                        pl-button
+                        class="gray-outline"
+                        *ngIf="canAddPlatormRole(contact)"
+                        (click)="onClickAddPlatformAccess(contact)"
+                    >
+                        Add Platform Access
+                    </button>
+                </div>
+                <table class="relations-table" *ngFor="let l of contact.relationsList">
+                    <tr>
+                        <th>{{ l.typeLabel }}</th>
+                        <th>
+                            Roles
+                            <pl-icon [svg]="'info'" [width]="14" class="learn-more" (click)="onClickRolesHelpIcon()"></pl-icon>
+                        </th>
+                        <th>Platform Access</th>
+                    </tr>
+                    <tr *ngFor="let x of l.items">
+                        <td>
+                            <div *ngIf="x.showLinkToLoc">
+                                <a [routerLink]="['/location', x.location.id, 'contacts']">{{ x.key }}</a>
+                            </div>
+                            <div *ngIf="!x.showLinkToLoc">
+                                {{ x.key }}
+                            </div>
+                            <div *ngIf="x.showOrg">
+                                <span *ngIf="x.showLinkToOrg">
+                                    (<a [routerLink]="['/organization', x.organization.id, 'contacts']">{{x.organization.name}}</a>)
+                                </span>
+                                <span *ngIf="!x.showLinkToOrg">({{ x.organization.name }})</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngFor="let cr of x.items" class="role">
+                                <span>{{ cr.roleName }}</span>
+                                <sup *ngIf="canRemoveRelation(contact, cr)">
+                                    <a [routerLink]="" (click)="onClickRemoveRelation(contact, cr)">[X]</a>
+                                </sup>
+                                <sup *ngIf="isSFBasedRelation(cr)">
+                                    <pl-icon
+                                        style="zoom:.65"
+                                        [svg]="'info'"
+                                        class="blue margin-r"
+                                        title="Contact PresenceLearning for any needed changes."
+                                    ></pl-icon>
+                                </sup>
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngFor="let cr of x.items2" class="role">
+                                <span>{{ cr.roleName }}</span>
+                                <sup *ngIf="canRemoveRelation(contact, cr)">
+                                    <a [routerLink]="" (click)="onClickRemoveRelation(contact, cr)">[X]</a>
+                                </sup>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <pl-table-footer [total]="total" [currentPage]="currentPage" [pageSize]="pageSize"></pl-table-footer>
+    </pl-table-wrapper>
+</div>

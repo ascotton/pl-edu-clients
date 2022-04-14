@@ -1,0 +1,15 @@
+<div class="pl-client-noms">
+    <div class="section-header">
+        <b class='margin-r'>NOMS</b>
+        <span *ngIf="mayAddNoms" [hidden]="saveNomVisible">
+            <span pl-button class="link x-qa-edit-noms" (click)="addNom()">Add</span>
+        </span>
+    </div>
+    <div *ngIf="saveNomVisible" class="margin-t">
+        <pl-client-nom-save [service]="service" [nom]="nomSave" (onCancel)="toggleSaveNomVisible()" (onSave)="onSaveNom()" (onDelete)="onSaveNom()"></pl-client-nom-save>
+    </div>
+
+    <div [hidden]="saveNomVisible || !noms.length">
+        <pl-table [data]="noms" [columns]="columns" [count]="dataInfo.count" [queryId]="dataInfo.queryId" (onQuery)="onQueryTable($event)" (onRowClick)="onRowClick($event)" [reQuery]="reQuery"></pl-table>
+    </div>
+</div>

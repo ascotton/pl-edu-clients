@@ -1,0 +1,97 @@
+@import 'core/colors.less';
+
+:host {
+    display: flex;
+    .loading-overlay {
+        background-color: rgba(255, 255, 255, .5);
+        position: fixed;
+        z-index: 9998;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        // Center
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        .content {
+            flex: 0 0 auto;
+        }
+    }
+    .pl-master-schedule {
+        margin-left: 16px;
+        margin-right: auto;
+        height: calc(100vh - 185px);
+        flex-direction: column;
+        &_actions {
+            justify-content: flex-end;
+            // background-color: #E3E8ED;
+            > div {
+                display: flex;
+                &.end {
+                    margin-left: auto;
+                }
+            }
+            [pl-button] {
+                margin: 0;
+            }
+            pl-data-loader {
+                display: flex;
+                margin-right: 8px;
+                min-width: 200px;
+            }
+        }
+        .keys-container {
+            margin-left: 48px;
+            display: flex;
+
+            .key-container {
+                display: flex;
+                font-size: 13px;
+                line-height: 16px;
+                width: 100px;
+                margin-left: 8px;
+                
+                .dot {
+                    height: 10px;
+                    width: 12px;
+                    border-radius: 50%;
+                    border: solid #000 1px;
+                    margin-top: 2px;
+                    &.provider-availability {
+                        background-color: @gray-lightest;
+                    }
+                    &.location-availability {
+                        background-color: @cream;
+                    }
+                    &.open-time {
+                        background-color: @blue-lightest;
+                    }
+                    &.reserved {
+                        background-color: @purple;
+                    }
+                    &.scheduled {
+                        background-color: @white;
+                    }
+                    &.scheduled-other-school {
+                        background-color: @red;
+                    }
+                    &.computer-not-available {
+                        background: repeating-linear-gradient(
+                            45deg,
+                            #FFF,
+                            #FFF 3px,
+                            @red 3px,
+                            @red 4px
+                        );
+                    }
+                }
+                .label {
+                    margin-left: 4px;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

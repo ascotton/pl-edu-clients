@@ -1,0 +1,17 @@
+:host {
+    display: inline-block;
+    position: relative;
+    .chart-label {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        position: absolute;
+        flex-direction: column;
+        z-index: -1;
+        &_value {
+            font-size: 2.5em;
+        }
+    }
+}

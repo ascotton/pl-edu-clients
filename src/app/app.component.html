@@ -1,0 +1,60 @@
+<div class="app" [ngClass]="classContainer">
+    <pl-app-nav
+        *ngIf="!newDesign
+            && browserSupported 
+            && appConfig.showAppNav 
+            && !util.isFullScreenRoute() 
+            && loggedIn"
+        [pageLinks]="hidePageLinks()?null:pageLinks"
+        [appLinks]="hideAppLinks()?null:appLinks"
+        [supportLinks]="supportLinks"
+        [isAlert]="isAssumedLogin"
+        [userMenuLinks]="userMenuLinks"
+        [logo]="logo"
+        [user]="currentUser"
+        [version]="gitSha"
+        [showLinks]="!showSearch"
+    >
+        <pl-global-search *ngIf="allowSearch" (visibilityChange)="showSearch = $event" class="margin-r" pl-nav-right></pl-global-search>
+        <div *ngIf="hasTasks && !hidePageLinks()" pl-nav-right>
+            <a [routerLink]="['/landing']" [title]="'You\'ve got tasks!'">
+                <img src="assets/task_icon.png" class="task-image" [ngClass]="{ 'task-image-unread' : hasUnreadTasks }" />
+            </a>
+        </div>
+    </pl-app-nav>
+    <pl-nav-header *ngIf="!newDesign && appConfig.showNavHeader"></pl-nav-header>
+    <div [hidden]="!newDesign && !browserSupported" class="content" [class.full]="util.isFullScreenRoute() || fullWidth">
+        <ng-progress id="navProgress" color="#F26724" [thick]="true" [spinner]="false"></ng-progress>
+        <pl-e2e-output></pl-e2e-output>
+        <pl-toast></pl-toast>
+        <pl-confirm-dialog></pl-confirm-dialog>
+        <pl-modal></pl-modal>
+        <router-outlet></router-outlet>
+        <pl-assumed-login-bar [username]="currentUsername"></pl-assumed-login-bar>
+        <pl-downloads></pl-downloads>
+        <pl-inactive></pl-inactive>
+    </div>
+    <pl-browser-unsupported *ngIf="newDesign && !browserSupported"></pl-browser-unsupported>
+</div>
+<div class="pl-debug-bar" *ngIf="_state.initialized && showDebugBar()">
+    <div class="debug-bar-main" (click)="toggleDebugBar()">
+    <b>{{_state.debugBarInfo.username}}</b> •
+    {{_state.debugBarInfo.firstName}} {{_state.debugBarInfo.lastName}} •
+    <span *ngIf="_state.debugBarInfo.providerType">{{_state.debugBarInfo.providerType}} •</span>
+    [{{_state.debugBarInfo.groups}}] &nbsp;•&nbsp;
+    <b>{{_state.gitSha}}</b> <a (click)="onClickLogout($event)" class="red">LOGOUT</a>
+    <pl-icon class="black" [svg]="'close-inverted'" [scale]="0.6" [verticalAlign]="'-2px'" (click)="hideDebugBar()"></pl-icon>
+    </div>
+    <div class="debug-bar-extra-container" *ngIf="_state.fullDebugBar">
+        <div>
+            <h1>Current User</h1>
+            <div class="debug-bar-extra">
+                <ngx-json-viewer [json]="currentUser"></ngx-json-viewer>
+            </div>
+        </div>
+        <div *ngIf="_state.debugBarInfo.extra">
+            <h1>Extra Info</h1>
+            <ngx-json-viewer [json]="_state.debugBarInfo.extra"></ngx-json-viewer>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="pl-time-grid" [class.drawable]="drawMode !== 0">
+    <div class="pl-time-grid_body">
+        <div class="pl-time-grid_time-labels gray-darker">
+            <div class="pl-time-grid_time-labels_header pl-time-grid_column-header">
+                <ng-content select=".time-labels-header"></ng-content>
+            </div>
+            <div class="pl-time-grid_time-labels_slot">
+                <div class="pl-time-grid_time-labels_slot_hour" *ngFor="let label of timeLabels">
+                    {{ label }}
+                </div>
+            </div>
+        </div>
+
+        <pl-time-grid-column *ngFor="let db of dayBlocks" [slots]="slots"
+            [slotTemplate]="slotTemplate" [blocks]="db.blocks" 
+            [drawMode]="drawMode" [blockDuration]="blockDuration" [allWeeks]="allWeeks"
+            [timezone]="timezone"
+            (blockAction)="blockAction.emit($event)"
+            (actionTrigerred)="onColumnActionTrigerred($event, db.day.key)"
+            [style.flex-basis.px]="columnWidth"
+            [style.max-width.px]="columnWidth"
+            [style.min-width.px]="columnWidth">
+            <ng-container *ngIf="dayHeaderTemplate; else defaultDayLabel"
+                [ngTemplateOutlet]="dayHeaderTemplate"
+                [ngTemplateOutletContext]="db.day">
+            </ng-container>
+            <ng-template #defaultDayLabel>
+                {{ db.day.label }}
+            </ng-template>
+        </pl-time-grid-column>
+    </div>
+</div>

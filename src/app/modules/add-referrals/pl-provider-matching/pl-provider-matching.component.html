@@ -1,0 +1,8 @@
+<div class="pl-provider-matching">
+    <div class="container">
+        <pl-location-banner [locationName]="locationName"></pl-location-banner>
+    </div>
+    <div class="matching-content">
+        <pl-input-radio-group class="form-input" [label]="'Matching Options'" [(model)]="model.selection" [options]="model.choices" [required]="true"></pl-input-radio-group>
+    </div>
+</div>

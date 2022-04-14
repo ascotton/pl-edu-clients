@@ -1,0 +1,33 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+@pl-form-background: @slate-lightest;
+
+.label-value {
+    .flexbox;
+
+    .label, .value {
+        margin-bottom: @spacing-xlarge;
+    }
+    .label {
+        .flex1;
+        font-weight: bold;
+    }
+    .value {
+        .flex1;
+        // break unbreakable text, like long email addresses
+        overflow: hidden;
+        overflow-wrap: break-word;
+    }
+}
+
+fieldset.pl-fieldset {
+    border: 1px solid silver;
+    border-radius: 5px;
+    padding: 5px;
+    legend {
+        font-size: 15px;
+        padding: 0 10px;
+        margin-left: 10px;
+    }
+}

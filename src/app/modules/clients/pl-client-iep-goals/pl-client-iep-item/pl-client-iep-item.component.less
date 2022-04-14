@@ -1,0 +1,132 @@
+@import 'core/colors.less';
+
+.pl-client-iep-item {
+  .future-transition-message {
+    text-align: right;
+  }
+
+  .iep-header {
+    padding: 7px 5px 0 5px;
+    height: 33px;
+    border: 1px solid @gray-lighter;
+    white-space: nowrap;
+    &.ACTIVE {
+      background-color: @blue-lightest;
+    }
+    &.FUTURE {
+      background-color: @cream;
+    }
+    &.COMPLETE {
+      background-color: @gray-lightest;
+    }
+    .title {
+      font-size: 20px;
+    }
+    &.iep-columns {
+      display: flex;
+      .col {
+        &.col-1 {
+          flex: 75%;
+        }
+        &.col-2 {
+          flex: 25%;
+          text-align: right;
+          .end-iep-button, .remove-iep-button {
+            margin: 0 0 3px 0;
+            margin-right: 5px;
+            position: relative;
+            top: -2px;
+          }
+          .end-iep-button.enabled {
+              background-color: @blue-medium;
+              color: white;
+              border: none;
+          }
+          .remove-iep-button {
+            background-color: @yellow-dark;
+            color: black;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+
+  .banner-end-iep {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .divider-line {
+    border-top: 1px solid @gray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    &.margin-bottom-small {
+      margin-bottom: 6px;
+    }
+    &.margin-top-small {
+      margin-top: 6px;
+    }
+    &.collapse-bottom {
+      margin-bottom: 0;
+    }
+    &.collapse-top {
+      margin-top: 0;
+    }
+  }
+
+  .cursor-hand:hover {
+    cursor: pointer;
+  }
+
+  .banner {
+    border-radius: 5px;
+    padding: 10px;
+    background-color: @blue-lighter;
+    white-space: no-wrap;
+    .icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 20px;
+      background-color: @blue;
+      text-align: center;
+      .text {
+        position: relative;
+        top: 0;
+        font-weight: bold;
+        color: white;
+        font-size: 15px;
+      }
+    }
+    &.info {
+      background-color: @yellow-light;
+      .icon {
+        background-color: @yellow;
+      }
+    }
+    .banner-text {
+      .message {
+        padding-left: 10px;
+        padding-right: 5px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+}

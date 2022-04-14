@@ -1,0 +1,305 @@
+<div class="pl-dashboard-ssp">
+    <pl-dot-loader *ngIf="!showSchoolStaffProvider && !showPrivatePracticeProvider && !licenseInfoIsNeeded"></pl-dot-loader>
+    <div *ngIf="showSchoolStaffProvider || showPrivatePracticeProvider">
+        <div class="card-section">
+            <div class="card">
+                <div class="card-header">Welcome to PresenceLearning!</div>
+                <div class="card-body" *ngIf="showPrivatePracticeProvider">
+                    <p>Please check out the resources and quick start guides below to prepare for your first session via the PresenceLearning platform.</p>
+                    <br />
+                    <iframe src="https://player.vimeo.com/video/574613306" width="640" height="338" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="card-body" *ngIf="showSchoolStaffProvider">
+                    <iframe src="https://player.vimeo.com/video/586934013?h=16bbbf4a28" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                    <br />
+                    Please follow the steps below to start your training and to prepare for your first session via the
+                    PresenceLearning platform.
+                    <div class="steps-container">
+                        <ul>
+                            <li>
+                                <h4>Tech Check</h4>
+                                In order to make sure your device is capable of working with the platform, be sure to run a
+                                Tech Check. If you encounter any issues with your set up, support will be able to help you
+                                out.<br />
+                                <p><a target="_blank" href="https://setup.presencelearning.com">Run a Tech Check</a></p>
+                            </li>
+                            <li>
+                                <h4>Therapy Foundations Training</h4>
+                                Complete this online course to learn to to use the PresenceLearning platform! This training
+                                must be completed prior to attending a LIVE training.<br />
+                                <p><a target="_blank" routerLink="/landing/launch-coassemble">Complete Therapy Foundations Training Course</a></p>
+                            </li>
+                            <li *ngFor="let item of liveTrainings | keyvalue">
+                                <h4>{{ item.key }} Live Training</h4>
+
+                                After you’ve completed the Therapy Foundations Training, schedule a live training to learn
+                                how to apply best practices.<br />
+
+                                <hr *ngIf="item.value[TYPE_REGISTRATION].length > 0" class="inner" />
+
+                                <div *ngFor="let r of item.value[TYPE_REGISTRATION]">
+                                    <pl-icon class="black" [svg]="'schedule-time'" [scale]=".6"></pl-icon>
+                                    <span *ngIf="r.attended">You attended:</span>
+                                    <span *ngIf="!r.attended">You're registered for:</span>
+                                    <b>{{ r.formattedTime }}</b>
+                                    <br />
+                                    <span *ngIf="r.canCancel">
+                                        <br />
+                                        When it's time for your session, a "Join" link will appear here. If you won't be able to make it,
+                                        <a
+                                            [routerLink]=""
+                                            (click)="onCancel(r)"
+                                        >cancel your registration</a>.
+                                    </span>
+                                    <p *ngIf="r.joinUrl"><a href="{{ r.joinUrl }}" target="_blank">Join this session now!</a></p>
+                                    <hr class="inner" />
+                                </div>
+                                <p *ngIf="!item.saving && item.value[TYPE_UPCOMING].length > 0"><a [routerLink]="" (click)="onShowMeetings(item.key, item.value[TYPE_UPCOMING], false)">Choose
+                                    <span *ngIf="item.value[TYPE_REGISTRATION].length === 0">a</span>
+                                    <span *ngIf="item.value[TYPE_REGISTRATION].length > 0">an additional</span>
+                                time</a></p>
+                                <pl-dot-loader *ngIf="item.saving"></pl-dot-loader>
+                            </li>
+                        </ul>
+                        <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+                    </div>
+                    If you have any clinical questions along the way, please connect with us during Office Hours or by emailing
+                    <a href="mailto:askaclinician@presencelearning.com">askaclinician@presencelearning.com</a>.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">PresenceLearning Resources</div>
+                <div class="card-body">
+                    <div
+                        class="app-item inline-block padding-lr"
+                        *ngFor="let link of apps"
+                    >
+                        <a
+                            *ngIf="link.href"
+                            routerLink="{{ link.href }}"
+                            routerLinkActive="active"
+                            [target]="(link.isNewWindow) ? '_blank' : null"
+                        >
+                            <pl-icon
+                                class="blue-medium"
+                                [svg]="link.icon"
+                                [scale]="1.5"
+                            ></pl-icon>
+                            <div class="font-h5 blue-medium"><b>{{ link.label }}</b></div>
+                        </a>
+                        <a
+                            *ngIf="link.hrefAbsolute"
+                            class="link-unstyled link-no-color"
+                            target="_blank"
+                            href="{{ link.hrefAbsolute }}"
+                        >
+                            <pl-icon
+                                class="blue-medium"
+                                [svg]="link.icon"
+                                [scale]="1.5"
+                            ></pl-icon>
+                            <div class="font-h5 blue-medium"><b>{{ link.label }}</b></div>
+                        </a>
+                    </div>
+                    <hr />
+                    <div class="room-title margin-small-b">
+                        <span class="font-h4">Room URL</span>
+                    </div>
+                    <div
+                        class="copy margin-small-b"
+                        [ngClass]="{'copied': isCopied()}"
+                    >
+                        <input
+                            id="room-url"
+                            class="url"
+                            value="{{ roomUrl }}"
+                            readonly
+                        />
+                        <span
+                            class="copy-text"
+                            (click)="copyRoomUrl()"
+                        >
+                            <pl-icon
+                                *ngIf="isCopied()"
+                                class="white"
+                                [svg]="'check'"
+                                [scale]="1"
+                            ></pl-icon>
+                            <span
+                                class="copy-label"
+                                *ngIf="!isCopied()"
+                            >Copy</span>
+                        </span>
+                    </div>
+                    <div class="margin-large-t margin-small-b">Experiencing issues with your Room?</div>
+                    <div><button
+                            pl-button
+                            class="link"
+                            (click)="onClickSupportChat()"
+                        >Chat with Support</button></div>
+                    <div class="margin-large-t margin-small-b">Tech Support</div>
+                    <div><a href="mailto:asksupport@presencelearning.com">asksupport@presencelearning.com</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="card-section" *ngIf="showSchoolStaffProvider && hasWorkshops">
+            <div class="card">
+                <div class="card-header">Office Hours</div>
+                <div class="card-body">
+                    These drop-in, open format sessions give you quick access and answers to your questions from experienced teletherapists.
+                    <div class="steps-container">
+                        <ul>
+                            <li *ngFor="let item of workshops | keyvalue">
+                                <h4>{{ item.key }}</h4>
+
+                                <div *ngFor="let r of item.value[TYPE_REGISTRATION]">
+                                    <pl-icon class="black" [svg]="'schedule-time'" [scale]=".6"></pl-icon>
+                                    <span *ngIf="r.attended">You attended:</span>
+                                    <span *ngIf="!r.attended">You're registered for:</span>
+                                    <b>{{ r.formattedTime }}</b>
+                                    <br />
+                                    <span *ngIf="r.canCancel">
+                                        <br />
+                                        When it's time for your session, a "Join" link will appear here. If you won't be able to make it,
+                                        <a
+                                            [routerLink]=""
+                                            (click)="onCancel(r)"
+                                        >cancel your registration</a>.
+                                    </span>
+                                    <p *ngIf="r.joinUrl"><a href="{{ r.joinUrl }}" target="_blank">Join this session now!</a></p>
+                                    <hr class="inner" />
+                                </div>
+                                <p *ngIf="!item.saving && item.value[TYPE_UPCOMING].length > 0"><a [routerLink]="" (click)="onShowMeetings(item.key, item.value[TYPE_UPCOMING], true)">
+                                    Choose a time
+                                </a></p>
+                                <pl-dot-loader *ngIf="item.saving"></pl-dot-loader>
+                            </li>
+                        </ul>
+                    </div>
+                    Prefer a 1:1 office hours with one of our clinical experts? Please request at <a href="mailto:askaclinician@presencelearning.com">askaclinician@presencelearning.com</a> and we will reach out to schedule.
+                </div>
+            </div>
+        </div>
+        <div class="card-section" *ngIf="showPrivatePracticeProvider">
+            <div class="card">
+                <div class="card-header">Show & Share Therapy Ideas!</div>
+                <div class="card-body">
+                    <div style="float:right; width: 320px;">
+                        <iframe src="https://player.vimeo.com/video/574134551" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div>
+                        <p>Watch experienced PresenceLearning users share their tips and tricks for making the most of the features you learned in the Quick Start guide.</p>
+                        <br />
+                        <a href="https://presencelearning.helpjuice.com/show-share" target="_blank">See All Show & Share Videos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-section" *ngIf="showPrivatePracticeProviderAssessments">
+            <div class="card">
+                <div class="card-header">Assessments</div>
+                <div class="card-body">
+                    <div style="float:right; width: 320px;">
+                        <iframe src="https://player.vimeo.com/video/574574956" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div>
+                        <p>Learn about the research based features for administering remote assessments.  PresenceLearning interactive modes and features allow you to deliver assessments with confidence.</p>
+                        <br />
+                        <a href="https://presencelearning.helpjuice.com/assessments-for-individual-group-practice/assessment-directory-individual-group-practice" target="_blank">See the Assessment Directory for more information</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-section" *ngIf="showSchoolStaffProvider">
+            <div class="card">
+                <div class="card-header">Accounts & Services</div>
+                <div class="card-body">
+                    <div class="font-h4">Tech Support</div>
+                    <div><a href="mailto:asksupport@presencelearning.com">asksupport@presencelearning.com</a></div>
+                    <div>1-844-415-4592</div>
+                    <br />
+                    <div>
+                        <div class="font-h4">Clinical Support</div>
+                        <div><a href="mailto:askaclinician@presencelearning.com">askaclinician@presencelearning.com</a></div>
+                        <br />
+                        <div class="font-h4">Teletherapy Essentials Facebook Group</div>
+                        <div><a href="https://www.facebook.com/groups/688197601802713" target="_blank">Access Facebook Group</a></div>
+                        <br />
+                        <div *ngIf="equipmentOrderUrl">
+                            <div class="font-h4">Equipment</div>
+                            <div><a href="{{ equipmentOrderUrl }}" target="_blank">Equipment Order Form</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-section" *ngIf="licenseInfoIsNeeded">
+        <div class="card">
+            <div class="card-header">Welcome to PresenceLearning!</div>
+            <div class="card-body">
+                <p>In order to activate your account and access to assessments, please verify your credentials below.</p>
+                <br />
+                <form [formGroup]="licenseInfoFormGroup">
+                    <pl-input-text
+                        class="form-input"
+                        [label]="'Name (as it appears on license)'"
+                        [formCtrl]="licenseInfoFormGroup"
+                        [(model)]="licenseInfo.name"
+                        [required]="true"
+                    ></pl-input-text>
+                    <pl-input-text
+                        class="form-input"
+                        [label]="'Title'"
+                        [formCtrl]="licenseInfoFormGroup"
+                        [(model)]="licenseInfo.title"
+                        [required]="true"
+                    ></pl-input-text>
+                    <pl-input-text
+                        class="form-input"
+                        [label]="'Phone number'"
+                        [formCtrl]="licenseInfoFormGroup"
+                        [pattern]="
+                                '^[\+]?[ ]?[0-9]{0,3}[ ]?[(]?[0-9]{3}[)]?[- \.]?[0-9]{3}[- \.]?[0-9]{4,6}[ ,]{0,2}(x|ex|ext)?[ \.]?[0-9]*$'
+                        "
+                        [validationMessages]="{ pattern: 'Must be a valid phone number' }"
+                        [(model)]="licenseInfo.phone"
+                        [required]="true"
+                    ></pl-input-text>
+                    <pl-input-select
+                        class="form-input"
+                        [label]="'License Type'"
+                        [formCtrl]="licenseInfoFormGroup"
+                        [options]="licenseTypeSelectOpts"
+                        [(model)]="licenseInfo.licenseType"
+                        [required]="true"
+                    ></pl-input-select>
+                    <pl-input-select
+                        class="form-input"
+                        [label]="'State'"
+                        [formCtrl]="licenseInfoFormGroup"
+                        [options]="stateSelectOpts"
+                        [(model)]="licenseInfo.state"
+                        [required]="true"
+                    >
+                    </pl-input-select>
+                    <pl-input-text
+                        class="form-input"
+                        [label]="'License Number'"
+                        [formCtrl]="licenseInfoFormGroup"
+                        [(model)]="licenseInfo.licenseNumber"
+                        [required]="true"
+                    ></pl-input-text>
+                    <pl-input-text
+                        class="form-input"
+                        [label]="'Relevant Degrees'"
+                        [formCtrl]="licenseInfoFormGroup"
+                        [(model)]="licenseInfo.relevantDegrees"
+                        [required]="true"
+                    ></pl-input-text>
+                    <button pl-button class="success" (click)="onClickSaveLicenseInfo()" [disabled]="!canClickSaveLicenseInfo()">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

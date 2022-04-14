@@ -1,0 +1,106 @@
+
+<h1 class="margin-xlarge-tb">
+    Platform Dashboard
+</h1>
+<!--
+Your dashboard helps keep you kep track of what’s going on at your district. Adipisci accusamus sit ducimus excepturi. In autem repudiandae voluptate tempora quia. Dolorem molestiae maiores reprehenderit minus.
+<br/>
+<a href="">Take a tour to learn more!</a>
+-->
+<ng-container *ngIf="data$ | async as data">
+    <section class="margin-xlarge-tb">
+        <h2 class="padding-b">
+            District Providers
+            <a class="left-nav upper" routerLink="../user-management">
+                Manage Users
+            </a>
+        </h2>
+        <mat-divider></mat-divider>
+        <div class="padding-tb">
+            {{ data.dashboard?.total_providers }}
+            Total Providers
+            (Updated {{ today | date: 'M/dd/yyyy' }})
+        </div>
+        <div class="row between-xs margin-t">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="text-center bold">
+                    Platform User Activity
+                </div>
+                <pl-data-loader>
+                    <pl-platform-user-activity class="padding-lr" 
+                        [fullWidth]="true" [usage]="data.userActivity?.days">
+                    </pl-platform-user-activity>    
+                </pl-data-loader>
+            </div>
+            <div *ngIf="!(organization$ | async)?.isGroupOrganization"
+                class="col-xs-12 col-sm-6 col-md-4 col-lg-2 margin-xlarge-b">
+                <div class="text-center bold margin-b">
+                    Users by Occupation
+                </div>
+                <pl-data-loader>
+                    <div *ngFor="let item of data.dashboard?.providers_type" class="flexbox margin-b">
+                        <strong class="pl-provider-type-value margin-lr">
+                            {{ item.count }}
+                        </strong>
+                        <span>
+                            {{ item.name }}
+                        </span>
+                    </div>
+                </pl-data-loader>
+            </div>
+            <div class="col-xs-12 col-md-4 col-lg-5 margin-xlarge-b">
+                <div class="text-center bold margin-b">
+                    Platform Licenses
+                </div>
+                <pl-platform-licenses></pl-platform-licenses>
+            </div>
+        </div>
+    </section>
+    <section class="margin-xlarge-t" *ngIf="!(isGroupPrivatePractice$ | async )">
+        <h2 class="padding-b">
+            User Training Progress
+            <a class="left-nav upper" routerLink="../training">
+                Manage Training
+            </a>
+        </h2>
+        <mat-divider></mat-divider>
+        <pl-training-graphs 
+            class="margin-t center-xs start-md" 
+            [total]="data.dashboard?.live_training.total   " 
+            [attended]="data.dashboard?.live_training.attended"
+            [completed]="data.dashboard?.teletherapy_foundations_training.completed" 
+            [inProgress]="data.dashboard?.teletherapy_foundations_training.in_progress" >
+        </pl-training-graphs>
+    </section>
+    <section class="margin-xlarge-t" *ngIf="(organization$ | async) as organization">
+        <h2 class="padding-b">
+            Support
+        </h2>
+        <mat-divider></mat-divider>
+        <div class="row between-xs margin-t margin-xlarge-b">
+            <div class="col-xs-12 col-md margin-b">
+                <strong>Platform Support</strong><br/>
+                <a target="_blank" href="mailto:asksupport@presencelearning.com">
+                    asksupport@presencelearning.com
+                </a>
+            </div>
+            <!--
+            <div class="col-xs-12 col-md margin-b">
+                <br/>
+                <a target="_blank" href="">
+                    View all training videos and FAQ
+                </a>
+            </div>
+            -->
+            <div class="col-xs-12 col-md margin-b">
+                <strong>Customer Success Contact</strong><br/>
+                {{ organization.accountOwner?.firstName }} 
+                {{ organization.accountOwner?.lastName }}<br/>
+                <a target="_blank" href="mailto:{{ organization.accountOwner?.email }}">
+                    {{ organization.accountOwner?.email }}
+                </a><br/>
+                <!--{{ organization.accountOwner?.profile.primaryPhone }}-->
+            </div>
+        </div>
+    </section>
+</ng-container>

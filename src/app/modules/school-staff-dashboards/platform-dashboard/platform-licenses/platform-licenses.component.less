@@ -1,0 +1,43 @@
+
+@progress-bar-height: 28px;
+
+.pl-license {
+    &-legends {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    &-type {
+        top: 0;
+        width: 100%;
+        color: white;
+        position: absolute;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &-container {
+            position: relative;
+            .mat-progress-bar {
+                border-radius: @progress-bar-height / 2;
+                height: @progress-bar-height !important;
+            }
+            .mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+                &.mat-warn {
+                    color: #FFF;
+                }
+            }
+        }
+        &-name {
+            text-align: center;
+        }
+        &-value {
+            line-height: @progress-bar-height;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+    }
+}

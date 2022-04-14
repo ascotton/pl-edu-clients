@@ -1,0 +1,80 @@
+<div class="pl-client-referral-reassign">
+    <pl-modal-header-wrapper headerText="Assign/Reassign Referrals">
+        <strong class="referrals-title">
+            Selected Referrals
+        </strong>
+        <div class="referrals rows padding-large-lr padding-tb margin-large-b">
+            <div class="row padding">
+                <div class="col-xs">
+                    <strong> Student Name </strong>
+                </div>
+                <div class="col-xs">
+                    <strong> Referral </strong>
+                </div>
+            </div>
+            <div *ngFor="let referral of referrals" class="row padding">
+                <div class="col-xs">
+                    {{ referral.client.firstName }} {{ referral.client.lastName }}
+                </div>
+                <div class="col-xs">
+                    {{ productTypeName(referral) }}
+                </div>
+            </div>
+        </div>
+        <div class="padding-t">
+            <strong>
+                Select {{ discipline }} provider to assign/reassign the above referrals/services
+            </strong>
+        </div>
+        <div class="providers padding margin-large-b">
+            <div class="row padding">
+                <div class="col-xs">
+                    <strong> Provider </strong>
+                </div>
+                <div class="col-xs text-center">
+                    <strong> Caseload </strong>
+                </div>
+                <div class="col-xs text-center estimated-col">
+                    <strong> Estimated Remaining Hours </strong>
+                </div>
+            </div>
+            <pl-dot-loader *ngIf="loading; else providerRows">
+            </pl-dot-loader>
+            <ng-template #providerRows>
+                <div class="rows">
+                    <div *ngFor="let provider of providers" class="row padding pointer">
+                        <div class="col-xs">
+                            <pl-input-radio [(model)]="selectedProviderUserId" [value]="provider.userId" [label]="provider.name" [name]="'providerRadio'"></pl-input-radio>
+                        </div>
+                        <div class="col-xs text-center">
+                            {{ provider.caseloadCount }}
+                        </div>
+                        <div class="col-xs text-center">
+                            {{ provider.remainingAvailableHours }}
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+
+        <div class="margin-b">
+            Need another provider? 
+            <a href="{{ this.requestLink }}" target="_blank">
+                Request Provider Assignment.
+            </a>
+        </div>
+        <div class="buttons">
+            <div class="buttons-primary">
+                <button pl-button
+                    class="success x-qa-reassign-confirm-btn"
+                    [disabled]="!selectedProviderUserId || loading || submiting"
+                    (click)="reassign()">
+                    Save
+                </button>
+                <button (click)="cancel()" pl-button class="x-qa-reassign-cancel-btn">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

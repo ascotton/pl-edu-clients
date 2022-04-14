@@ -1,0 +1,28 @@
+<div class="pl-demo-event-bus-0"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  >
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} - {{_state.ID}}
+  </div>
+
+  <h1 class="title">
+    Component 0
+  <button pl-button class="primary" (click)="onClickSendMessage({color: 'silver'}, 'CTX_DEMO_CLIENT')">Client Stream</button>
+  <button pl-button class="primary" (click)="onClickSendMessage({color: 'orange'}, 'CTX_DEMO_PROVIDER')">Provider Stream</button>
+  <button pl-button class="primary" (click)="onClickSendMessage({color: 'pink'})">Global Stream</button>
+  <button pl-button class="secondary" (click)="onClickSendMessage({color: 'white'})">RESET</button>
+  </h1>
+
+  <div class="divider-line"></div>
+
+  <div style="text-align: center">
+    <pl-demo-event-bus-1></pl-demo-event-bus-1>
+    <pl-demo-event-bus-2 class="margin-xlarge-l"></pl-demo-event-bus-2>
+  </div>
+
+  <div class="margin-large-t" style="text-align: center">
+    <pl-demo-event-bus-3></pl-demo-event-bus-3>
+  </div>
+  
+</div>

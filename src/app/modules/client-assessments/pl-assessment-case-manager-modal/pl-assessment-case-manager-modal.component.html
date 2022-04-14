@@ -1,0 +1,23 @@
+<div mat-dialog-content class="pl-assessment-case-manager-modal-container">
+    <div class="modal-header">
+        <h2><strong>Add Case Manager</strong></h2>
+        <pl-icon
+            class="close-button pointer margin-small-r"
+            [svg]="'cross'"
+            [scale]="0.8"
+            (click)="onClickCloseButton()">
+        </pl-icon>
+    </div>
+    <div class="modal-container">
+        <pl-client-contact-save
+            [client]="client"
+            [contact]="contact"
+            [contactTypes]="contactTypes"
+            [languages]="languages"
+            [showToastOnSave]="false"
+            (onSave)="onSaveContact($event)"
+            (onDelete)="onDeleteContact($event)"
+            (onCancel)="onClickCloseButton()">
+        </pl-client-contact-save>
+    </div>
+</div>

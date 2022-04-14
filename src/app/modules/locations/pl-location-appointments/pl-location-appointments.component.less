@@ -1,0 +1,124 @@
+@import 'core/colors.less';
+@import 'core/flexbox.less';
+@import 'core/spacing.less';
+@import 'core/decoration.less';
+@import 'core/typography.less';
+
+// print css? Would need to be applied to the whole app to remove the header?
+
+.pl-location-appointments {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .filter-box, .appointments-box {
+        background-color: @slate-lightest;
+        .padding-large;
+        box-shadow: @box-shadow-component;
+    }
+    .appointments-box {
+        .padding-xlarge;
+    }
+
+    .appointments-box {
+        .header {
+            .left-spacer {
+                width: 175px;
+            }
+            .title {
+                text-align: center;
+                .font-h1;
+            }
+        }
+
+        .headers, .appointments-body, .day-appointment {
+            width: 100%;
+        }
+
+        .headers {
+            >div {
+                .flex1;
+                background-color: @slate-lighter;
+                .padding;
+
+                &:not(:last-child) {
+                    .margin-r;
+                }
+            }
+        }
+        .day-header {
+            background-color: @slate-dark;
+            .font-h3;
+            color: @white;
+        }
+        .day-appointment {
+            border-bottom: solid 1px @gray-light;
+            border-left: solid 1px @gray-light;
+            border-right: solid 1px @gray-light;
+            box-sizing: border-box;
+            &>div {
+                flex: 1 0 0;
+                overflow: hidden;
+                .padding;
+                .padding-large-tb;
+            }
+            &:nth-child(odd) {
+                background-color: @white;
+            }
+            // Duplicate here for CSS specificity to overwrite even-odd coloring.
+            &.cancelled {
+                text-decoration: line-through;
+                font-style: italic;
+            }
+            &.cancelled-red {
+                background-color: @red-light;
+            }
+        }
+        .cancelled {
+            text-decoration: line-through;
+            font-style: italic;
+        }
+        .cancelled-red {
+            background-color: @red-light;
+        }
+        .billing-code {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.inputs {
+    display: grid;
+    grid-gap: @spacing-normal @spacing-xlarge;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 500px) {
+    .inputs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 750px) {
+    .inputs {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .inputs {
+        grid-template-columns: 1fr;
+    }
+    .container {
+        .flexbox;
+
+        .filters {
+            width: 250px;
+            .margin-xlarge-r;
+        }
+        .appointments {
+            .flex1
+        }
+    }
+}

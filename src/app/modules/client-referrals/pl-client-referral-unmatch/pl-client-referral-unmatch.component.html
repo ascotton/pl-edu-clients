@@ -1,0 +1,22 @@
+<div class="pl-client-referral-unmatch">
+    <pl-modal-header-wrapper [headerText]="'Unmatch Referral'">
+        <div class="margin-b flexbox">
+            <div>
+                <div class="margin-r icon-circle"><pl-icon class="white" [svg]="'minus'" [scale]="0.6" [verticalAlign]="'-2px'"></pl-icon></div>
+            </div>
+            <div class="flex1">You are about to unmatch a referral. <br> Please select a reason for unmatching the referral.</div>
+        </div>
+        <div class="inputs margin-xlarge-b">
+            <pl-input-select class="form-input x-qa-reason" [(model)]="unmatchingReasonId" [options]="declineReason" [placeholder]="'Select a Reason'" [disabled]="isUnmatching"></pl-input-select>
+        </div>
+        <div>
+            <button pl-button class="success x-qa-decline-confirm-btn" (click)="onUnmatchReferral()" [disabled]="isUnmatching">
+                <span>Unmatch Referral</span>
+            </button>
+            <button pl-button class="x-qa-decline-cancel-btn" (click)="onCancel()" [disabled]="isUnmatching">Cancel</button>
+        </div>
+        <div>
+            <pl-dot-loader *ngIf="isUnmatching"  [align]="'center'"></pl-dot-loader>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

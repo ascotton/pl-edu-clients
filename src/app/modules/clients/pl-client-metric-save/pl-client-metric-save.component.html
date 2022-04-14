@@ -1,0 +1,14 @@
+<div class="pl-client-metric-save">
+    <form [formGroup]="metricSaveForm">
+        <pl-input-text class="form-input x-qa-metric-short-description" [formCtrl]="metricSaveForm" [label]="'Short Description'" [(model)]="metric.name" [required]="true" [maxlength]="50"></pl-input-text>
+        <pl-input-textarea class="form-input x-qa-metric-long-description" [formCtrl]="metricSaveForm" [label]="'Long Description'" [(model)]="metric.description" [maxlength]="250"></pl-input-textarea>
+        <pl-input-text class="form-input x-qa-metric-goal" [formCtrl]="metricSaveForm" [type]="'number'" [label]="'Goal'" [(model)]="metric.goal" [required]="true" [min]="0" [max]="100"></pl-input-text>
+
+        <div [hidden]="savingMetric">
+            <button pl-button class="success x-qa-save-metric-button" [disabled]="!metricSaveForm.valid" (click)="save(metricSaveForm)">Save</button>
+            <button type="button" pl-button class="gray-outline x-qa-cancel-metric-button" (click)="cancel(metricSaveForm)">Cancel</button>
+            <button *ngIf="metric.uuid" type="button" pl-button class="bare x-qa-delete-metric-button" (click)="delete(metricSaveForm)">Delete</button>
+        </div>
+        <pl-dot-loader [hidden]="!savingMetric" [align]="'left'"></pl-dot-loader>
+    </form>
+</div>

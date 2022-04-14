@@ -1,0 +1,11 @@
+<div class="pl-client-metrics" [hidden]="!metrics.length">
+  <div class="section-header">
+    <b class='margin-r'>Metrics</b>
+  </div>
+  <div class="metrics-container margin-large-tb margin-xlarge-lr">
+    <div class="margin-large-tb">
+      <pl-table [data]="metrics" [columns]="columns" [count]="dataInfo.count" [queryId]="dataInfo.queryId" (onQuery)="onQueryTable($event)"
+        [reQuery]="reQuery"></pl-table>
+      <div>
+  </div>
+</div>

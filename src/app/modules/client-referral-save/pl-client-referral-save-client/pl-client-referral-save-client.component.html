@@ -1,0 +1,89 @@
+<div class="pl-client-referral-save-client padding-large">
+    <div class="section-body margin-large-b">
+        <div class="margin-b">Search and select an existing <pl-client-student-display [user]="currentUser"></pl-client-student-display> or create a new one.</div>
+        <form [formGroup]="clientReferralClientForm">
+            <div class="top-row">
+                <div class="filter-input">
+                    <pl-input-text class="x-qa-last-name" [formCtrl]="clientReferralClientForm" [label]="'Last Name'" [(model)]="modelFilters.lastName" [required]="false" (onChange)="changeFilter()"></pl-input-text>
+                    <div *ngIf="inputErrors.lastName"><ng-container *ngTemplateOutlet="plClientReferralSaveClientError"></ng-container></div>
+                </div>
+                <div class="filter-input">
+                    <pl-input-text class="x-qa-first-name" [formCtrl]="clientReferralClientForm" [label]="'First Name'" [(model)]="modelFilters.firstName" [required]="false" (onChange)="changeFilter()"></pl-input-text>
+                    <div *ngIf="inputErrors.firstName"><ng-container *ngTemplateOutlet="plClientReferralSaveClientError"></ng-container></div>
+                </div>
+                <div class="filter-input">
+                    <pl-input-text class="x-qa-external-id" [formCtrl]="clientReferralClientForm" [label]="clientIdLabel" [(model)]="modelFilters.externalId" [required]="false" (onChange)="changeFilter()"></pl-input-text>
+                    <div *ngIf="inputErrors.externalId"><ng-container *ngTemplateOutlet="plClientReferralSaveClientError"></ng-container></div>
+                </div>
+                <div class="filter-input">
+                    <pl-input-datepicker class="x-qa-birthday" [formCtrl]="clientReferralClientForm" [label]="'Date of Birth'" [(model)]="modelFilters.birthday" [required]="false" [reverseYearSort]="true" [placeholder]="'MM/DD/YYYY'" [maxDate]="maxDate" (onChange)="changeFilter()"></pl-input-datepicker>
+                    <div *ngIf="inputErrors.birthday"><ng-container *ngTemplateOutlet="plClientReferralSaveClientError"></ng-container></div>
+                </div>
+            </div>
+            <div class="bottom-row">
+                <div class="location-select">
+                    <div class="location-loading" *ngIf="loadingLocations">
+                        <pl-dot-loader [align]="'left'"></pl-dot-loader>
+                        <div>Loading Locations</div>
+                    </div>
+                    <div *ngIf="!loadingLocations">
+                        <div class="location-input">
+                            <pl-input-select  class="form-input x-qa-organization-select"
+                            [label]="'Organization'" [(model)]="modelFilters.organization" [options]="organizationOpts"
+                            [sortByLabel]="true"
+                            [clearSelectFilter]="clearDropDownOrganizationFilter"
+                            (onChange)="organizationSelected($event)"></pl-input-select>
+                            <button pl-button class="x-qa-organization-clear"
+                                    [disabled]="!modelFilters.organization"
+                                    (click)="clearOrganization()">Clear</button>
+                        </div>
+                        <div class="location-input">
+                            <pl-input-select class="form-input x-qa-location-select"
+                            [label]="'Location'" [(model)]="modelFilters.location" [options]="locationOpts"
+                            [sortByLabel]="true"
+                            [clearSelectFilter]="clearDropDownLocationFilter"
+                            (onChange)="locationSelected($event)"></pl-input-select>
+                            <button pl-button class="x-qa-location-clear" [disabled]="!modelFilters.location"
+                                    (click)="clearLocation()">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-error margin-t">
+                <button type="button" pl-button class="filter-input inline success add-client-button" [disabled]="createNewDisabled" (click)="addClient()">Create New</button>
+                <div *ngIf="errorMessage" class="margin-large-tb red">{{ errorMessage }}</div>
+            </div>
+        </form>
+    </div>
+
+    <pl-table-wrapper (onQuery)="onQuery($event)">
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'lastName'" [orderDirection]="orderDirection.lastName">Last Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'firstName'" [orderDirection]="orderDirection.firstName">First Name</pl-table-header-cell>
+            <pl-table-header-cell><pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display> ID</pl-table-header-cell>
+            <pl-table-header-cell>Birthday</pl-table-header-cell>
+            <pl-table-header-cell>Organization</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'locationName'">Location</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!clients.length && !loading" class="center padding-xlarge-tb">
+            <pl-icon class="warning-icon white" [svg]="'info'" [scale]="0.6"></pl-icon>
+            No matching records exist, click "Create New" to create a new <pl-client-student-display [user]="currentUser"></pl-client-student-display>.
+        </div>
+        <pl-table-row *ngFor="let client of clients" (click)="clickClient(client)">
+            <pl-table-cell>{{ client.lastName }}</pl-table-cell>
+            <pl-table-cell>{{ client.firstName }}</pl-table-cell>
+            <pl-table-cell>
+                <pl-client-id [externalId]="client.externalId" [internalId]="client.id"></pl-client-id>
+            </pl-table-cell>
+            <pl-table-cell>{{ client.xBirthday }}</pl-table-cell>
+            <pl-table-cell>{{ client.xOrganization }}</pl-table-cell>
+            <pl-table-cell>{{ client.xLocation }}</pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="total" [currentPage]="currentPage" [pageSize]="pageSize"></pl-table-footer>
+    </pl-table-wrapper>
+</div>
+
+<ng-template #plClientReferralSaveClientError><div class="margin-small-t"><pl-icon class="red margin-small-r" [svg]="'close'" [scale]="0.7" [verticalAlign]="'-2px'"></pl-icon>Required Field</div></ng-template>

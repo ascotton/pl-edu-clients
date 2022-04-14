@@ -1,0 +1,19 @@
+<div class="pl-location-clients">
+    <pl-schoolyear-select [simpleSelect]="true" [(selectedSchoolYear)]="selectedSchoolYear" (onYearSelected)="onYearSelected($event)"></pl-schoolyear-select>
+
+    <div class="download-students">
+        <button *ngIf="mayDownloadStudentList && schoolYearLoaded" pl-button (click)="downloadStudents()" [disabled]="downloadButtonDisabled" class="x-qa-download-bulk-upload-summary">
+            <pl-icon [svg]="'download'" [width]="16" [height]="16"></pl-icon>
+            <span>Download {{ clientStudentCapital }}s</span>
+        </button>
+        <div>
+            <pl-icon *ngIf="mayDownloadStudentList && schoolYearLoaded" class="learn-more" [ngClass]="{'in-use': showTooltip}" [svg]="'info'" [width]="20" [height]="20" (click)="displayLearnMore($event)"></pl-icon>
+            <div id="students-tooltip" [ngClass]="{'hidden': !showTooltip, 'visible': showTooltip}" (click)="onClickTooltipContents($event)">
+                Clicking this download button will download students (<i>first name, last name, date of birth & student ID</i>) for the selected school year within the PresenceLearning Referral Template.
+                This list can be used to facilitate student onboarding via Bulk Upload as well as to keep on file. Please note, provider type and referral are not included and need to be filled out for Bulk Upload.
+            </div>
+        </div>
+    </div>
+
+    <pl-table [data]="data" [columns]="columns" [count]="dataInfo.count" [queryId]="dataInfo.queryId" [reQuery]="reQuery" [rowHrefFn]="onRowHref" (onQuery)="onQuery($event)" [orderKey]="'orderBy'"></pl-table>
+</div>

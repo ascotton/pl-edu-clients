@@ -1,0 +1,11 @@
+<div>
+    <pl-modal-header-wrapper [headerText]="headerText">
+        <div>Custom Modal 1, with icon and select components.</div>
+        <pl-icon [svg]="'activities'"></pl-icon>
+        <pl-input-select class="form-input" [(model)]="models.colors" [options]="selectOptsColors"></pl-input-select>
+        <div>
+            <button pl-button class="success" (click)="save()">Save</button>
+            <button pl-button (click)="cancel()">Cancel</button>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

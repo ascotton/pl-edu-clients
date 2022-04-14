@@ -1,0 +1,51 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-client-direct-service {
+    padding-top: 5px;
+    padding-bottom: 3px;
+
+    &.expanded {
+        background-color: @slate-lightest;
+    }
+
+    .header {
+        &>div {
+            flex-basis: 0;
+            .margin-l;
+        }
+        .expand-button, .service-type {
+            cursor: pointer;
+        }
+        .created, .expand-button, .service-type {
+            line-height: 32px;
+        }
+    }
+
+    .service-details {
+        .padding-large-lr;
+    }
+
+    .service-field {
+        width: 31%;
+        min-width: 175px;
+        max-width: 250px;
+        .margin;
+
+        .service-field-value {
+            text-align: right;
+        }
+
+        >div {
+            .padding-lr;
+        }
+
+        .minutes-remaining {
+            background-color: @gray-lightest;
+        }
+    }
+
+    .active-text {
+        margin-top: 6px;
+    }
+}

@@ -1,0 +1,25 @@
+@import 'core/colors.less';
+
+:host {
+    .row-field {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        .field {
+            width: 100%;
+        }
+    }
+    .therapy-session-editor {
+        // max-width: 400px;
+        min-width: 400px;
+    }
+    .remove {
+        padding: 4px;
+        border-radius: 50%;
+        &:hover {
+            background-color: @red;
+            color: @white;
+            fill: @white;
+        }
+    }
+}

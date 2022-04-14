@@ -1,0 +1,51 @@
+<div class="pl-date-time-range" [class.vertical]="vertical">
+    <div [ngClass]="vertical ? 'margin-b' : 'margin-r'" [style.width.px]="startWidth">
+        <div class="pl-input-text">
+            <label class="label">Start</label>
+        </div>
+        <div class="date-time-group">
+            <pl-input-datepicker
+                minDate="2016-01-01"
+                [model]="startDate"
+                [formatDisplay]="formats.date.display"
+                [disabled]="disabled"
+                (onChange)="manageChange('date', $event.model)">
+            </pl-input-datepicker>
+            <pl-input-time-double
+                class="margin-l fixed-input-time-width"
+                options="timeOptsStart"
+                tabindex="0"
+                [model]="startTime"
+                [disabled]="disabled"
+                (onChange)="manageChange('time', $event.model)">
+            </pl-input-time-double>
+        </div>
+    </div>
+    <div>
+        <div class="pl-input-text">
+            <label class="label">End</label>
+        </div>
+        <div class="date-time-group">
+            <pl-input-datepicker
+                minDate="2016-01-01"
+                [model]="endDate"
+                [formatDisplay]="formats.date.display"
+                [disabled]="disabled"
+                (onChange)="manageChange('date', $event.model, false)">
+            </pl-input-datepicker>
+            <pl-input-time-double
+                class="margin-l fixed-input-time-width"
+                options="timeOptsEnd"
+                tabindex="0"
+                [model]="endTime"
+                [disabled]="disabled"
+                (onChange)="manageChange('time', $event.model, false)">
+            </pl-input-time-double>
+        </div>
+    </div>
+</div>
+<ng-container *ngIf="inlineErrors">
+    <div class="h6 red" *ngFor="let error of errorMessages">
+        {{ error.message }}
+    </div>
+</ng-container>

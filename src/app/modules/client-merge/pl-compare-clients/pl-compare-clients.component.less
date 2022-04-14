@@ -1,0 +1,78 @@
+@import 'core/colors.less';
+@import 'core/typography.less';
+
+.compare-clients {
+    .instructions {
+        margin: 10px 0 10px 40px;
+    }
+    .error-bar {
+        background-color: @red-light;
+        margin: 10px 20px 10px 20px;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: @opensans;
+        color: @gray-darkest;
+        .close-icon {
+            fill: @red;
+            margin-right: 16px;
+        }
+        .refresh-button {
+            float: right;
+            span {
+                display: inline;
+            }
+        }
+    }
+    .diff-table {
+        margin: 20px;
+        .row:nth-child(2n+2) {
+            background: @gray-really-light;
+        }
+        .row:nth-child(n+2) {
+            border-bottom: 1px solid @gray-light;
+        }
+        .row {
+            display: flex;
+            flex-wrap: nowrap;
+            >div,>pl-input-radio {
+                padding: 10px;
+                width: 33%;
+                line-height: 2.2em;
+                &:first-child {
+                    color: @gray-dark;
+                    font-weight: bold;
+                }
+                &.stack {
+
+                }
+            }
+            .address {
+                display: flex;
+                .address-line {
+                    line-height: 1.2em;
+                }
+            }
+        }
+        .error-row div:not(:first-child) {
+            background-color: @red-light;
+            a {
+                float: right;
+            }
+        }
+    }
+    &.debug-show-div {
+        @debug-color: rgb(0, 183, 255);
+        border: 3px solid @debug-color;
+        padding: 20px;
+        position: relative;
+        .debug-component-name {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 11px;
+            padding: 2px;
+            background-color: @debug-color;
+            color: white;
+        }
+    }
+}

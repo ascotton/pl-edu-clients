@@ -1,0 +1,6 @@
+<div class="pl-location-documents">
+    <pl-schoolyear-select [simpleSelect]="true" [(selectedSchoolYear)]="selectedSchoolYear" (onYearSelected)="onYearSelected($event)">
+    </pl-schoolyear-select>
+    <pl-account-documents [locationUuid]="locationId" [mayDelete]="mayDelete" [mayUpload]="mayUpload" [schoolYearId]="selectedSchoolYearId"></pl-account-documents>
+</div>
+

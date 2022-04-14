@@ -1,0 +1,36 @@
+@import 'core/colors.less';
+@import 'core/typography.less';
+.success-bar {
+    background-color: @green-light;
+    display: flex;
+    align-items: center;
+    margin: 0px 30px 10px 30px;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: @opensans;
+    color: @gray-darkest;
+    .close-icon {
+        fill: @green;
+        margin-right: 15px;
+    }
+}
+
+.client-summary {
+      background-color: @gray-really-light;
+      border: solid 1px @gray-lighter;
+      padding: 12px;
+      margin: 40px;
+      .row {
+          line-height: 32px;
+          display: flex;
+          .label {
+              color: @gray-dark;
+              font-weight: bold;
+              width: 150px;
+          }
+      }
+}
+
+.navigation {
+    margin-left: 60px;
+}

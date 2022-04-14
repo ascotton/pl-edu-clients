@@ -1,0 +1,113 @@
+@import 'core/colors.less';
+
+.pl-client-end-iep-goal-status {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 99998;
+
+  .content {
+    margin: 25px;
+  }
+  .title {
+    margin-bottom: 15px;
+  }
+  .divider-line {
+    height: 1px;
+    border-top: 1px solid @gray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .stepper {
+    width: 300px;
+    margin: 25px auto;
+  }
+  .instructions {
+    margin: 20px 0;
+  }
+  .goals-container {
+    .goal-item {
+      background-color: #F5F5F5;
+      border: 0 1px 1px 1px solid #efefef;
+      box-shadow: 0px 2px 2px 0px @gray-light;
+      padding: 30px 24px;
+      margin: 10px 0 20px 0;
+      min-height: 60px;
+      .columns {
+        display: flex;
+        .col {
+          flex: 1;
+          justify-content: flex-start;
+          &.col-1 {
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 200px;
+            position: relative;
+            .goal-status-label {
+              margin-bottom: 1px;
+            }
+            .goal-status-item {
+              position: absolute;
+              z-index: 99999;
+              transform-origin: 0;
+              -webkit-transform-origin: 0;
+              transform: scale(0.85);
+            }
+          }
+          &.col-vertical-line {
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 20px;
+            border-left: 1px solid @gray;
+          }
+          &.col-2 {
+            .goal-label {
+              font-weight: bold;
+              margin-bottom: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .action-bar {
+    margin-top: 20px;
+    width: 100%;
+    background-color: @slate-lightest;
+    .actions {
+      margin: 0 30px;
+    }
+  }
+
+  .banner {
+    .columns {
+      display: flex;
+      border-radius: 5px;
+      padding: 10px;
+      background-color: @blue-lighter;
+      .left {
+        width: 30px;
+      }
+      .right {
+        .banner-message {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+}

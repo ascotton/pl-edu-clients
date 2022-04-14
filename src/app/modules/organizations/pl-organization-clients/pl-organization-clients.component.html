@@ -1,0 +1,5 @@
+<div class="pl-organization-clients">
+    <pl-schoolyear-select [simpleSelect]="true" [(selectedSchoolYear)]="selectedSchoolYear" (onYearSelected)="onYearSelected($event)"></pl-schoolyear-select>
+
+    <pl-table [data]="data" [columns]="columns" [count]="dataInfo.count" [queryId]="dataInfo.queryId" [reQuery]="reQuery" [rowHrefFn]="onRowHref" (onQuery)="onQuery($event)" [orderKey]="'orderBy'"></pl-table>
+</div>

@@ -1,0 +1,100 @@
+<div class="pl-location-appointments"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  *ngIf="_state.initialized"
+  >
+<div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+</div>
+
+<div *ngIf="_state.initialized">
+    <div *ngIf="!mayView">Location appointments are not available for Virtual schools.</div>
+    <div *ngIf="mayView" class="container">
+        <div class="filters margin-xlarge-b">
+            <div class="margin-b"><pl-icon [svg]="'filter'" class="blue-medium margin-r"></pl-icon> <span class="font-h4">Filters</span></div>
+            <div class="filter-box">
+                <div class="margin-b"><button pl-button class="link" (click)="clearAllFilters()">Clear All Filters</button></div>
+                <div class="inputs">
+                    <pl-input-multi-select class="form-input" [label]="'Days of the Week'" [(model)]="filters.weekDays" [options]="weekDaysOpts" (change)="changeFilters()"></pl-input-multi-select>
+                    <pl-input-multi-select class="form-input" [label]="'Provider'" [(model)]="filters.providerIds" [options]="providersOpts" (change)="changeFilters()"></pl-input-multi-select>
+                    <pl-input-multi-select class="form-input" [label]="clientFilterLabel" [(model)]="filters.clientIds" [options]="clientsOpts" (change)="changeFilters()"></pl-input-multi-select>
+                    <pl-input-multi-select class="form-input" [label]="'Event'" [(model)]="filters.billingCodes" [options]="billingCodesOpts" (change)="changeFilters()"></pl-input-multi-select>
+                </div>
+            </div>
+        </div>
+        <div class="appointments">
+            <div class="margin-b"><pl-icon [svg]="'schedule'" class="blue-medium margin-r"></pl-icon>
+                <span class="font-h4">Appointments</span>
+                <span class="margin-large-l font-h5 orange" *ngIf="util.flag(_state, 'SHOW_TIMEZONE') || util.flag(_state, 'SET_TIMEZONE')">
+                    <span *ngIf="util.flag(_state, 'SET_TIMEZONE')">DEBUG</span><span *ngIf="!util.flag(_state, 'SET_TIMEZONE')">Location</span> Timezone: <b>{{location.timezone || 'None'}}</b> <span *ngIf="!location.timezone">, Browser Timezone: <b>{{timezone}}</b></span></span>
+            </div>
+            <div class="appointments-box">
+                <div class="header flexbox">
+                    <div class="left-spacer">
+                        <pl-input-datepicker *ngIf="mayPickDate" [(model)]="startPicked" [minDate]="'2010-01-01'" [scrollToYearByValue]="currentYear" (onChange)="changeDate()"></pl-input-datepicker>
+                        <span *ngIf="!mayPickDate">&nbsp;</span>
+                    </div>
+                    <div class="flex1 title">
+                        <span *ngIf="!dateOverride">Week of</span>
+                        <div *ngIf="dateOverride" class="orange">Date Range Override</div>
+                         {{ weekStart }} - {{ weekEnd }}</div>
+                    <div><button pl-button class="gray-outline" (click)="print()">
+                        <pl-icon [svg]="'printer'" class="gray"></pl-icon> Print Current View
+                    </button></div>
+                </div>
+                <div class="margin-large-b"><b>Total:</b> {{ totalAppointments }}</div>
+                <div [hidden]="totalAppointments > 0">No appointments to show.</div>
+                <div [hidden]="totalAppointments < 1">
+                    <div class="headers flexbox">
+                        <div>Start-time</div>
+                        <div>Duration</div>
+                        <div>
+                            <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display>
+                        </div>
+                        <div>Event</div>
+                        <div>Provider</div>
+                    </div>
+                    <div class="appointments-body" *ngFor="let groupedAppointment of groupedAppointments">
+                        <div [hidden]="!groupedAppointment.appointments.length" class="day-header padding">
+                            <span class="pointer margin-r" (click)="toggleDayVisible(groupedAppointment)">
+                                <pl-icon *ngIf="groupedAppointment.visible" [svg]="'collapse'" class="white"></pl-icon>
+                                <pl-icon *ngIf="!groupedAppointment.visible" [svg]="'expand'" class="white"></pl-icon>
+                            </span>
+                            {{ groupedAppointment.title }}
+                        </div>
+                        <div [hidden]="!groupedAppointment.appointments.length || !groupedAppointment.visible" class="day-body">
+                            <div class="day-appointment flexbox" [ngClass]="appointment.classes" *ngFor="let appointment of groupedAppointment.appointments">
+                                <div>{{ appointment.xTimeRange }}</div>
+                                <div>{{ appointment.xDuration }}</div>
+                                <div>
+                                    <div *ngFor="let item of appointment.xBillingCodesClients" class="margin-b" [ngClass]="item.classes">
+                                        <a [routerLink]="['/client', item.client.id]" class="link-underline">
+                                            {{ item.client.firstName }} {{ item.client.lastName }}
+                                        </a>
+                                    </div>
+                                    <div *ngIf="appointment.xMissingClientsText">
+                                        {{ appointment.xMissingClientsText }}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div *ngFor="let item of appointment.xBillingCodesClients" class="margin-b billing-code" [ngClass]="item.classes">
+                                        {{ item.billingCode.name }}
+                                    </div>
+                                </div>
+                                <div>
+                                    <span *ngIf="appointment.provider">
+                                        <a [routerLink]="['/provider', appointment.provider.id]" class="link-underline">
+                                            {{ appointment.provider.firstName }} {{ appointment.provider.lastName }}
+                                        </a>
+                                    </span>
+                                    <pl-is-available [condition]="appointment.provider">
+                                    </pl-is-available>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

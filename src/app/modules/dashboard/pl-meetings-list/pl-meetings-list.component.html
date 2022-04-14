@@ -1,0 +1,15 @@
+<pl-modal-header-wrapper [headerText]="title">
+    <p>{{ subtitle }}</p>
+    <br />
+    Please choose a time.<br />
+    <br />
+    <div *ngFor="let r of items">
+        <pl-input-radio
+            [label]="r.formattedTime"
+            [value]="r"
+            [(model)]="selectedValue"
+        ></pl-input-radio>
+    </div>
+    <br />
+    <button pl-button class="success" (click)="onClickSelect()">Select</button>
+</pl-modal-header-wrapper>

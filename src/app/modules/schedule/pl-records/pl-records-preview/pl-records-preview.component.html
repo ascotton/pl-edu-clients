@@ -1,0 +1,31 @@
+<section class="pl-record-preview" *ngFor="let record of records">
+    <div class="top-line flexbox">
+        <div *ngIf="!record.recordClientNameHidden; else clientNameHidden" 
+            class="title padding-lr pl-record-preview-billing-codes" [ngClass]="record.billingCodeClass">
+            {{ record.title }}
+            <div class="pl-record-preview-billing-code-name" [class.no-record]="!record.billingCodeClass">
+                - {{ record.documented ? record.billingCodeName : 'not documented' }}
+            </div>
+        </div>
+        <ng-template #clientNameHidden>
+            <div class="title padding-lr margin-r">
+                <i>client name hidden</i>
+            </div>
+        </ng-template>
+        <div class="signed flexbox padding-large-l margin-large-r">
+            <pl-icon height="15" width="15"
+                [class]="record.signed ? 'green' : 'red'" 
+                [svg]="record.signed ? 'check' : 'blocked'">
+            </pl-icon>
+            <span class="margin-small-l">
+                {{ record.signed ? 'Signed' : 'Unsigned' }}
+            </span>
+        </div>
+    </div>
+    <div *ngIf="record.location_expanded && showLocation">
+        {{ record.location_expanded?.name }}
+    </div>
+    <div>
+        {{ record.billing_expanded?.name }}
+    </div>
+</section>

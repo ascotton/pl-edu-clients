@@ -1,0 +1,172 @@
+<div class="pl-invoice-documentation-readonly standalone">
+
+    <div id="invoice-header">
+        <div class="details">
+            <h3 class="name">
+                <span> {{ getClientName() }} </span>
+                <span class="location"> - {{ getLocationName() }} </span>
+            </h3>
+
+            <span class="datetime">
+                <span *ngIf="isTheDocumentSigned()" class="signed signed-mark">
+                    [ <pl-icon [svg]="'check'" [width]="14" [height]="15" class="green"></pl-icon> Signed ]
+                </span>
+                <span *ngIf="isClientAppointment()">{{ getBillingCodeName() | uppercase }} - </span>
+                {{ getAppointmentTimeDisplay() }}
+            </span>
+        </div>
+
+        <pl-icon class="close-button pointer white" [svg]="'close-inverted'" [scale]="1.5"
+            (click)="onClickCloseButton()">
+        </pl-icon>
+
+    </div>
+
+    <!-- BLACKOUT DAY NOTICE BANNER -->
+    <div class="blackout-day-banner margin-b" *ngIf="BO.isBlackoutDay(selectedAppointment)">
+        <div class="header-text">
+            <pl-icon [svg]="'warning-alert-white'"></pl-icon>
+            WARNING - This appointment conflicts with the school’s Non-Service Dates.
+        </div>
+        <div class="secondary-text margin-t">
+            You should not work during established Non-Service Dates
+            unless you have been authorized by the school to do so.
+        </div>
+    </div>
+
+    <div class="detail-container" *ngIf="initialized" [@fadeIn]>
+
+        <div class="readonly-info">
+            <h4 class="header">
+                <span class="header-title"> Billing Information </span>
+            </h4>
+
+            <div class="details">
+                <div id="billing-details" class="full padding-small">
+                    <fieldset class="pl-fieldset">
+                        <legend>Details</legend>
+                        <div class="padding margin-large-l">
+                            <div class="margin-b">
+                                <span> <b> Billing Code: </b> </span>
+                                <span class="margin-small-l" [ngClass]="{'no-data': !selectedAppointment.billingCode}"> {{ getBillingCodeName() }} </span>
+                            </div>
+
+                            <div class="margin-b" *ngIf="selectedAppointment.clientService">
+                                <span> <b> Service: </b> </span>
+                                <span class="margin-small-l" [ngClass]="{'no-data': !selectedAppointment.clientService}">{{ getServiceName() }}</span>
+                            </div>
+
+                            <div class="margin-b" *ngIf="trackingType">
+                                <span> <b> Tracking Type: </b> </span>
+                                <span class="margin-small-l">{{ trackingType }}</span>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <div class="readonly-info">
+            <h4 class="header">
+                <span class="header-title"> Clinical Information </span>
+            </h4>
+
+            <div class="details">
+                <div id="soap-notes" class="full padding-small">
+                    <fieldset class="pl-fieldset">
+                        <legend>Notes</legend>
+                        <div class="padding margin-large-l">
+                            <div id="soap-notes" *ngIf="requiresSOAPNotes && hasSOAPNotes">
+                                <div class="margin-b" *ngIf="soapNotes.subjective">
+                                    <span> <b> Subjective: </b> </span>
+                                    <span class="margin-small-l">{{ soapNotes.subjective }}</span>
+                                </div>
+
+                                <div class="margin-b" *ngIf="soapNotes.objective">
+                                    <span> <b> Objective: </b> </span>
+                                    <span class="margin-small-l">{{ soapNotes.objective }}</span>
+                                </div>
+
+                                <div class="margin-b" *ngIf="soapNotes.assessment">
+                                    <span> <b> Assessment: </b> </span>
+                                    <span class="margin-small-l">{{ soapNotes.assessment }}</span>
+                                </div>
+
+                                <div class="margin-b" *ngIf="soapNotes.plan">
+                                    <span> <b> Plan: </b> </span>
+                                    <span class="margin-small-l">{{ soapNotes.plan }}</span>
+                                </div>
+                            </div>
+
+                            <div class="margin-b" *ngIf="generalNotes">
+                                <span> <b> General: </b> </span>
+                                <span class="margin-small-l">{{ generalNotes }}</span>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div *ngIf="BO.isEvaluationAppointment(selectedAppointment)">
+
+                <div class="details" *ngIf="getAreasOfConcern()?.length">
+                    <div id="areas-of-concern" class="full padding-small">
+                        <fieldset class="pl-fieldset">
+                            <legend>Areas of Concern</legend>
+                            <div class="padding margin-large-l" >
+                                <li *ngFor="let aoc of areasOfConcern">
+                                    {{aoc}}
+                                </li>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="details" *ngIf="getEvaluationActivities()?.length">
+                    <div id="activity-components" class="full padding-small">
+                        <fieldset class="pl-fieldset">
+                            <legend>Components</legend>
+                            <div class="padding margin-large-l" >
+                                <div *ngFor="let activityItem of getEvaluationActivities()" class="activity-item">
+                                    <li class="padding-large-t">
+                                        <span>{{activityItem.activity.name}}</span>
+                                        <span class="detail" *ngIf="activityItem.activityDetail"> / {{activityItem.activityDetail.name}}</span>
+                                    </li>
+                                    <div class="indent wide">
+                                        <div class="label">Status: </div>
+                                        <span>{{getAcvitityStatusDisplayValue(activityItem)}}</span>
+                                    </div>
+                                    <div class="indent wide" *ngIf="activityItem.savedEvalActivity.signed_on">
+                                        <div class="label">Date completed: </div>
+                                        <span>{{getActivityDateCompletedDisplayValue(activityItem)}}</span>
+                                    </div>
+                                    <div class="indent wide">
+                                        <div class="label">Invoice status: </div>
+                                        <span *ngIf="activityItem.savedEvalActivity.invoice_submitted_on">{{getActivityInvoiceSubmittedDate(activityItem)}}</span>
+                                        <span *ngIf="!activityItem.savedEvalActivity.invoice_submitted_on">Not yet invoiced</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <div id="activity-components" class="full padding-small">
+                        <fieldset class="pl-fieldset">
+                            <legend>Evaluation Status</legend>
+                            <div class="padding margin-large-l" >
+                                {{getEvaluationStatus()}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #noNotes>
+            <div class="padding center">
+                <div class="no-data">{{ NO_NOTES }}</div>
+            </div>
+        </ng-template>
+    </div>

@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "downlevelIteration": true,
+        "module": "esNext",
+        "moduleResolution": "node",
+        "outDir": "./aot",
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": ["es2015", "dom", "esnext.asynciterable"],
+        "noImplicitAny": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "typeRoots": [
+            "./node_modules/@types/"
+        ],
+        "allowSyntheticDefaultImports": true
+    },
+    "files": [
+        "src/app/app.module.ts",
+        "src/main-aot.ts"
+    ],
+    "angularCompilerOptions": {
+        "genDir": "./aot",
+        "skipMetadataEmit" : true
+    },
+    "exclude": [
+        "test.ts",
+        "**/*.spec.ts",
+        "**/*.stub.ts"
+    ]
+}

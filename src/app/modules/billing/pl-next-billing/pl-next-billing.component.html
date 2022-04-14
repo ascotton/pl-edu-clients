@@ -1,0 +1,90 @@
+<section class="pl-next-billing padding-large">
+    <div *ngIf="!billingView?.result.noInvoice || billingView?.result.submitStatus === 'unsubmitted'">
+        <h3><b> {{ billingView?.mainTitle }} </b></h3>
+
+        <ng-container *ngIf="!loading && billingView?.result.status !== 'error' && billingView?.result.status !== 'empty'; else loadingTemplate">
+            <div *ngIf="!billingView?.result.noInvoice">
+                <div class="banner {{ billingView?.result.status }} padding margin-tb">
+                    <div class="message-row-icon">
+                        <pl-icon [svg]="icon" [class]="iconColor"></pl-icon>
+                        <div class="banner-text margin-l">
+                            <span *ngIf="billingView?.result.valid && !billingView?.result.noRecords">
+                                You must <b>preview, sign off</b> and <b>submit</b> {{ billingView?.type }} by <b>{{
+                                    billingView?.result.dueDate
+                                    }}.</b>
+                            </span>
+                            <span class="message-text ida"
+                                *ngIf="!billingView?.result.valid && billingView?.result.appointmentErrorCount">
+                                You have <b>{{ billingView?.result.appointmentErrorCount }}</b> outstanding events.
+                                Select <b>Documentation Assistant</b> and we can help you with that.
+                            </span>
+                            <span *ngIf="!billingView?.result.appointmentErrorCount && billingView?.result.noRecords">
+                                No appointments
+                                <span> {{ isW2Provider ? 'on the next timesheet.' : 'to invoice.' }} </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="message-text message-row-after-icon"
+                        *ngIf="!billingView?.result.valid && !billingView?.result.noRecords">
+                        <div>
+                            Submit <span> {{ isW2Provider ? 'timesheet' : 'invoice' }} </span> by <b>{{billingView?.result.dueDate}}</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-info"
+                *ngIf="billingView?.result.submitStatus === 'unsubmitted' || billingView?.result.submitStatus === 'draft'">
+                <div class="padding-r">
+                    <div><b> {{ billingView?.periodTitle }} </b></div>
+                    <div>{{ billingView?.result.start }} - {{ billingView?.result.end }}</div>
+                </div>
+                <div class="padding-lr">
+                    <div><b> {{ billingView?.estimationTitle }} </b></div>
+                    <div>
+                        <span *ngIf="!isW2Provider">{{ billingView?.result.amount || '0' | plCurrency }}</span>
+                        <span *ngIf="isW2Provider">{{ billingView?.result.amount | plTiming }}</span>
+                    </div>
+                </div>
+                <div class="padding-l">
+                    <button *ngIf="billingView?.result.valid && !billingView?.result.noRecords" pl-button
+                        class="primary" (click)="routeTo(billingView?.detailsRouteLink)">
+                        {{ billingView?.buttonTitle }}
+                    </button>
+                    <button *ngIf="!billingView?.result.valid" pl-button class="ida primary"
+                        routerLink="/documentation-assistant">
+                        Documentation Assistant
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-template *ngIf="billingView?.result.status !== 'error' && billingView?.result.status !== 'empty'" #loadingTemplate>
+            <pl-dot-loader align="left"></pl-dot-loader>
+        </ng-template>
+
+        <ng-container *ngIf="billingView?.result.status === 'error'">
+            <div class="banner error padding margin-tb">
+                <div class="message-row-icon">
+                    <pl-icon svg="caution" class="red"></pl-icon>
+
+                    <div class="banner-text margin-l">
+                        <p> There was an error getting your next {{ billingView.type }} information. Please reload and try again. </p>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="billingView?.result.status === 'empty'">
+            <div class="banner padding margin-tb">
+                <div class="message-row-icon">
+                    <pl-icon svg="caution" class="green"></pl-icon>
+
+                    <div class="banner-text margin-l">
+                        <p> You're all caught up! Come back later. </p>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</section>

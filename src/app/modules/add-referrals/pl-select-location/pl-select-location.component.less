@@ -1,0 +1,30 @@
+@import 'core/colors.less';
+
+.pl-select-location {
+    width: 100%;
+    box-sizing : border-box;
+
+    .pl-selection-location-container {
+        margin: 0px 24px 0px 24px;
+        background-color: @slate-lightest;
+        border-radius: 4px;
+
+        .location-loading {
+            font-style: italic;
+            padding: 24px;
+        }
+
+        .location-prompt {
+            padding: 24px;
+        }
+
+        .location-input {
+            padding: 0 24px 24px 24px;
+
+            pl-input-select {
+                width: 380px;
+            }
+        }
+
+    }
+}

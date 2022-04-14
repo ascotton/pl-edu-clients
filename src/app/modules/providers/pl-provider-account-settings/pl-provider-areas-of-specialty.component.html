@@ -1,0 +1,13 @@
+<pl-modal-header-wrapper [headerText]="'Edit Areas of Specialty'">
+    <div class="pl-provider-areas-of-specialty">
+        <div class="list">
+            <pl-input-checkbox-group
+                [(model)]="selectedAreaIds"
+                [options]="areaOptions"
+                [col3]="true"
+            ></pl-input-checkbox-group>
+        </div>
+        <hr />
+        <button pl-button class="success" (click)="onClickSave()">Save</button>
+    </div>
+</pl-modal-header-wrapper>

@@ -1,0 +1,16 @@
+<div class="pl-client-nom-save">
+    <form [formGroup]="nomSaveForm">
+        <pl-input-select class="form-input x-qa-nom-measure" [formCtrl]="nomSaveForm" [label]="'Measure'" [(model)]="nom.metric" [options]="selectOptsNoms" [required]="true"></pl-input-select>
+        <pl-input-select class="form-input x-qa-nom-measure-initial-level" [formCtrl]="nomSaveForm" [label]="'Initial Level'" [(model)]="nom.initial_value" [options]="selectOptsLevel" [required]="true"></pl-input-select>
+        <pl-input-datepicker class="form-input x-qa-nom-measure-initial-level-date" [formCtrl]="nomSaveForm" [label]="'Initial Level Date'" [(model)]="nom.initial_at" [required]="true"></pl-input-datepicker>
+        <pl-input-select class="form-input x-qa-nom-measure-final-level" [formCtrl]="nomSaveForm" [label]="'Final Level'" [(model)]="nom.final_value" [options]="selectOptsLevel"></pl-input-select>
+        <pl-input-datepicker class="form-input x-qa-nom-measure-final-level-date" [formCtrl]="nomSaveForm" [label]="'Final Level Date'" [(model)]="nom.final_at"></pl-input-datepicker>
+
+        <div [hidden]="savingNom">
+            <button pl-button class="success x-qa-save-nom-button" [disabled]="!nomSaveForm.valid" (click)="save(nomSaveForm)">Save</button>
+            <button type="button" pl-button class="gray-outline x-qa-cancel-nom-button" (click)="cancel(nomSaveForm)">Cancel</button>
+            <button *ngIf="nom.uuid" type="button" pl-button class="bare x-qa-delete-nom-button" (click)="delete(nomSaveForm)">Delete</button>
+        </div>
+        <pl-dot-loader [hidden]="!savingNom" [align]="'left'"></pl-dot-loader>
+    </form>
+</div>

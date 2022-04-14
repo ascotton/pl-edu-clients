@@ -1,0 +1,17 @@
+<div class="row margin-large-tb">
+    <div *ngFor="let item of items" 
+        class="col-xs-12 margin-large-b"
+        [class.col-sm-6]="!fullWidth"
+        [class.col-md-4]="!fullWidth"
+        [class.col-lg-2]="!fullWidth">
+        <div class="usage-item mat-elevation-z5 padding-large-lr padding-tb">
+            <div class="usage-item-value margin-large-r">
+                {{ item.value }}
+            </div>
+            <div>
+                Active users in the last 
+                {{ item.time }}
+            </div>
+        </div>
+    </div>
+</div>

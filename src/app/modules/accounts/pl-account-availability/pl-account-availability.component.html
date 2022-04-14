@@ -1,0 +1,35 @@
+<div class="pl-account-availability">
+    <div *ngIf="ready">
+        <p>Providers may regularly meet with students at this location in the time blocks shown below.</p>
+        <p>The total number of available computers during each time block is shown in parentheses.</p>
+        <br />
+
+        <pl-weekly-time-grid
+            [readOnly]="readOnly"
+            [timezone]="location.timezone"
+            [showWorkstations]="true"
+            [blocks]="blocks"
+            (hoursChanged)="onHoursChanged($event)"
+        ></pl-weekly-time-grid>
+
+        <div class="total-hours">
+            Total Hours: <b>{{ this.selectedHours.totalHours }}</b>
+        </div>
+
+        <div *ngIf="!readOnly && !saving">
+            <div class="form-submit">
+                <button
+                    pl-button
+                    class="success"
+                    [disabled]="!isDirty"
+                    (click)="onClickSubmitForm()"
+                >
+                    <span>Save</span>
+                </button>
+            </div>
+        </div>        
+    </div>
+    <div *ngIf="saving || !ready">
+        <pl-dot-loader [align]="'left'"></pl-dot-loader>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="pl-organization-availability">
+    <pl-schoolyear-select
+        [(selectedSchoolYear)]="selectedSchoolYear"
+        (onYearSelected)="onYearSelected($event.model)"
+        [simpleSelect]="true"
+    >
+    </pl-schoolyear-select>
+
+    <div class="card-section margin-t">
+        <div class="card">
+            <pl-table-wrapper *ngIf="!loading" class="location-table">
+                <pl-table-header>
+                    <pl-table-header-cell>Location</pl-table-header-cell>
+                    <pl-table-header-cell>Hours</pl-table-header-cell>
+                </pl-table-header>
+                <div *ngIf="loadingData" class="padding-xlarge-tb">
+                    <pl-dot-loader></pl-dot-loader>
+                </div>
+                <div *ngIf="!availabilities.length && !loadingData" class="padding-large center">No availability to show.</div>
+                <pl-table-row *ngFor="let b of availabilities" [class.selected]="location === b.location">
+                    <pl-table-cell>                        
+                        <a [routerLink]="" (click)="onClickLocation(b.location)">{{ b.name }}</a>
+                    </pl-table-cell>
+                    <pl-table-cell>
+                        <div *ngIf="b.hours.length > 0" class="hours-list">
+                            <ng-container *ngFor="let h of b.hours">
+                                {{ h.day }} {{ h.start }} - {{ h.end }} ({{ h.availableStations }})<br />
+                            </ng-container>
+                        </div>
+                        Total Hours: <b>{{ b.totalHours }}</b>
+                    </pl-table-cell>
+                </pl-table-row>
+            </pl-table-wrapper>
+        </div>
+        <div *ngIf="!location || !selectedSchoolYear" id="right_panel"></div>
+        <div *ngIf="location && selectedSchoolYear" id="right_panel" class="card location-availability">
+            <h3>{{ location.name }} Availability</h3>
+            <pl-account-availability                
+                [location]="location"
+                [schoolYear]="selectedSchoolYear"
+                (isDirtyChanged)="onIsDirtyChanged($event)"
+            ></pl-account-availability>
+        </div>
+    </div>
+</div>

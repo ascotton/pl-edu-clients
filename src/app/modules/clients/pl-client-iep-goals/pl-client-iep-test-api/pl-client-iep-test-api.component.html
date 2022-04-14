@@ -1,0 +1,156 @@
+<div class="pl-client-iep-test-api"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  *ngIf="util.flagLocalStorage('DEBUG_ADMIN')"
+  >
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <!----------------------------------------------------------
+  -  traditional API source data binding
+  ----------------------------------------------------------->
+  <div *ngIf="_state.model.data">
+    <h1 class="title">API Playground - Test and build client IEP/Progress Tracker data scenarios</h1>
+    <div class="divider-line"></div>
+
+    <fieldset>
+      <legend>IEP/Progress Trackers</legend>
+      <!-- GET IEPs-->
+      <basic-test-api [actionButtonLabel]="'Get IEP/Progress Trackers'" [onClickApiAction]="onClickGetIEPs.bind(this)" [modelApiData]="_state.model.data.ieps">
+      </basic-test-api>
+      <div class="divider-line small"></div>
+
+      <pl-input-select class="inline-block" [placeholder]="'Select a Type'" [(model)]="_state.model.type" 
+        *ngIf="_state.model.data.typesSelectOpts"
+        [options]="_state.model.data.typesSelectOpts">      
+      </pl-input-select>
+
+      <!-- CREATE ACTIVE IEP-->
+      <basic-test-api [actionButtonLabel]="'Create Active IEP/Progress Tracker'" [onClickApiAction]="onClickCreateIEP.bind(this, 'ACTIVE')"
+        [modelApiData]="_state.model.data.createActiveIEP"></basic-test-api>
+      <!-- CREATE FUTURE IEP-->
+      <basic-test-api [actionButtonLabel]="'Create Future IEP/Progress Tracker'" [onClickApiAction]="onClickCreateIEP.bind(this, 'FUTURE')"
+        [modelApiData]="_state.model.data.createFutureIEP"></basic-test-api>
+      <div class="divider-line small"></div>
+
+      <!-- DELETE IEP (active)-->
+      <basic-test-api [actionButtonLabel]="'Delete Active IEP/Progress Tracker'" [onClickApiAction]="onClickDeleteIEP.bind(this, 'ACTIVE')"
+        [modelApiData]="_state.model.data.deleteActiveIEP"></basic-test-api>
+      <!-- DELETE IEP (future)-->
+      <basic-test-api [actionButtonLabel]="'Delete Future IEP/Progress Tracker'" [onClickApiAction]="onClickDeleteIEP.bind(this, 'FUTURE')"
+        [modelApiData]="_state.model.data.deleteFutureIEP"></basic-test-api>
+      <!-- DELETE IEP (complete)-->
+      <basic-test-api [actionButtonLabel]="'Delete Past IEP/Progress Tracker'" [onClickApiAction]="onClickDeleteIEP.bind(this, 'COMPLETE')"
+        [modelApiData]="_state.model.data.deleteCompleteIEP"></basic-test-api>
+      <div class="divider-line small"></div>
+
+      <!-- UPDATE IEP (active)-->
+      <basic-test-api [actionButtonLabel]="'Update IEP/Progress Tracker (status ACTIVE -> COMPLETE)'" [onClickApiAction]="onClickUpdateIEP.bind(this, 'COMPLETE')"
+        [modelApiData]="_state.model.data.updateActiveIEP"></basic-test-api>
+      <!-- UPDATE IEP (complete)-->
+      <basic-test-api [actionButtonLabel]="'Update IEP/Progress Tracker (status COMPLETE -> ACTIVE)'" [onClickApiAction]="onClickUpdateIEP.bind(this, 'ACTIVE')"
+        [modelApiData]="_state.model.data.updateCompleteIEP"></basic-test-api>
+      <pl-input-text class="inline-block" [placeholder]="'Enter IEP/Progress Tracker ID'" [(model)]="_state.model.updateIepId"></pl-input-text>
+    </fieldset>
+
+    <fieldset>
+      <legend>Service Areas</legend>
+      <!-- CREATE SERVICE AREA-->
+      <basic-test-api [actionButtonLabel]="'Create Service Area'" [onClickApiAction]="onClickCreateServiceArea.bind(this)"
+        [modelApiData]="_state.model.data.createServiceArea"></basic-test-api>
+      <pl-input-select class="inline-block margin-small-l" [placeholder]="'Select an IEP'"
+        *ngIf="_state.model.data.iepSelectOpts"
+        [(model)]="_state.model.createServiceAreaSelectedIep" [options]="_state.model.data.iepSelectOpts">
+      </pl-input-select>
+      <div class="divider-line small"></div>
+
+      <!-- UPDATE SERVICE AREA (closed)-->
+      <basic-test-api [actionButtonLabel]="'Update Service Area (closed -> true)'" [onClickApiAction]="onClickUpdateServiceArea.bind(this, true)"
+        [modelApiData]="_state.model.data.updateServiceArea_true"></basic-test-api>
+      <!-- UPDATE SERVICE AREA (not closed)-->
+      <basic-test-api [actionButtonLabel]="'Update Service Area (closed -> false)'" [onClickApiAction]="onClickUpdateServiceArea.bind(this, false)"
+        [modelApiData]="_state.model.data.updateServiceArea_false"></basic-test-api>
+      <pl-input-text class="inline-block" [placeholder]="'Enter Service Area ID'"
+        [(model)]="_state.model.updateServiceAreaId"></pl-input-text>
+    </fieldset>
+
+    <fieldset>
+      <legend>Goals</legend>
+      <!-- CREATE GOAL-->
+      <basic-test-api [actionButtonLabel]="'Create Goal'" [onClickApiAction]="onClickCreateGoal.bind(this)"
+        [modelApiData]="_state.model.data.createGoal"></basic-test-api>
+      <pl-input-select class="inline-block margin-small-l" [placeholder]="'Select an IEP'" *ngIf="_state.model.data.iepSelectOpts"
+        [(model)]="_state.model.createGoalSelectedIep" [options]="_state.model.data.iepSelectOpts"
+        (onChange)="onChangeSelectIepForCreateGoal($event)">
+      </pl-input-select>
+      <pl-input-select class="inline-block margin-small-l" [placeholder]="'Select a Service Area'"      *ngIf="_state.model.createGoalSelectedIep && _state.model.data.serviceAreaSelectOpts"
+        [(model)]="_state.model.createGoalSelectedServiceArea" [options]="_state.model.data.serviceAreaSelectOpts">
+      </pl-input-select>
+      <div class="divider-line small"></div>
+      <!-- DELETE GOAL-->
+      <basic-test-api [actionButtonLabel]="'Delete Goal'" [onClickApiAction]="onClickDeleteGoal.bind(this)"
+        [modelApiData]="_state.model.data.deleteGoal"></basic-test-api>
+      <pl-input-text class="inline-block" [placeholder]="'Enter Goal ID'"
+        [(model)]="_state.model.deleteGoalId"></pl-input-text>
+      <div class="divider-line small"></div>
+      <!-- UPDATE GOAL-->
+      <basic-test-api [actionButtonLabel]="'Update Goal'" [onClickApiAction]="onClickUpdateGoal.bind(this)"
+        [modelApiData]="_state.model.data.updateGoal"></basic-test-api>
+      <pl-input-text class="inline-block" [placeholder]="'Enter Goal ID'" [(model)]="_state.model.updateGoalId"></pl-input-text>
+    </fieldset>
+
+    <fieldset>
+      <legend>Metrics</legend>
+      <!-- CREATE METRIC-->
+      <basic-test-api [actionButtonLabel]="'Create Metric'" [onClickApiAction]="onClickCreateMetric.bind(this)"
+        [modelApiData]="_state.model.data.createMetric"></basic-test-api>
+      <pl-input-select class="inline-block margin-small-l" [placeholder]="'Select an IEP'" *ngIf="_state.model.data.iepSelectOpts"
+        [(model)]="_state.model.createMetricSelectedIep" [options]="_state.model.data.iepSelectOpts"
+        (onChange)="onChangeSelectIepForCreateMetric($event)">
+      </pl-input-select>
+      <pl-input-select class="inline-block margin-small-l" [placeholder]="'Select a Service Area'"
+        *ngIf="_state.model.createMetricSelectedIep && _state.model.data.serviceAreaSelectOpts"
+        [(model)]="_state.model.createMetricSelectedServiceArea" [options]="_state.model.data.serviceAreaSelectOpts"
+        (onChange)="onChangeSelectServiceAreaForCreateMetric($event)">
+      </pl-input-select>
+      <pl-input-select class="inline-block margin-small-l" [placeholder]="'Select a Goal'"
+        *ngIf="_state.model.createMetricSelectedServiceArea && _state.model.data.goalSelectOpts"
+        [(model)]="_state.model.createMetricSelectedGoal" [options]="_state.model.data.goalSelectOpts">
+      </pl-input-select>
+      <div class="divider-line small"></div>
+      <!-- DELETE METRIC-->
+      <basic-test-api [actionButtonLabel]="'Delete Metric'" [onClickApiAction]="onClickDeleteMetric.bind(this)"
+        [modelApiData]="_state.model.data.deleteMetric"></basic-test-api>
+      <pl-input-text class="inline-block" [placeholder]="'Enter Metric ID'" [(model)]="_state.model.deleteMetricId">
+      </pl-input-text>
+      <div class="divider-line small"></div>
+      <!-- UPDATE METRIC-->
+      <basic-test-api [actionButtonLabel]="'Update Metric'" [onClickApiAction]="onClickUpdateMetric.bind(this)"
+        [modelApiData]="_state.model.data.updateMetric"></basic-test-api>
+      <pl-input-text class="inline-block" [placeholder]="'Enter Metric ID'" [(model)]="_state.model.updateMetricId"></pl-input-text>
+    </fieldset>
+
+    <fieldset>
+      <legend>Other</legend>
+      <!-- GET SERVICE TYPES-->
+      <basic-test-api [actionButtonLabel]="'Get Service Types'" [onClickApiAction]="onClickGetServiceTypes.bind(this)"
+        [modelApiData]="_state.model.data.getServiceTypes"></basic-test-api>
+    </fieldset>
+  </div>
+
+
+<!----------------------------------------------------------
+-  push based reactive data/action streams
+----------------------------------------------------------->
+  <div *ngIf="util.flag(_state, 'TEST_API_STREAMS')">
+    <h1 class="title">TEST API: IEP: using reactive data/action streams</h1>
+    <div class="divider-line"></div>
+    <stream-test-api [actionButtonLabel]="'Get IEP/Progress Trackers'" [onClickApiAction]="onClickRefreshClientIeps.bind(this)"
+      [modelApiStream]="service.combo$">
+      <div *ngIf="service.combo$ | async as data">
+        <ngx-json-viewer [json]="data.clientIeps"></ngx-json-viewer>
+      </div>
+    </stream-test-api>
+  </div>
+</div>

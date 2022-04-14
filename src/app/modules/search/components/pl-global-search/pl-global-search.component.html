@@ -1,0 +1,67 @@
+<ng-container *ngIf="allowSearch">
+    <form [formGroup]="searchForm" class="flexbox" [class.hidden]="!searchVisible" autocomplete="off">
+        <div class="pl-search" [class.active]="searchResultsVisible">
+            <div class="pl-search-prefix">
+                <!--
+                <pl-input-select formControlName="searchCategory" class="gray-light-bg pl-search-field-category" placeholder="Search in" [options]="searchCategories" 
+                    [model]="searchForm.value.searchCategory" (modelChange)="onValueChanged($event, 'searchCategory')"
+                    (onBlur)="searchResultsVisible = false" (onFocus)="searchResultsVisible = true"></pl-input-select>
+                -->
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="assets/search-icons.svg#search" /> 
+                </svg>
+            </div>
+            <div class="pl-search-text">
+                <input #searchInput id="pl-search-input" type="search" formControlName="searchText" class="search-text" 
+                    placeholder="Search Clients, Locations, Organizations, or Providers"
+                    (blur)="searchTextBlur()" (focus)="searchTextFocus()" (keyup)="searchKeyNavigation($event)"/>
+            </div>
+            <div class="pl-search-suffix"></div>
+
+            <div *ngIf="searchResultsVisible && searchForm.valid && results.length === 0" class="search-container padding-large-tb">
+                <div class="search-label padding-large-lr margin-b"> 
+                    No match found for “{{ searchForm.value.searchText }}"
+                </div>
+            </div>
+            <div *ngIf="searchResultsVisible && results.length > 0" class="search-container padding-large-tb">
+                <div *ngIf="view === 1" class="search-label padding-large-lr margin-b"> 
+                    Recently viewed
+                </div>
+                <div class="search-scroll">
+                    <div *ngFor="let item of results; let idx = index" [class.hover]="idx === selectedIndex" (click)="selectItem(item)" class="search-item">
+                        <div class="search-item_icon {{ item.type }}">
+                            <ng-container *ngIf="item.initials; else svgIcon">
+                                {{ item.initials }}
+                            </ng-container>
+                            <ng-template #svgIcon>
+                                <svg width="24" height="24" viewBox="0 0 24 24">
+                                    <ng-container *ngIf="item.type === 'Location'">
+                                        <use xlink:href="assets/search-icons.svg#school" />
+                                    </ng-container>
+                                    <ng-container *ngIf="item.type === 'Organization'">
+                                        <use xlink:href="assets/search-icons.svg#organization" />
+                                    </ng-container>
+                                </svg>
+                            </ng-template>
+                        </div>
+                        <div class="search-item_text">
+                            <div class="search-item_name" [innerHTML]="hightlightText(item.name)">
+                            </div>
+                            <div class="search-item_type">
+                                {{ item.type }} 
+                                <ng-container *ngIf="item.other"> at {{ item.other }} </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="cancel margin-xlarge-l" (click)="closeSearch()"> Cancel </span>
+    </form>
+    <div *ngIf="searchVisible" class="pl-search-overlay" (click)="closeSearch()"></div>
+    <button *ngIf="!searchVisible" pl-button class="link pl-search-button" title="Search" (click)="openSearch()">
+        <svg width="24" height="24" viewBox="0 0 24 24" class="gray-darkest">
+            <use xlink:href="assets/search-icons.svg#search" /> 
+        </svg>
+    </button>
+</ng-container>

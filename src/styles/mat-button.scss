@@ -1,0 +1,23 @@
+@import './pl-colors.scss';
+
+.mat-button-base {
+    &.cdk-focused {
+        box-shadow: $gray 0px 0px 0px 3px;
+    }
+    &.mat-raised-button {
+        &.mat-accent {
+            &:hover {
+                background-color: $orange-dark;
+            }
+        }
+    }
+}
+.mat-button-focus-overlay {
+    background-color: transparent !important;
+}
+
+.mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
+    &.mat-secondary {
+        background-color: $blue;
+    }
+}

@@ -1,0 +1,95 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-client-direct-referral {
+    padding-top: 5px;
+    padding-bottom: 3px;
+
+    &.expanded {
+        background-color: @slate-lightest;
+    }
+
+    .header {
+        &>div {
+            flex-basis: 0;
+            .margin-l;
+        }
+        .expand-button, .service-type {
+            cursor: pointer;
+        }
+        .created, .expand-button, .service-type {
+            line-height: 32px;
+        }
+    }
+
+    .service-details {
+        .padding-large-lr;
+    }
+
+    .service-details-border {
+        border-top: solid 1px @gray-light;
+        border-bottom: solid 1px @gray-light;
+        .padding-large-tb;
+        .margin-b;
+    }
+    .service-details-left, .service-details-right {
+        display: inline-block;
+        vertical-align: top;
+    }
+    .service-details-left {
+        width: 39.8%;
+    }
+    .service-details-right {
+        width: 47%;
+        .margin-large-l;
+    }
+    .textarea-wrapper, .textarea-button {
+        display: inline-block;
+        vertical-align: top;
+    }
+    .textarea-wrapper {
+        width: 30%;
+    }
+
+    .status-dot {
+        vertical-align: -6px;
+    }
+
+    .active-text {
+        margin-top: 6px;
+        .margin-l;
+    }
+}
+
+@media (min-width: 650px) {
+    .pl-client-direct-referral {
+        .service-details-right {
+            width: 45%;
+        }
+        .textarea-wrapper {
+            width: 40%;
+        }
+    }
+}
+
+@media (min-width: 800px) {
+    .pl-client-direct-referral {
+        .service-details-right {
+            width: 50%;
+        }
+        .textarea-wrapper {
+            width: 50%;
+        }
+    }
+}
+
+@media (min-width: 1000px) {
+    .pl-client-direct-referral {
+        .service-details-right {
+            width: 58%;
+        }
+        .textarea-wrapper {
+            width: 70%;
+        }
+    }
+}

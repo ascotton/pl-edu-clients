@@ -1,0 +1,275 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+@import 'core/colors-classes.less';
+@import 'core/layout.less';
+@import 'app/client-absences.less';
+
+
+.pl-client-absences-dashboard {
+    @header-height: 45px;
+    @tabs-height: 53px;
+    @top-spacing: @spacing-normal-large;
+    @top-height: (@header-height + @tabs-height + @top-spacing);
+
+    .table-type-buttons {
+        .margin-large-b;
+
+        .table-type-btn {
+            margin: 0 auto;
+            white-space: nowrap;
+        }
+    }
+
+    .filter-item {
+        display: inline-block;
+        width: 250px;
+        vertical-align: top;
+        .margin-r;
+        .margin-b;
+    }
+
+    .table-top.buttons {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .table-top, .table-order {
+        background-color: @slate-lightest;
+    }
+
+    .fixed-side-table {
+        position: fixed;
+        left: @spacing-normal-large;
+        right: 50%;
+        top: @top-height;
+        bottom: @spacing-normal-large;
+    }
+    .fixed-side {
+        position: fixed;
+        left: 50%;
+        right: @spacing-normal-large;
+        top: @top-height;
+        bottom: @spacing-normal-large;
+        overflow: auto;
+
+        &.selectedClientService {
+            background-color: @slate-darkest;
+        }
+    }
+    // Set height in fixed-side then all children to 100%
+    // to use vertical flexbox to get dynamic height for
+    // records scrollbar.
+    .fixed-height-table {
+        height: 100%;
+    }
+    .fixed-selected-client {
+        height: 100%;
+
+        .details-wrapper {
+            height: 100%;
+
+            .details {
+                height: 100%;
+            }
+        }
+    }
+
+    .fixed-height-table {
+        flex-direction: column;
+
+        .fixed-height-table-inner {
+            flex-direction: column;
+        }
+        .table-rows {
+            overflow-y: auto;
+        }
+    }
+
+    .table-rows {
+        background-color: @slate-lightest;
+    }
+
+    .table-row {
+        &.selected {
+            background-color: @slate-darkest;
+            color: @white;
+        }
+    }
+
+    .color-box-cell {
+        overflow: visible;
+        flex: 0;
+
+        &.priority-1 {
+            background-color: @priority-1-color;
+        }
+        &.priority-2 {
+            background-color: @priority-2-color;
+        }
+        &.priority-3, &.priority-0 {
+            background-color: @priority-3-color;
+        }
+
+        .color-box-cell-inner {
+            width: 50px;
+            text-align: center;
+            // vertical centering
+            padding-top: 10px;
+            .white;
+        }
+    }
+
+    .absences-definition-list {
+        dt {
+            .bold;
+
+            &::after {
+                content: ':';
+            }
+        }
+
+        dt,
+        dd {
+            display: inline;
+        }
+    }
+
+    .details-wrapper {
+        &.priority-1 {
+            .info-items {
+                border-color: @priority-1-color;
+            }
+        }
+        &.priority-2 {
+            .info-items {
+                border-color: @priority-2-color;
+            }
+        }
+        &.priority-3, &.priority-0 {
+            .info-items {
+                border-color: @priority-3-color;
+            }
+        }
+
+        .client-icon {
+            padding: 10px;
+            background-color: @white;
+            border-radius: 100px;
+        }
+        .details {
+            flex-direction: column;
+        }
+
+        .details-top {
+            color: @white;
+        }
+        .info-items {
+            background-color: @white;
+            border-top-right-radius: 4px;
+            border-top-left-radius: 4px;
+            border-top-width: 5px;
+            border-top-style: solid;
+            .info-item {
+                white-space: nowrap;
+                display: inline-block;
+                padding: 5px;
+            }
+
+            .absences-streak, .absences-ytd {
+                color: white;
+                border-radius: 100px;
+                padding: 2px 10px;
+
+                &.priority-1 {
+                    background-color: @priority-1-color;
+                }
+
+                &.priority-2 {
+                    background-color: @priority-2-color;
+                }
+
+                // NOTE 1: priority-0 only effectively applies to ytd
+                // NOTE 2: zero counts are going to be removed in a future version
+                &.priority-3, &.priority-0 {
+                    background-color: @priority-3-color;
+                }
+            }
+
+            .absences-rate {
+                border-radius: 100px;
+                padding: 2px 0;
+                &.priority-1 {
+                    color: @priority-1-color;
+                }
+
+                &.priority-2 {
+                    color: @priority-2-color;
+                }
+
+                &.priority-3 {
+                    color: @priority-3-color;
+                }
+            }
+
+            .absences-streak,
+            .absences-rate,
+            .absences-ytd {
+                .margin-r;
+                .inline-block;
+                .font-h2;
+                font-weight: bold;
+            }
+
+            .smaller-data {
+                .inline-block;
+                vertical-align: -7px;
+            }
+        }
+
+        .records-title {
+            border-bottom: solid 1px @gray-dark;
+            background-color: @white;
+        }
+        .records {
+            background-color: @white;
+            overflow-y: auto;
+
+            .record {
+                border-bottom: solid 1px @gray-dark;
+            }
+
+            .record-note {
+                .margin-t;
+            }
+            .record-note-label {
+                .margin-r;
+            }
+        }
+
+        .footer {
+            .btn {
+                &[pl-button] {
+                    margin: 0;
+                    color: @white;
+                    border-color: @white;
+                }
+            }
+        }
+    }
+    &.debug-show-div {
+        @debug-color: rgb(0, 183, 255);
+        border: 3px solid @debug-color;
+        padding: 20px;
+        position: relative;
+        .debug-component-name {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 11px;
+            padding: 2px;
+            background-color: @debug-color;
+            color: white;
+        }
+    }
+}

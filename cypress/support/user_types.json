@@ -1,0 +1,14 @@
+{
+    "providerSlp": "provider-slp",
+    "providerOt": "provider-ot",
+    "providerMhp": "provider-mhp",
+    "providerPa": "provider-pa",
+    "providerW2Pa": "provider-w2-pa",
+    "camUser": "cam_user",
+    "camBillingUser": "cam_billing_user",
+    "serviceAndSupport": "service-and-support",
+    "customerAdmin": "customer_admin",
+    "cam-onboarding-user": "cam-onboarding-user",
+    "cam-billing-onboarding-user": "cam-billing-onboarding-user",
+    "providerSlpOnboarding": "provider-slp-onboarding"
+}

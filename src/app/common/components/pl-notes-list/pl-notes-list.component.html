@@ -1,0 +1,87 @@
+<div class="pl-notes-list-container">
+    <div *ngIf="!notes.length && !isStandaloneEditor">No notes added yet.</div>
+    <div class="notes-list margin-large-b" *ngIf="notes.length">
+        <div class="note" *ngFor="let note of notes">
+            <div class="view-note" *ngIf="!isEditingNote(note)">
+                <div class="note-header">
+                    <i>{{ note.owner.firstName }} {{ note.owner.lastName }} - {{ note.created | date:"MMMM d, y, h:mm a" }}</i>
+                    <small *ngIf="note.isEdited"> (edited) </small>
+                    <button
+                        *ngIf="isNoteOwner(note) && !viewMode"
+                        pl-button type="button" class="link margin-small-l note-header-action"
+                        (click)="onEditNoteClick(note)">
+                        Edit
+                    </button>
+                </div>
+                <div class="note-body margin-small-t" [innerHTML]="note.text | plSafeHtml"></div>
+                <div class="divider-line"></div>
+            </div>
+            <div class="edit-note" *ngIf="isEditingNote(note)">
+                <div class="new-note">
+                    <div class="new-note-header">
+                        <div class="note-header">
+                            <i>
+                                {{ currentNote.owner.firstName }} {{ currentNote.owner.lastName }} - {{ currentNote.created | date:"MMMM d, y, h:mm a" }}
+                            </i>
+                        </div>
+                        <div class="new-note-header-actions">
+                            <button pl-button type="button" class="link margin-small-r"
+                                (click)="onDeleteNoteClick(currentNote)">
+                                Delete
+                            </button>
+                            <button pl-button type="button" class="link margin-small-r"
+                                (click)="onCancelEditingNotesClick()">
+                                Cancel
+                            </button>
+                            <button pl-button type="button" class="primary"
+                                [disabled]="isSaveNoteDisabled()"
+                                (click)="onSaveNoteClick()">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                    <div class="new-note-form">
+                        <pl-note-editor [editor]="editor" [mentionableUsers]="tinyMentionableUsers"></pl-note-editor>
+                    </div>
+                </div>
+                <div class="divider-line"></div>
+            </div>
+        </div>
+    </div>
+    <div class="new-note" *ngIf="isAddingNewNote">
+        <div class="new-note-header">
+            <div class="note-header">
+                <i>
+                    {{ currentNote.owner.firstName }} {{ currentNote.owner.lastName }}
+                </i>
+            </div>
+            <div *ngIf="!isStandaloneEditor" class="new-note-header-actions">
+                <button pl-button type="button" class="link margin-small-r"
+                    (click)="onCancelEditingNotesClick()">
+                    Cancel
+                </button>
+                <button pl-button type="button" class="primary"
+                    [disabled]="isSaveNoteDisabled()"
+                    (click)="onSaveNoteClick()">
+                    Save
+                </button>
+            </div>
+        </div>
+        <div class="new-note-form">
+            <pl-note-editor
+                [editor]="editor"
+                [mentionableUsers]="tinyMentionableUsers"
+                (editorChange)="onEditorChange($event)">
+            </pl-note-editor>
+        </div>
+    </div>
+    <div class="margin-t">
+        <button
+            pl-button type="button" class="link"
+            *ngIf="shouldShowAddNotesButton()"
+            (click)="onAddNotesClick()">
+            <pl-icon [svg]="'notes'" class="margin-small-r"></pl-icon>
+            Add note
+        </button>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+@import 'core/colors.less';
+@import 'core/flexbox.less';
+
+.pl-billing-preview-summary {
+    .header {
+        margin-bottom: 1px;
+        background-color: @slate-medium;
+    }
+    .subheader {
+        background-color: @slate-light;
+    }
+    .details-row {
+        &:nth-child(odd) {
+            background-color: @slate-lightest;
+        }
+
+        .col-code {
+            font-weight: bolder;
+        }
+    }
+    .col-code, .col-hours, .col-rate, .col-amount, .total-right {
+        padding: 14px 14px;
+    }
+    .col-code {
+        .flex2;
+        flex-basis: 0;
+    }
+    .col-hours, .col-rate, .col-amount {
+        .flex1;
+        flex-basis: 0;
+        border-left: solid 1px white;
+        text-align: right;
+    }
+    .total {
+        margin-top: 1px;
+    }
+    .total-right {
+        text-align: right;
+    }
+    .subtotal {
+        font-size: larger;
+        font-weight: bolder; 
+    }
+}

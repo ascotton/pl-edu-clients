@@ -1,0 +1,8 @@
+<div class="stream-test-api">
+  <div>
+    <button pl-button class="primary inline-block" (click)="onClickApiAction()">{{actionButtonLabel}}</button>
+    <button pl-button class="bare inline-block" (click)="onClickToggleData()" *ngIf="modelApiStream | async">🎉</button>
+  </div>
+  <ng-content *ngIf="_state.showData"></ng-content>
+</div>
+

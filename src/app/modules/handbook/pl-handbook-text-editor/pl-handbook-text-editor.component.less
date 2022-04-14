@@ -1,0 +1,44 @@
+@import 'core/colors.less';
+@import 'core/decoration.less';
+
+h1 {
+  font-size: 20px;
+  line-height: 27px;
+}
+
+.pl-text-editor-inline-flex {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.pl-text-editor-desc {
+  font-size: 11px;
+  color: @gray-darker;
+}
+
+.pl-text-editor-no-content {
+  text-align: center;
+
+  span > p {
+    font-weight: bold;
+  }
+}
+
+.pl-text-editor-shadow {
+  box-shadow: @box-shadow-component;
+}
+
+.pl-text-editor-animate-right {
+  position: relative;
+  animation: animateright 0.4s;
+}
+@keyframes animateright {
+  from {
+    right: -300px;
+    opacity: 0;
+  }
+  to {
+    right: 0;
+    opacity: 1;
+  }
+}

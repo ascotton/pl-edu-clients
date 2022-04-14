@@ -1,0 +1,44 @@
+<pl-schoolyear-select
+[simpleSelect]="true"
+[(selectedSchoolYear)]="selectedSchoolYear"
+(onYearSelected)="onYearSelected($event)">
+</pl-schoolyear-select>
+
+<div class="table-actions">
+    <div class="table-actions-toggle-columns-filters">
+        <div class="toggle-columns">
+            <pl-input-multi-select
+                [(model)]="assessmentsTableService.tableColumnsToggle.value"
+                [options]="assessmentsTableService.tableColumnsToggle.selectOptsMulti"
+                [placeholder]="'Toggle Columns'"
+                [label]="'Toggle Columns'">
+            </pl-input-multi-select>
+        </div>
+        <button pl-button
+            (click)="onToggleFilters()"
+            class="gray-outline">
+            <pl-icon [svg]="'filter'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon> {{hasFiltersVisible ? 'Hide' : 'Show' }} Filters
+        </button>
+    </div>
+
+    <div class="table-actions-add-referrals">
+        <button pl-button
+            *ngIf="assessmentsTableService.userCanAddSingleReferral"
+            class="gray-outline" (click)="routeTo('/client-referral-save')">
+            <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon> Add Evaluation Referral
+        </button>
+        <button pl-button
+            *ngIf="assessmentsTableService.userCanAddReferrals"
+            class="gray-outline x-qa-upload-referrals" (click)="routeTo('/add-referrals')">
+            <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon> Add Evaluation Referrals in Bulk
+        </button>
+    </div>
+</div>
+
+<pl-assessments-table
+    *ngIf="loadedCurrentUser"
+    [hasFiltersVisible]="hasFiltersVisible"
+    (assessmentChange)="onAssessmentChange($event)"
+    (tableChange)="onQuery($event)"
+    (closeFilters)="onToggleFilters()">
+</pl-assessments-table>

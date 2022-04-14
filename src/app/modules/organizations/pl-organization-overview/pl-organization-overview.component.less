@@ -1,0 +1,16 @@
+@import 'core/spacing.less';
+
+.pl-organization-locations {
+    a {
+        text-decoration: underline;
+    }
+}
+
+.card-section {
+    .card {
+        &.locations-card {
+            grid-column: ~"1 / -1";
+            margin-top: @spacing-xlarge;
+        }
+    }
+}

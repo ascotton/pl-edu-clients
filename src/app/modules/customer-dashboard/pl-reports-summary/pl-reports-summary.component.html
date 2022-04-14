@@ -1,0 +1,84 @@
+<section class="pl-reports-summary" *ngIf="_state.initialized" [ngClass]="{ 'debug-show-div': util.showDivs(_state) }">
+    <div class="debug-component-name" *ngIf="util.showDivs(_state)">{{ _state.componentName }} {{ _state.ID }}</div>
+    <pl-button-group class="flexbox margin-b toggle-buttons">
+        <button
+            pl-button
+            class="flex1 x-qa-reports-summary-toggle-client-btn"
+            [ngClass]="_state.classesToggle.client"
+            (click)="toggleType('client', _state)"
+        >
+            By <pl-client-student-display [user]="_state.currentUser" [capitalize]="true"></pl-client-student-display>
+        </button>
+        <button
+            pl-button
+            class="flex1 x-qa-reports-summary-toggle-location-btn"
+            [ngClass]="_state.classesToggle.location"
+            (click)="toggleType('location', _state)"
+        >
+            By Location
+        </button>
+    </pl-button-group>
+
+    <div class="bottom">
+        <div [hidden]="_state.type !== 'client'">
+            <pl-input-select-api
+                class="form-input"
+                [(model)]="_state.clientId"
+                [options]="_state.clientOpts"
+                [loading]="_state.clientsLoading"
+                [label]="'Name'"
+                (onSearch)="onSearchClients($event, this._state)"
+                [searchByDefault]="true"
+                [filterPlaceholder]="'Search for a student'"
+            ></pl-input-select-api>
+            <button
+                *ngIf="!_state.clientId"
+                pl-button
+                class="primary"
+                [disabled]="
+                    (_state.type === 'client' && !_state.clientId) || (_state.type === 'location' && !_state.locationId)
+                "
+            >
+                View Notes
+            </button>
+            <a
+                *ngIf="_state.clientId"
+                [routerLink]="['/client', _state.clientId, 'reports']"
+                class="link-none"
+                target="_blank"
+            >
+                <button pl-button class="primary x-qa-view-notes-client-btn">View Notes</button>
+            </a>
+        </div>
+        <div [hidden]="_state.type !== 'location'">
+            <pl-input-select-api
+                class="form-input"
+                [(model)]="_state.locationId"
+                [options]="_state.locationOpts"
+                [loading]="_state.locationsLoading"
+                [label]="'Name'"
+                (onSearch)="onSearchLocations($event, this._state)"
+                [searchByDefault]="true"
+                [filterPlaceholder]="'Search for a location'"
+            ></pl-input-select-api>
+            <button
+                *ngIf="!_state.locationId"
+                pl-button
+                class="primary"
+                [disabled]="
+                    (_state.type === 'client' && !_state.clientId) || (_state.type === 'location' && !_state.locationId)
+                "
+            >
+                View Notes
+            </button>
+            <a
+                *ngIf="_state.locationId"
+                [routerLink]="['/location', _state.locationId, 'reports']"
+                class="link-none"
+                target="_blank"
+            >
+                <button pl-button class="primary x-qa-view-notes-location-btn">View Notes</button>
+            </a>
+        </div>
+    </div>
+</section>

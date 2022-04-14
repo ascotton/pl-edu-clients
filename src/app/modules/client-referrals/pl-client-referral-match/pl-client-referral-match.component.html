@@ -1,0 +1,114 @@
+<div class="pl-client-referral-match">
+    <pl-modal-header-wrapper [headerText]="'Match Provider'">
+        <div class="margin-b"><b>{{ client.firstName }} {{ client.lastName }} - {{ productTypeName() }}</b></div>
+        <div class="supporting-details">
+            <dl *ngIf="isDirectTherapyProductType()" class="direct-therapy-fields">
+                <dt>Duration</dt>
+                <dd>
+                    <pl-is-available [condition]="referral.duration !== null">
+                        {{ referral.duration | i18nPlural : durationPluralization }}
+                    </pl-is-available>
+                </dd>
+                <dt>Frequency</dt>
+                <dd>
+                    <pl-is-available [condition]="referral.frequency !== null">
+                        {{ referral.frequency }} {{ referral.frequency > 1 ? 'times' : 'time' }}
+                    </pl-is-available>
+                </dd>
+                <dt>Interval</dt>
+                <dd>
+                    <pl-is-available [condition]="referral.interval !== null">
+                        {{ referral.interval | plOptions : intervalOptions }}
+                    </pl-is-available>
+                </dd>
+                <dt>Group/Individual</dt>
+                <dd>
+                    <pl-is-available [condition]="referral.grouping !== 'unspecified'">
+                        {{ referral.grouping | plOptions : groupingOptions }}
+                    </pl-is-available>
+                </dd>
+            </dl>
+            <p *ngIf="showLanguageNote()" class="language-note margin-b">
+                <ng-container *ngIf="isEvaluationProductType()">
+                    This {{ clientStudentText }} is currently an ELL student with
+                    {{ client.primaryLanguage.name }} as the primary language. For an
+                    evaluation, you must select a provider who can speak the
+                    {{ clientStudentText }}'s language and / or identify a translator.
+                </ng-container>
+                <ng-container *ngIf="isDirectTherapyProductType()">
+                    This {{ clientStudentText }} is currently an ELL student with
+                    {{ client.primaryLanguage.name }} as the primary language. If a
+                    provider who speaks {{ client.primaryLanguage.name }} cannot be found,
+                    it is acceptable to select an English-speaking provider.
+                </ng-container>
+            </p>
+        </div>
+        <div>
+            <div class="margin-b">
+                Select an {{ referral.discipline }} provider for this {{ productTypeName() }} referral.
+            </div>
+            <div class="providers margin-large-b">
+                <div class="header-row padding flexbox">
+                    <div class="header-col name-col">Provider</div>
+                    <div class="header-col center">Caseload</div>
+                    <div class="header-col center">Estimated Remaining Hours</div>
+                </div>
+                <div class="rows">
+                    <pl-dot-loader *ngIf="loading" [align]="'center'"></pl-dot-loader>
+                    <div *ngIf="!loading && !providers.length" class="center padding-large">
+                        {{ referral.organizationName }} needs an assigned {{ referral.discipline }} Provider to serve this referral.
+                    </div>
+                    <div *ngFor="let provider of providers" class="provider-info body-row padding flexbox pointer">
+                        <div class="body-col name-col">
+                            <pl-input-radio [(model)]="selectedProviderUserId" [value]="provider.userId" [label]="provider.name" [name]="'providerRadio'"></pl-input-radio>
+                        </div>
+                        <div class="body-col center">{{ provider.caseloadCount }}</div>
+                        <div class="body-col center">{{ provider.remainingAvailableHours }}</div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="loading || providers.length" class="margin-large-b">
+                <b class="margin-r">Notes</b>
+                <div class="referral-notes rows margin-small-t">
+                    <pl-referral-notes
+                        [currentUser]="currentUser"
+                        [referralId]="referral.id"
+                        [clientId]="client.id"
+                        [locationId]="locationId"
+                        [mayEditNotes]="false"
+                        >
+                    </pl-referral-notes>
+                </div>
+            </div>
+            <div class="margin-b">Need another provider? <a href="{{ this.requestLink }}" target="_blank">Request Provider Assignment.</a></div>
+        </div>
+        <div class="buttons" [hidden]="submitting">
+            <div class="buttons-primary">
+                <button
+                    id="saveMatchButton"
+                    *ngIf="loading || providers.length"
+                    pl-button
+                    class="success x-qa-match-confirm-btn"
+                    (click)="onSaveMatchClick()"
+                    [disabled]="loading || !selectedProviderUserId"
+                >
+                    Save
+                </button>
+                <button pl-button class="x-qa-match-cancel-btn" (click)="onCancelClick()">Cancel</button>
+            </div>
+            <div class="buttons-secondary">
+                <button
+                    id="confirmMatchButton"
+                    *ngIf="loading || providers.length"
+                    pl-button
+                    (click)="onConfirmMatchClick()"
+                    [disabled]="loading || !selectedProviderUserId"
+                >
+                    Confirm Match
+                </button>
+            </div>
+        </div>
+        <pl-dot-loader *ngIf="submitting" [align]="'center'"></pl-dot-loader>
+        <div *ngIf="noneSelectedError">Whoops, you forgot to select a Provider.</div>
+    </pl-modal-header-wrapper>
+</div>

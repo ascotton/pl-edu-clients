@@ -1,0 +1,8 @@
+<div class="pl-billing-preview-container container">
+    <ng-template #content>
+        <pl-billing-preview [billing]="billing" [billingType]="billingType"></pl-billing-preview>
+    </ng-template>
+    <div *ngIf="loading; else content">
+        <pl-dot-loader></pl-dot-loader>
+    </div>
+</div>

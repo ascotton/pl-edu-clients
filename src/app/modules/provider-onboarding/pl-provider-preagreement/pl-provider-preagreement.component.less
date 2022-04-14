@@ -1,0 +1,57 @@
+@import 'core/spacing.less';
+
+.pl-provider-preagreement {
+    .nav-container {
+        .padding-tb;
+        .padding-large-lr;
+        border-bottom: 1px solid #d2d3d5;
+    }
+
+    .content {
+        .padding-large;
+
+        .frame {
+            border: solid 1px #d2d3d5;
+        }
+
+        .download-doc {
+            float: right;
+            font-size: 11px;
+            margin-top: -16px;
+            @media (min-width: 768px) {
+                display: none;
+            }
+        }
+    }
+
+    .sig-form {
+        .input-initials {
+            max-width: 150px;
+        }
+
+        .message {
+            font-style: italic;
+            font-size: 13px;
+            margin-bottom: 16px;
+            margin-top: 4px;
+        }
+    }
+
+    .grid-container {
+        width: 150px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 5px;
+    }
+
+    .footer {
+        .margin-l;
+        text-align: center;
+        font-size: 13px;
+
+        .small {
+            margin-top: 6px;
+            font-size: 11px;
+        }
+    }
+}

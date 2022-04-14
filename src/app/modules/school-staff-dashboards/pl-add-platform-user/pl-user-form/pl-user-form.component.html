@@ -1,0 +1,113 @@
+<form class="pl-user-form" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="submit()">
+    <div class="row margin-b">
+        <div class="col-xs col-md-4">
+            <mat-form-field
+                [floatLabel]="plDesign.components.formField.floatLabel"
+                [appearance]="plDesign.components.formField.appearance">
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstName">
+                <mat-error *ngIf="form.get('firstName').hasError('required')">
+                    Missing field
+                </mat-error>
+                <mat-error *ngIf="form.get('firstName').getError('maxlength') as error">
+                    You have exceed max length of {{ error.requiredLength}}
+                </mat-error>
+                <mat-error *ngIf="form.get('firstName').hasError('pattern')">
+                    Please enter a valid format
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-xs col-md-4">
+            <mat-form-field
+                [floatLabel]="plDesign.components.formField.floatLabel"
+                [appearance]="plDesign.components.formField.appearance">
+                <mat-label>Last Name</mat-label>
+                <input matInput formControlName="lastName">
+                <mat-error *ngIf="form.get('lastName').hasError('required')">
+                    Missing field
+                </mat-error>
+                <mat-error *ngIf="form.get('lastName').getError('maxlength') as error">
+                    You have exceed max length of {{ error.requiredLength}}
+                </mat-error>
+                <mat-error *ngIf="form.get('lastName').hasError('pattern')">
+                    Please enter a valid format
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-xs col-md-4">
+            <mat-form-field
+                [floatLabel]="plDesign.components.formField.floatLabel"
+                [appearance]="plDesign.components.formField.appearance">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email">
+                <mat-error *ngIf="form.get('email').hasError('email')">
+                    Please enter a valid email address.
+                </mat-error>
+                <mat-error *ngIf="form.get('email').hasError('required')">
+                    Missing field
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row margin-tb">
+        <div class="col-xs">
+            <pl-licenses-helper formControlName="licenseType"
+                (valueChange)="onLicenseChanged($event)">
+            </pl-licenses-helper>
+            <mat-error *ngIf="form.get('licenseType').hasError('required')">
+                Please select a license.
+            </mat-error>
+            <mat-error *ngIf="form.get('licenseType').hasError('plLicense')">
+                {{ form.get('licenseType').getError('plLicense') }}
+            </mat-error>
+            <div class="padding-tb">
+                <a href="mailto:{{ contact?.email }}" target="_blank">
+                    Contact Customer Success
+                </a> to purchase additional licenses.
+            </div>
+        </div>
+    </div>
+    <div class="row margin-tb">
+        <div class="col-xs col-md-4">
+            <mat-form-field
+                [floatLabel]="plDesign.components.formField.floatLabel"
+                [appearance]="plDesign.components.formField.appearance">
+                <mat-label>Occupation</mat-label>
+                <mat-select formControlName="occupation">
+                    <mat-option *ngFor="let type of validOcupations" [value]="type.value">
+                        {{type.label}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('occupation').hasError('required')">
+                    Missing field
+                </mat-error>
+                <mat-error *ngIf="form.get('occupation').hasError('invalidOption')">
+                    Selected option is not valid
+                </mat-error>
+            </mat-form-field>
+            <mat-checkbox
+                formControlName="adminAccess">
+                Assign administrative access
+            </mat-checkbox>
+            <mat-error *ngIf="form.get('adminAccess').hasError('plAdminLicense')">
+                {{ form.get('adminAccess').getError('plAdminLicense') }} <br/>
+                To assign more, please contact your Customer Success Representative.
+            </mat-error>
+        </div>
+    </div>
+    <div class="flexbox between-xs margin-xlarge-t" [style.width.px]="320">
+        <button mat-stroked-button type="button"
+            [disabled]="loading"
+            (click)="form.reset()">
+            Cancel
+        </button>
+        <button mat-flat-button type="submit" 
+            color="accent">
+            <mat-progress-spinner *ngIf="loading"
+                class="margin-tb margin-r"
+                mode="indeterminate" [diameter]="16">
+            </mat-progress-spinner>
+            {{ loading ? 'Submiting' : 'Activate' }}
+        </button>
+    </div>
+</form>

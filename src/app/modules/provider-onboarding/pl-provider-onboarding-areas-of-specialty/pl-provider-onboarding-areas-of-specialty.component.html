@@ -1,0 +1,31 @@
+<div class="pl-provider-areas-of-specialty padding-large">
+    <div class="margin-b"><h3>Areas of Specialty</h3></div>
+    <div class="margin-b">
+        Please indicate if you are fluent in any languages besides English, and your areas of specialty, from the lists below.<br />
+        <br />
+        You can access these lists from your profile later to make changes in the future.
+    </div>
+    <br />
+
+    <div class="margin-b"><h4>Languages</h4></div>
+    <pl-input-checkbox [(model)]="isBilingual" label="I am fluent in a language in addition to English"></pl-input-checkbox>
+
+    <div *ngIf="isBilingual" class="languageList">
+        <pl-input-checkbox-group
+            [(model)]="selectedLanguageCodes"
+            [options]="languageOptions"
+            [col3]="true"
+        ></pl-input-checkbox-group>        
+    </div>
+    <br />
+
+    <div class="margin-b"><h4>Areas of Specialty</h4></div>
+    <pl-input-checkbox-group
+        [(model)]="selectedAreaIds"
+        [options]="areaOptions"
+        [col2]="true"
+    ></pl-input-checkbox-group>
+    <br />
+    <hr />
+    <button pl-button class="primary" (click)="onClickSave()">Save & Continue</button>
+</div>

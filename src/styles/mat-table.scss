@@ -1,0 +1,29 @@
+.mat {
+    &-header-row {
+        &.loader {
+            min-height: 4px;
+            border: 0;
+            > .mat-header-cell {
+                padding: 0;
+            }
+        }
+    }
+    &-row {
+        &.expandable {
+            min-height: 0;
+            overflow: hidden;
+            .loader {
+                height: 4px;
+            }
+        }
+        &.no-border {
+            border: 0;
+        }
+    }
+    &-cell, &-header-cell {
+        &.expandable-arrow {
+          padding-right: 24px;
+          max-width: 24px;
+        }
+    }
+}

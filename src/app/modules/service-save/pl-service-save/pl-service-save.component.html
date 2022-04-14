@@ -1,0 +1,56 @@
+<section class="pl-service-save">
+    <div class="header-blue padding-large-lr padding-tb">
+        <h2><span *ngIf="!isEdit">Add</span><span *ngIf="isEdit">Edit</span> Service<span *ngIf="client.firstName">: {{ client.firstName }} {{ client.lastName }}</span></h2>
+    </div>
+
+    <div class="margin-large-t">
+        <pl-steps [steps]="steps"></pl-steps>
+    </div>
+
+    <pl-dot-loader [hidden]="!initing" [align]="'center'"></pl-dot-loader>
+    <div [hidden]="initing">
+        <div class="padding-large">
+            <div *ngIf="referralToConvert.id" class="referrals-box padding-large margin-large-b">
+                <div><b>This service is based on a referral:</b></div>
+                <div>{{ referralToConvert.xLabel }}</div>
+            </div>
+            <div class="flexbox">
+                <div class="flex1">
+                    <div class="content-section flexbox col">
+                        <router-outlet></router-outlet>
+                        <div class="section-body flex1"></div>
+                    </div>
+                </div>
+                <div class="flex1">
+                    <div class="notes-section flexbox col">
+                        <h4 class="section-header"><br></h4>
+                        <div class="section-body flex1">
+                            <b class="margin-r">Notes</b>
+                            <pl-referral-notes
+                                *ngIf="convertedReferral.id"
+                                [currentUser]="currentUser"
+                                [referralId]="convertedReferral.id"
+                                [clientId]="client.id"
+                                [locationId]="locationId"
+                                (noteEditing)="onNoteEditing($event)">
+                            </pl-referral-notes>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-fixed-spacer">&nbsp;</div>
+        <div class="footer-fixed">
+            <pl-dot-loader [hidden]="!saving" [align]="'left'"></pl-dot-loader>
+            <div [hidden]="saving">
+                <pl-steps-buttons
+                    [steps]="steps"
+                    (onCancel)="stepsCancel($event)"
+                    (onFinish)="stepsFinish($event)"
+                    (onNext)="stepsNext($event)"
+                ></pl-steps-buttons>
+            </div>
+        </div>
+    </div>
+</section>

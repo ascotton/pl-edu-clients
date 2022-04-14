@@ -1,0 +1,16 @@
+<div class="pl-nav-left-steps">
+    <div *ngFor="let step of steps" class="step" [ngClass]="step.classes.step">
+        <a *ngIf="step.mayClick" [routerLink]="step.href" routerLinkActive="active" class="step-inner link-none flexbox">
+            <div class="icon-wrapper">
+                <pl-icon *ngIf="step.status === 'complete'" class="green" [svg]="'check-circle'"></pl-icon>
+            </div>
+            <div class="flex1 text">{{ step.text }}</div>
+        </a>
+        <div *ngIf="!step.mayClick" class="step-inner flexbox">
+            <div class="icon-wrapper">
+                <pl-icon *ngIf="step.status === 'complete'" class="green" [svg]="'check-circle'"></pl-icon>
+            </div>
+            <div class="flex1 text">{{ step.text }}</div>
+        </div>
+    </div>
+</div>

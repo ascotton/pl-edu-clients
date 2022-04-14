@@ -1,0 +1,12 @@
+<div class="pl-availability-wrapper">
+    <pl-availability-view
+        *ngIf="!loading"
+        [showTabs]="showTabs"
+        [isCAMView]="true"
+        [blockReload]="false"
+        [provider]="provider">
+    </pl-availability-view>
+    <div *ngIf="loading" class="padding-xlarge-tb">
+        <pl-dot-loader></pl-dot-loader>
+    </div>
+</div>

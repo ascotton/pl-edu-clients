@@ -1,0 +1,52 @@
+<div class="pl-client-referral-open">
+    <div>
+        <button pl-button class="gray-outline x-qa-move-to-caseload-btn" (click)="addSelectedReferralsToCaseload()">
+            <pl-icon [svg]="'plus'" [scale]="0.6"></pl-icon>
+            Add to Caseload
+        </button>
+    </div>
+    <div *ngIf="noneSelectedError" class="inline-block none-selected-error padding-large-lr padding-tb">
+        <div class="icon-circle inline-block">
+            <pl-icon [svg]="'exclamation'" [scale]="0.6"></pl-icon>
+        </div>
+        Please first select the rows you wish to add.
+    </div>
+    <pl-table-wrapper class="x-qa-table" (onQuery)="onQuery($event)" [orderKey]="'orderBy'" [pageSizeKey]="'first'"
+        [stateName]="'cro'">
+        <pl-table-filters-top [filterSelectOpts]="filterSelectOpts" [total]="total"></pl-table-filters-top>
+        <pl-table-header>
+            <pl-table-header-cell class="checkbox-cell">
+                <pl-input-checkbox [(model)]="allChecked" [noPadding]="true" (onChange)="changeSelectAllPage($event)">
+                </pl-input-checkbox>
+            </pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'clientLastName'">Last Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'clientFirstName'">First Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'productTypeCode'">Referral</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'created'" [orderDirection]="'ascending'">Created</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'clientLocationName'">Location</pl-table-header-cell>
+            <pl-table-header-cell>Primary Language</pl-table-header-cell>
+            <pl-table-header-cell>ELL Status</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!referrals.length && !loading" class="center padding-xlarge-tb">
+            No matching referrals.
+        </div>
+        <pl-table-row *ngFor="let referral of referrals">
+            <pl-table-cell class="checkbox-cell">
+                <pl-input-checkbox [(model)]="referral._checked" [noPadding]="true"
+                    (onChange)="changeSelectRow(referral)"></pl-input-checkbox>
+            </pl-table-cell>
+            <pl-table-cell>{{ referral.client.lastName }}</pl-table-cell>
+            <pl-table-cell>{{ referral.client.firstName }}</pl-table-cell>
+            <pl-table-cell>{{ referral.xType }}</pl-table-cell>
+            <pl-table-cell>{{ referral.xCreated }}</pl-table-cell>
+            <pl-table-cell>{{ referral.xLocation }}</pl-table-cell>
+            <pl-table-cell>{{ referral.client.primaryLanguage.name }}</pl-table-cell>
+            <pl-table-cell>{{ referral.xELLStatus }}</pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="total" [currentPage]="currentPage" [pageSize]="pageSize"
+            [selected]="referralsSelectedCount"></pl-table-footer>
+    </pl-table-wrapper>
+</div>

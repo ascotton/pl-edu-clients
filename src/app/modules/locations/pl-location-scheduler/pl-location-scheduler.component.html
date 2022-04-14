@@ -1,0 +1,102 @@
+<div class="loading-overlay" *ngIf="loading$ | async">
+    <div class="content">    
+        Loading
+        <pl-dot-loader></pl-dot-loader>
+    </div>
+</div>
+<div *ngIf="!mayView; else scheduler">
+    Location scheduler is not available for Virtual schools.
+</div>
+<ng-template #scheduler>
+    <ng-container *ngIf="data$ | async as data">
+        <div style="margin-left: auto;">
+            <div class="margin-b">
+                <pl-schoolyear-select            
+                    [simpleSelect]="true"
+                    [selectedSchoolYear]="schoolYearCode$ | async"
+                    (onYearSelected)="onYearSelected($event)">
+                </pl-schoolyear-select>
+                <!--
+                For future release
+                <div *ngIf="data.providerView" class="margin-large-tb">
+                    <pl-input-select 
+                        label="Viewing"
+                        (modelChange)="onLocationSelected($event, data.currentUser)"
+                        [model]="locationId$ | async"
+                        [options]="locationsAssignedOpts$ | async">
+                    </pl-input-select>
+                </div>
+                -->
+            </div>
+            <pl-master-schedule-referrals
+                *ngIf="mayView"
+                [mayEdit]="data.mayEditReferrals"
+                [filterBy]="referralFilters"
+                [providerView]="data.providerView"
+                [providers]="selectedProviders"
+                [calendar]="locationSchedule$ | async"
+                [disabled]="!selectedProvidersIds.length || reservingBlock"
+                [(selection)]="selectedReferrals">
+            </pl-master-schedule-referrals>
+        </div>
+
+        <div *ngIf="mayView" class="pl-master-schedule flexbox">
+            <div class="pl-master-schedule_actions flexbox padding-b">
+                <div class="start">
+                    <ng-template #providerSelect>
+                        <pl-data-loader [loading]="providersLoading$ | async" loadingText="Loading Providers">
+                            <pl-input-multi-select
+                                label="" placeholder="Choose Provider"
+                                [options]="providersOpts$ | async" [model]="selectedProvidersIds" (modelChange)="onProvidersSelected($event, providers)">
+                            </pl-input-multi-select>
+                        </pl-data-loader>
+                    </ng-template>
+                    <div class="padding-lr" *ngIf="data.providerView; else providerSelect">
+                        <label class="label">
+                            Provider
+                        </label>
+                        <div class="value">
+                            {{ data.currentUser.first_name }} 
+                            {{ data.currentUser.last_name }}
+                        </div>
+                    </div>
+                    <button pl-button [class.primary]="reservingBlock" 
+                        [style.minWidth.px]="117"
+                        (click)="reservingBlock = !reservingBlock"
+                        matTooltip="Allocate recurring time for a provider to hold meetings, evaluations or other activities that are not consistently with the same student at this location.">
+                        Reserve Block
+                    </button>
+                    <div class="keys-container">
+                        <div *ngFor="let key of labelKeys" class="key-container">
+                            <div class="dot {{key.key}}"></div>
+                            <div class="label">{{ key.label }}</div>
+                        </div>
+                    </div>
+                    <ng-content select=".pl-time-grid_header_right"></ng-content>
+                </div>
+                <div class="button-container end">
+                    <button pl-button class="bare" style="margin-right:4px;" (click)="onClear(data.providerView)">
+                        Clear
+                    </button>
+                    <button *ngIf="data.mayApproveSchedule" [disabled]="!(canApprove$ | async)" pl-button class="primary" (click)="onApprove()">
+                        Approve
+                    </button>
+                </div>
+            </div>
+            <pl-master-schedule
+                [providerView]="data.providerView"
+                [timezone]="selectedTimezone"
+                [providers]="selectedProviders"
+                [selectedReferrals]="selectedReferrals" 
+                [location]="data.location"
+                [allProviders]="providers$ | async"
+                [referrals]="referrals$ | async" 
+                [locationsAssigned]="locationsAssignedIds$ | async"
+                [locationCalendar]="locationSchedule$ | async"
+                [locationAvailability]="locationAvailability$ | async"
+                [providersAvailability]="providersAvailability$ | async"
+                [(selectionAllow)]="reservingBlock">
+            </pl-master-schedule>
+        </div>
+    </ng-container>
+</ng-template>

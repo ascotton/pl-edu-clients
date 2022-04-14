@@ -1,0 +1,15 @@
+<pl-input-select 
+    [disabled]="disabled" 
+    [label]="label" 
+    [placeholder]="placeholder" 
+    [options]="visibleOptions" 
+    [sortByLabel]="true" 
+    [filter]="visibleOptions.length > 5"  
+    (onChange)="onSelected($event)"></pl-input-select>
+<div class="margin-t">
+    <div *ngFor="let opt of selectedOptions" class="selected-option padding-small-tb">
+        {{ opt.label }}
+        <pl-icon *ngIf="allowRemove" class="pointer" svg="close-inverted" width="12" height="12"
+            (click)="onUnselect(opt)"></pl-icon>
+    </div>
+</div>

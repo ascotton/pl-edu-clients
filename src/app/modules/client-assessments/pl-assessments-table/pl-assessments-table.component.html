@@ -1,0 +1,245 @@
+<pl-assessments-filters
+    [hasFiltersVisible]="hasFiltersVisible"
+    (filtersChange)="onQuery($event)"
+    (closeFilters)="onToggleFilters()">
+</pl-assessments-filters>
+<div class="pl-assessments-table">
+    <div class="table-total">Total: <strong>{{totalAssessments}}</strong></div>
+    <pl-table-wrapper (onQuery)="onQuery($event)" [orderKey]="'orderBy'">
+        <pl-table-header class="table-header" [class.table-header-padding]="assessmentsTableService.assessments.length > 5">
+            <pl-table-header-cell
+                *ngFor="let column of assessmentsTableService.tableColumns"
+                [orderKey]="shouldDisplayColumn(column.header.key) && column.header.orderKey"
+                [orderDirection]="column.header.defaultOrdering"
+                [class.collapsed]="!shouldDisplayColumn(column.header.key)">
+                <span *ngIf="shouldDisplayColumn(column.header.key)">{{column.header.value}}</span>
+                <span
+                    *ngIf="!shouldDisplayColumn(column.header.key)"
+                    matTooltip="{{column.header.value}}"
+                    matTooltipPosition="right"
+                    matTooltipClass="hidden-column-tooltip"
+                    class="table-header-cell-content">
+                </span>
+            </pl-table-header-cell>
+        </pl-table-header>
+
+        <div *ngIf="assessmentsTableService.loadingAssessments" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!assessmentsTableService.loadingAssessments && !assessmentsTableService.assessments.length" class="center padding-xlarge-tb">
+            <span>No matching assessments</span>
+        </div>
+
+        <div *ngIf="!assessmentsTableService.loadingAssessments" class="pl-assessments-table-body">
+            <ng-container *ngTemplateOutlet="rows"></ng-container>
+        </div>
+        <ng-template #rows>
+            <div
+                *ngFor="let row of localTableService.displayRows; let idx = index"
+                class="assessment-row"
+                [class.zebra]="idx % 2 === 1"
+                [attr.data-rowid]="row.id">
+                <pl-table-row>
+                    <span class="margin-small-l notes-toggle-arrow" (click)="onToggleNotes(row)">
+                        <pl-icon [width]="12" [svg]="'chevron-right'" *ngIf="!row.isNotesOpen"></pl-icon>
+                        <pl-icon [width]="12" [svg]="'chevron-down'" *ngIf="row.isNotesOpen"></pl-icon>
+                        &nbsp;
+                    </span>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('location')"
+                        class="non-editable"
+                        [class.first-column-cell]="shouldDisplayColumn('location')">
+                        <div class="table-cell-content padding-small-tb padding-lr">
+                            <div class="location-cell">
+                                <span>{{ row.locationName }}</span>
+                            </div>
+                        </div>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('studentName')"
+                        class="non-editable"
+                        [class.first-column-cell]="!shouldDisplayColumn('location')">
+                        <div class="table-cell-content padding-small-tb padding-lr">
+                            <a [routerLink]="row.studentProfileURL" target="_blank">
+                                {{ row.studentName }}
+                            </a>
+                        </div>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('serviceType')" class="non-editable">
+                        <div class="table-cell-content padding-small-tb padding-lr">
+                            {{ row.serviceType }}
+                        </div>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('status')" class="non-editable">
+                        <div class="table-cell-content padding-small-tb padding-lr">
+                            {{ row.statusDisplay }}
+                        </div>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('providerName')" class="non-editable">
+                        <div class="table-cell-content padding-small-tb padding-lr">
+                            {{ row.providerName }}
+                            <pl-assessments-provider-matching
+                                *ngIf="assessmentsTableService.userCanMatchOrUnmatchProvider()"
+                                [assessment]="row">
+                            </pl-assessments-provider-matching>
+                        </div>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('matchingDate')" class="non-editable">
+                        <div class="table-cell-content padding-small-tb padding-lr">
+                            {{ row.matchingDate | date:"M/d/yyyy" }}
+                        </div>
+                    </pl-table-cell>
+                    <pl-table-cell
+                        *ngIf="shouldDisplayColumn('stage')"
+                        class="table-cell-input"
+                        [class.non-editable]="!row.isService || !row.isAssessment">
+                        <mat-form-field appearance="fill" *ngIf="row.isService && row.isAssessment">
+                            <mat-select
+                                [(ngModel)]="row.stage"
+                                [disabled]="!canUpdateAssessment(row) || !canUpdateStage(row)"
+                                (selectionChange)="onStageChange($event, row)">
+                                <mat-option
+                                    *ngFor="let stageOpt of assessmentStageOpts"
+                                    [value]="stageOpt.value">
+                                    {{stageOpt.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <span class="table-cell-content padding-small-tb padding-lr" *ngIf="!row.isAssessment">N/A</span>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('assessmentPlanSignedOn')" class="table-cell-input">
+                        <mat-form-field appearance="fill" *ngIf="row.isAssessment">
+                            <input
+                                matInput [matDatepicker]="signedOnPicker"
+                                [value]="getDateFormControlValue(row.assessmentPlanSignedOn)"
+                                [min]="dateColumns['assessmentPlanSignedOn'].minDate"
+                                [max]="dateColumns['assessmentPlanSignedOn'].maxDate"
+                                [disabled]="!canUpdateAssessment(row)"
+                                (click)="signedOnPicker.open()"
+                                (keyup)="$event.keyCode === 13 && !signedOnPicker.opened && signedOnPicker.open()"
+                                (dateChange)="onSignedOnChange($event, row)">
+                            <div
+                                class="icon-right margin-small-r margin-small-t"
+                                (click)="signedOnPicker.open()">
+                                <pl-icon [svg]="'schedule'" [class.disabled]="!canUpdateAssessment(row)"></pl-icon>
+                            </div>
+                            <mat-datepicker #signedOnPicker></mat-datepicker>
+                        </mat-form-field>
+                        <span class="table-cell-content padding-small-tb padding-lr" *ngIf="!row.isAssessment">N/A</span>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('dueDate')" class="table-cell-input">
+                        <mat-form-field appearance="fill">
+                            <input
+                                matInput [matDatepicker]="dueDatePicker"
+                                [value]="getDateFormControlValue(row.dueDate)"
+                                [min]="dateColumns['dueDate'].minDate"
+                                [max]="dateColumns['dueDate'].maxDate"
+                                [disabled]="!canUpdateAssessment(row)"
+                                (click)="dueDatePicker.open()"
+                                (keyup)="$event.keyCode === 13 && !dueDatePicker.opened && dueDatePicker.open()"
+                                (dateChange)="onDueDateChange($event, row)">
+                            <div
+                                class="icon-right margin-small-r margin-small-t"
+                                (click)="dueDatePicker.open()">
+                                <pl-icon [svg]="'schedule'" [class.disabled]="!canUpdateAssessment(row)"></pl-icon>
+                            </div>
+                            <mat-datepicker #dueDatePicker></mat-datepicker>
+                        </mat-form-field>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('meetingDate')" class="table-cell-input">
+                        <mat-form-field appearance="fill" *ngIf="row.isAssessment">
+                            <input
+                                matInput [matDatepicker]="meetingDatePicker"
+                                [value]="getDateFormControlValue(row.meetingDate)"
+                                [min]="dateColumns['meetingDate'].minDate"
+                                [max]="dateColumns['meetingDate'].maxDate"
+                                [disabled]="!canUpdateAssessment(row)"
+                                (click)="meetingDatePicker.open()"
+                                (keyup)="$event.keyCode === 13 && !meetingDatePicker.opened && meetingDatePicker.open()"
+                                (dateChange)="onMeetingDateChange($event, row)">
+                            <div
+                                class="icon-right margin-small-r margin-small-t"
+                                (click)="meetingDatePicker.open()">
+                                <pl-icon [svg]="'schedule'" [class.disabled]="!canUpdateAssessment(row)"></pl-icon>
+                            </div>
+                            <mat-datepicker #meetingDatePicker></mat-datepicker>
+                        </mat-form-field>
+                        <span class="table-cell-content padding-small-tb padding-lr" *ngIf="!row.isAssessment">N/A</span>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="shouldDisplayColumn('caseManager')" class="non-editable">
+                        <div class="table-cell-content padding-small-tb padding-lr">
+                            <div class="case-manager-cell">
+                                <div class="case-manager-info-wrapper">
+                                    <span class="case-manager-info margin-small-r">{{ row.caseManagerDisplay }}</span>
+                                    <div *ngIf="row.caseManager && canAddContacts(row)" (click)="openAddCaseManagerDialog(row)">
+                                        <pl-icon [svg]="'pencil'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon>
+                                    </div>
+                                </div>
+                                <div class="case-manager-buttons">
+                                    <div *ngIf="canAddContacts(row)">
+                                        <button
+                                            pl-button
+                                            type="button"
+                                            class="pl-button info add-case-manager-button"
+                                            (click)="openAddCaseManagerDialog(row, true)">
+                                            <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'" class="non-actionable-icon"></pl-icon> Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </pl-table-cell>
+                </pl-table-row>
+                <div
+                    *ngIf="!row.isNotesOpen"
+                    class="open-notes-button">
+                    <pl-icon
+                        *ngIf="row.hasNotes"
+                        matTooltip="There are notes!"
+                        matTooltipClass="assessments-table-row-tooltip"
+                        class="non-actionable-icon margin-l"
+                        [svg]="'message-box'">
+                    </pl-icon>
+                    <button
+                        pl-button type="button" class="link margin-l"
+                        (click)="onAddNotesClick(row)">
+                        <pl-icon *ngIf="!row.hasNotes" [svg]="'notes'" class="margin-small-r"></pl-icon>
+                        {{canUpdateAssessment(row) ? 'Add note' : 'View notes'}}
+                    </button>
+                </div>
+                <div
+                    *ngIf="row.isNotesOpen"
+                    class="assessment-notes"
+                    [@inOutAnimation]
+                    (@inOutAnimation.done)="onAnimationDone(row, $event)">
+                    <div class="assessment-notes-wrapper">
+                        <pl-icon
+                            *ngIf="row.hasNotes"
+                            matTooltip="There are notes!"
+                            matTooltipClass="assessments-table-row-tooltip"
+                            class="non-actionable-icon padding-large-l padding-large-t"
+                            [svg]="'message-box'">
+                        </pl-icon>
+                        <pl-referral-notes
+                            class="flex1"
+                            [currentUser]="assessmentsTableService.currentUser"
+                            [referralId]="row.referralId"
+                            [clientId]="row.client.id"
+                            [locationId]="row.location.id"
+                            [mayEditNotes]="canUpdateAssessment(row)"
+                            [openInEditMode]="canUpdateAssessment(row) && row.hasClickedAddNote"
+                            (noteCreated)="handleNoteCreated(row)"
+                            (noteEditing)="handleNoteEditing($event)"
+                            (notesListUpdated)="handleNotesUpdated($event, row)"
+                            >
+                        </pl-referral-notes>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <pl-table-footer
+            [total]="totalAssessments"
+            [currentPage]="localTableService.currentPage"
+            [useFixedPageSize]="useFixedPageSize"
+            [pageSize]="localTableService.pageSize">
+        </pl-table-footer>
+    </pl-table-wrapper>
+ </div>

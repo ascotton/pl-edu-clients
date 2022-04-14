@@ -1,0 +1,123 @@
+<div class="pl-client-iep-goal-item"
+  [ngClass]="{'debug-show-div': util.showDivs(_state),
+    'add-edit-mode': !isReadOnlyMode(),
+    'edit-mode': isEditGoalMode(),
+    'toggle': _state.expandCardToggle}"
+  *ngIf="_state.initialized"
+  >
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <div *ngIf="goal" class="goal-container" [@enterAnimation]>
+    <h1 *ngIf="isEditGoalMode()" class="margin-small-b blue-medium">Edit Goal</h1>
+    <h1 *ngIf="isAddGoalMode()" class="margin-small-b" style="color: #9ac61e">Add Goal</h1>
+    <!-- goal -->
+    <div class="goal-content margin-large-b">
+      <div class="goal-header margin-large-b">
+        <div class="col col-1">
+          <pl-goal-status [goal]="goalForStatusInput()" [isReadOnly]="!isGoalModifiable()"></pl-goal-status>
+          <span *ngIf="isGoalModifiable()"
+            tooltip="<div class='pl-tooltip'>This status reflects the end state of the goal at the close of the service period. Mark the status when ending the service period.</div>"
+            placement="top" show-delay="100" theme="light" animation-duration="400">
+            <pl-icon [svg]="'info'" [height]="18" [width]="18" [class]="'cursor-hand inline-block blue-medium margin-small-l'"
+              style="position: relative;top: 5px;"
+              (click)="onClickGoalStatusInfoIcon()"></pl-icon>
+          </span>
+          <span *ngIf="!isGoalModifiable()"
+            tooltip="<div class='pl-tooltip'>This status reflects the end state of the goal at the close of the service period.</div>" placement="top" show-delay="100" theme="light" animation-duration="400">
+            <pl-icon [svg]="'info'" [height]="18" [width]="18" [class]="'inline-block blue-medium margin-small-l cursor-hand'"
+              style="position: relative;top: 5px;"></pl-icon>
+          </span>
+        </div>
+        <div class="col col-2">
+          <div *ngIf="isReadOnlyMode() && isGoalModifiable()">
+            <pl-icon [svg]="'pencil-plus'" [height]="17" [width]="17" [class]="'inline-block gray-darker margin-large-r cursor-hand'" style="position: relative;top: 1px; left: 5px;" (click)="onClickEdit()"></pl-icon>
+            <pl-icon [svg]="'trash'" [height]="20" [width]="20" [class]="'inline-block gray-darker margin-small-r cursor-hand'" (click)="onClickDelete()"></pl-icon>
+          </div>
+        </div>
+      </div>
+      <div class="iep-textarea margin-small-t" *ngIf="!isReadOnlyMode()">
+        <pl-input-textarea label="Goal" [(model)]="goal.description"
+        [maxlength]="3000"
+        [placeholder]="getGoalPlaceholderText()"></pl-input-textarea>
+      </div>
+      <div class="margin-xlarge-t" *ngIf="isReadOnlyMode()">
+        <b>Goal</b><br/>
+        <div class="margin-large-b" style="font-size: 12px" *ngFor="let p of splitGoalDescriptionParagraphs()">
+          <div *ngFor="let b of splitLineBreaks(p)">
+            <div>{{b}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isReadOnlyMode()" class="metrics-table" [@enterAnimation]>
+      <!-- metrics table-->
+      <table>
+        <tr class="metrics-header" *ngIf="_state.metricsMonthNames">
+          <th class="label">Metric (Benchmark/Objective)</th>
+          <th>{{_state.metricsMonthNames.monthMinus2}}<br/>Avg</th>
+          <th>{{_state.metricsMonthNames.monthMinus1}}<br/>Avg</th>
+          <th>{{_state.metricsMonthNames.currentMonth}}<br/>Avg</th>
+          <th>Total<br/>Avg</th>
+          <th class="goal">Goal</th>
+        </tr>
+        <tbody>
+          <tr class="metrics-item" *ngFor="let metric of goal.metrics">
+            <td class="label">{{metric.name}}</td>
+            <td>{{metric.monthMinus2Average}}%</td>
+            <td>{{metric.monthMinus1Average}}%</td>
+            <td>{{metric.currentMonthAverage}}%</td>
+            <td>{{metric.totalAverage}}%</td>
+            <td>{{metric.goalPercentage}}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!isReadOnlyMode()" [@enterAnimation]>
+      <!-- metrics instructions -->
+      <div class="metrics-instructions margin-small-b">
+        Please enter your criteria for progress monitoring related to this goal. All fields are required.
+      </div>
+      <!-- add metric button -->
+      <button pl-button class="add-metric-button margin-large-t margin-xlarge-b" (click)="onClickAddMetric()">
+        <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'" class="margin-small-r"></pl-icon> Add Metric
+      </button>
+      <!-- new metrics -->
+      <div class="metric-items">
+        <div *ngFor="let nm of goal.newMetrics" [@enterAnimation]>
+          <pl-client-iep-metric-item [metric]="nm" [metrics]="goal.newMetrics"></pl-client-iep-metric-item>
+        </div>
+      </div>
+      <div *ngFor="let m of goal.metrics; index as nmIndex" [@enterAnimation]>
+        <pl-client-iep-metric-item [metric]="m" [metrics]="goal.metrics" [deleteMetrics]="goal.deleteMetrics"></pl-client-iep-metric-item>
+      </div>
+    </div>
+
+    <!-- save, cancel buttons -->
+    <div class="form-actions">
+      <button pl-button class="primary save-goal-button inline-block"
+        [disabled]="!canClickSave()" (click)="onClickSave()" *ngIf="!isReadOnlyMode()">
+        Save
+      </button>
+      <button pl-button class="save-goal-button inline-block" (click)="onClickCancel()" *ngIf="!isReadOnlyMode()">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+
+  <div class="expand-bar" *ngIf="isReadOnlyMode()">
+    <div class="opacity-low" [ngClass]="{'toggle': _state.expandCardToggle}"></div>
+    <div class="opacity-high" [ngClass]="{'toggle': _state.expandCardToggle}"></div>
+    <div class="toggle-bar" (click)="onClickExpandCardToggle()">
+      <pl-icon [svg]="'chevron-down'" [height]="16" [width]="16" [class]="'gray-dark'"
+        *ngIf="!_state.expandCardToggle"></pl-icon>
+      <pl-icon [svg]="'chevron-up'" [height]="16" [width]="16" [class]="'gray-dark'"
+        *ngIf="_state.expandCardToggle"></pl-icon>
+    </div>
+  </div>
+</div>

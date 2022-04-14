@@ -1,0 +1,107 @@
+<div class="pl-repeat-rule flexbox">
+    <div [style.width.px]="270" class="margin-b">
+        <pl-input-select
+            label="Repeats"
+            [style.width.%]="80"
+            [(model)]="repeatSelection" 
+            [options]="repatingOpts"
+            (onChange)="setSelection(repeatSelection)">
+        </pl-input-select>
+    </div>
+    <div *ngIf="repeatSelection !== 'norepeat'" [ngSwitch]="rruleInput.end.type" class="margin-b">
+        <pl-input-radio-group 
+            label="End"
+            optionWidth="80px"
+            [horizontal]="true"
+            [(model)]="rruleInput.end.type"
+            (onChange)="change()"
+            [options]="endOpts">
+        </pl-input-radio-group>
+        <div class="margin-t">
+            <ng-container *ngSwitchCase="'count'">
+                <div style="display: inline-block; width: 65px;">
+                    <pl-input-text type="number"
+                        min="1"
+                        [(model)]="rruleInput.end.count" 
+                        (onChange)="change()"></pl-input-text>
+                </div>
+                <span>
+                    occurrences
+                </span>
+            </ng-container>
+            <div *ngSwitchCase="'datetime'" [style.width.px]="200">
+                <pl-input-datepicker 
+                    placeholder=""
+                    minDate="2016-01-01"
+                    formatDisplay="ddd MMM D, YYYY" 
+                    [style.width.px]="170"
+                    [(model)]="rruleInput.end.datetime"
+                    (onChange)="change()">
+                </pl-input-datepicker>
+            </div>
+        </div>
+    </div>
+    <ng-container *ngIf="repeatSelection === 'custom'">
+        <div class="flexbox margin-b">
+            <label class="flexbox margin-r align-center">
+                Repeat every
+            </label>
+            <div class="margin-l" [style.width.px]="65">
+                <pl-input-text type="number"
+                    [min]="1"
+                    [max]="99"
+                    [(model)]="rruleInput.interval"
+                    (onChange)="change()">
+                </pl-input-text>
+            </div>
+            <div class="margin-l">
+                <pl-input-select
+                    [(model)]="rruleInput.frequency" 
+                    [options]="frequencyOpts" 
+                    (onChange)="change()">
+                </pl-input-select>
+            </div>
+        </div>
+        <div class="margin-tb flexbox" [ngSwitch]="rruleInput.frequency">
+            <ng-container *ngSwitchCase="'WEEKLY'">
+                <pl-input-checkbox-group label="Repeat on"
+                    optionWidth="50px"
+                    [horizontal]="true"
+                    [(model)]="rruleInput.weekly.byweekday"
+                    [options]="byweekdayOpts" 
+                    (onChange)="change()"></pl-input-checkbox-group>
+            </ng-container>
+            <div *ngSwitchCase="'MONTHLY'" class="flexbox margin-lr align-bottom">
+                <pl-input-radio-group label="Repeat on"
+                    optionWidth="50px"
+                    [options]="monthlyRepeatBy"
+                    [(model)]="rruleInput.monthly.by"
+                    (onChange)="change()">
+                </pl-input-radio-group>
+                <div class="margin-lr">
+                    <div class="margin-b">
+                        <pl-input-select
+                            [disabled]="rruleInput.monthly.by === 'dayOfWeek'"
+                            [options]="monthdayOpts" 
+                            [(model)]="rruleInput.monthly.bymonthday"
+                            (onChange)="change()"></pl-input-select>
+                    </div>
+                    <div class="flexbox">
+                        <pl-input-select
+                            class="margin-r"
+                            [disabled]="rruleInput.monthly.by === 'dayOfMonth'"
+                            [(model)]="rruleInput.monthly.bysetpos"
+                            [options]="bysetposOpts" 
+                            (onChange)="change()"></pl-input-select>
+                        <pl-input-select
+                            class="margin-l"
+                            [disabled]="rruleInput.monthly.by === 'dayOfMonth'"
+                            [(model)]="rruleInput.monthly.byweekday"
+                            [options]="byweekdayOpts" 
+                            (onChange)="change()"></pl-input-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

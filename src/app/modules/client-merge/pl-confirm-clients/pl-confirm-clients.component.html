@@ -1,0 +1,103 @@
+<div class="compare-clients">
+    <div class="instructions">
+        Before you merge, review the information below to make sure it’s accurate.
+    </div>
+    <div class="diff-table">
+        <div class="row">
+            <div>NAME</div>
+            <div>{{updateFormatted.name}}</div>
+        </div>
+        <div class="row">
+            <div>DATE OF LAST EVENT</div>
+            <div>{{updateFormatted.lastEvenDateFormatted}}</div>
+        </div>
+        <div class="row">
+            <div>DATE OF BIRTH</div>
+            <div>{{updateFormatted.birthdayFormatted}}</div>
+        </div>
+        <div class="row">
+            <div>STUDENT ID</div>
+            <div>{{update.externalId}}</div>
+        </div>
+        <div class="row">
+            <div>LOCATION (Site)</div>
+            <div>{{updateFormatted.locationName}}</div>
+        </div>
+        <div class="row">
+            <div>ACTIVE REFERRAL(S)</div>
+            <div>{{updateFormatted.referrals}}</div>
+        </div>
+        <div class="row">
+            <div>ACTIVE SERVICE(S)</div>
+            <div>{{updateFormatted.services}}</div>
+        </div>
+        <div class="row">
+            <div>LEARNING COACH</div>
+            <div>{{updateFormatted.learningCoach}}</div>
+        </div>
+
+        <!-- Optional fields below. Would be nice to just iterate over the list, and bang out one template,
+             but some need special formatting -->
+        <div class="row" *ngIf="update.grade">
+            <div>GRADE</div>
+            <div>{{updateFormatted.gradeDisplay}}</div>
+        </div>
+        <div class="row" *ngIf="update.sex">
+            <div>SEX</div>
+            <div>{{update.sex}}</div>
+        </div>
+        <div class="row" *ngIf="update.address">
+            <div>ADDRESS</div>
+            <div class="address">
+                <div>
+                    <div class="address-line">{{updateFormatted.addressLine1}}</div>
+                    <div class="address-line">{{updateFormatted.addressLine2}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="update.phone">
+            <div>PHONE</div>
+            <div>{{update.phone}}</div>
+        </div>
+        <div class="row" *ngIf="update.contactPreference">
+            <div>CONTACT PREFERENCE</div>
+            <div>{{updateFormatted.contactPreferenceFormatted}}</div>
+        </div>
+        <div class="row" *ngIf="update.timezone">
+            <div>TIMEZONE</div>
+            <div>{{update.timezone}}</div>
+        </div>
+        <div class="row" *ngIf="update.primaryLanguageCode">
+            <div>PRIMARY LANGUAGE</div>
+            <div>{{updateFormatted.primaryLanguageName}}</div>
+        </div>
+        <div class="row" *ngIf="update.secondaryLanguageCode">
+            <div>SECONDARY LANGUAGE</div>
+            <div>{{updateFormatted.secondaryLanguageName}}</div>
+        </div>
+        <div class="row" *ngIf="update.englishLanguageLearnerStatus">
+            <div>ENGLISH LANGUAGE LEARNER STATUS</div>
+            <div>{{updateFormatted.englishLanguageLearnerStatusFormatted}}</div>
+        </div>
+        <div class="row" *ngIf="update.raceIds">
+            <div>RACE(S)</div>
+            <div class="address">
+                <div>{{updateFormatted.racesFormatted}}</div>
+            </div>
+        </div>
+        <div class="row" *ngIf="update.ethnicityIds">
+            <div>ETHNICITY(S)</div>
+            <div class="address">
+                <div>{{updateFormatted.ethnicitiesFormatted}}</div>
+            </div>
+        </div>
+        <div class="row" *ngIf="update.strategies">
+            <div>STRATEGIES</div>
+            <div>{{update.strategies}}</div>
+        </div>
+        <div class="row" *ngIf="update.teletherapyInformedConsent">
+            <div>TELETHERAPY INFORMED CONSENT</div>
+            <div>{{updateFormatted.teletherapyInformedConsentFormatted}}</div>
+        </div>
+    </div>
+</div>

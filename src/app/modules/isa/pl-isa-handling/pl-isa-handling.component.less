@@ -1,0 +1,62 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-isa-handling {
+    .banner {        
+        .padding-nl;
+
+        &.sign-mode {
+            background-color: @blue-lightest;
+
+            .icon {
+                color: @blue;
+            }
+        }
+        
+        &.remove-mode {
+            background-color: @yellow-light;
+
+            .icon {
+                color: @yellow;
+            }
+        }
+    }
+
+    .flex-aligned-center {
+        display: flex;
+        align-items: center;
+    }
+
+    .removal-table {
+        width: 100rem;
+        max-width: 95vw;
+        .margin-large-tb;
+
+    }
+    
+    .with-auto-scroll {
+        overflow-y: auto;
+        max-height: 30rem;
+    }
+
+    .signing-text {
+        .margin-t;
+        max-width: 54em;
+    }
+
+    .signing-boxes {
+        width: 50%;
+        .margin-large-tb;
+
+        .input-text {
+            width: 60%;
+        }
+    }
+
+    button {
+        &:not([disabled]) {
+            color: @white;
+            background-color: @slate-dark;
+        }
+    }
+}

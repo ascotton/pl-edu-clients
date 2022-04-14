@@ -1,0 +1,98 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-custom-assignment-modal {
+    width: 900px;
+
+    .col {
+        width: 300px;
+    }
+    .col1 {
+        padding-right: 20px;
+    }
+    .col2 {
+        .right {
+            text-align: right;
+        }
+    }
+    .header {
+        font-size: 1.5rem;
+        .margin-b;
+
+        .school-year {
+            float: right;
+        }
+        .oppty-line {
+            .padding;
+            padding-left: 0;
+            border-bottom: 1px solid @gray-lightest;
+        }
+        .service-type {
+            font-size: 1rem;
+        }
+    }
+    .provider-name {
+        .margin-large-tb;
+    }
+    .accent-dot {
+        position: relative;
+        top: -3px;
+        display: inline-block;
+        border-radius: 50%;
+        height: 7px;
+        width: 7px;
+        background-color: @gray-darkest;
+    }
+    .providers-list {
+        .margin-large-b;
+        height: 300px;
+        overflow: scroll;
+        b {
+            font-weight: 500;
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0px;
+            z-index: 101;
+        }
+        .separation {
+            font-size: 13px;
+            font-style: italic;
+            line-height: 16px;
+        }
+    }
+    .search-input {
+        .margin-l;
+        float: left;
+        border: none;
+        font-size: 14px;
+        transition: all 0.25s ease-in-out;
+        width: 0px;
+        visibility: hidden;
+        &.visible {
+            width: calc(100% - 32px);
+            visibility: visible;
+        }
+    }
+    .name {
+        float: left;
+        width: calc(100% - 32px);
+        overflow: hidden;        
+        transition: all 0.25s ease-in-out;
+        &.hidden {
+            width: 0;
+        }
+    }
+    .right {
+        float: right;
+    }
+    .warning {
+        background-color: @red-light;
+        font-weight: 400;
+        padding: 20px;
+    
+        span {
+            color: @gray-darkest;
+        }
+    }
+}

@@ -1,0 +1,81 @@
+<div class="pl-client-records-list">
+    <pl-table-wrapper (onQuery)="onQuery($event)">
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'appointment__start'" [orderDirection]="'descending'">Appointment Date</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'billing_code__name'">Billing Code</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'client_service__service__service_type__short_name'">Discipline</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'client_service__service__name'"> Service </pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'tracking_type'"> Tracking Type </pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'modified_by__first_name'">Last Edit</pl-table-header-cell>
+        </pl-table-header>
+
+        <pl-table-row *ngFor="let row of data">
+            <div class="multi-row">
+                <div class="sub-row">
+                    <pl-table-cell>
+                        <div>{{ displayAppointment(row.appointment_expanded) }}</div>
+                    </pl-table-cell>
+                    <pl-table-cell>{{ displayBillingCode(row.billing_code) }}</pl-table-cell>
+                    <pl-table-cell>{{ displayDiscipline(row.client_service_expanded) }}</pl-table-cell>
+                    <pl-table-cell> {{ displayService(row.client_service_expanded) }} </pl-table-cell>
+                    <pl-table-cell> {{ displayRecordTrackingType(row) }} </pl-table-cell>
+                    <pl-table-cell>{{ displayModifiedBy(row.modified_by_expanded) }}</pl-table-cell>
+                </div>
+                <div class="sub-row" *ngIf="getNotesForRow(row); let notes">
+                    <div class="padding-lr padding-t">
+                        <div *ngIf="notes.subjective"><b>Subjective:</b></div><div class="padding-large-l margin-b">{{notes.subjective}}</div>
+                        <div *ngIf="notes.objective"><b>Objective:</b></div><div class="padding-large-l margin-b">{{notes.objective}}</div>
+                        <div *ngIf="notes.assessment"><b>Assessment:</b></div><div class="padding-large-l margin-b">{{notes.assessment}}</div>
+                        <div *ngIf="notes.plan"><b>Plan:</b></div><div class="padding-large-l margin-b">{{notes.plan}}</div>
+                        <div *ngIf="notes.notes"><b>General:</b></div><div class="padding-large-l margin-b">{{notes.notes}}</div>
+                    </div>
+                </div>
+                <div class="sub-row recordings-row" *ngIf="row.recordingsX && row.recordingsX.length">
+                    <b>Recordings:</b>
+                    <div *ngFor="let recording of row.recordingsX">
+                        <a class="recording-link" (click)="clickedRecording(recording)">
+                            <pl-icon class="blue-medium" [svg]="'video'" [width]="16"></pl-icon>
+                            <span>{{ displayRecording(recording) }}</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="sub-row" *ngIf="row.capturesX && row.capturesX.length">
+                    <div class="padding-lr padding-t">
+                        <b>Image:</b>
+                        <div class="record-captures-thumbnails">
+                            <div *ngFor="let captureGroup of row.capturesX"
+                                (click)="onCapturesGalleryClick(captureGroup)"
+                                (mouseenter)="loadCaptures(captureGroup, false)"
+                                class="thumbnail-container">
+                                <div class="thumbnail-title margin-b">
+                                    {{ captureGroup.name }}
+                                </div>
+                                <pl-record-captures-thumbnails
+                                    [thumbnailImg]="captureGroup.thumbnailUrl"
+                                    [hasMultipleCaptures]="captureGroup.items_count > 2">
+                                </pl-record-captures-thumbnails>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </pl-table-row>
+
+        <pl-table-footer [total]="total" [currentPage]="currentPage" [pageSize]="pageSize">
+        </pl-table-footer>
+    </pl-table-wrapper>
+
+    <div class="video-viewer" *ngIf="showArchiveVideo">
+        <div class="video-inner">
+            <div class="title-bar">
+                <div>View: {{currentArchiveVideoName}}</div>
+                <button pl-button (click)="closeVideoPlayer()">
+                    <pl-icon [svg]="'close-inverted'" [class]="'gray'" [height]="20" [width]="20"></pl-icon>
+                </button>
+            </div>
+            <video  width="100%" controls controlslist="nodownload" (contextmenu)="onRightClick($event)">
+                <source src="{{currentArchiveVideoSrc}}" type="video/mp4">
+            </video>
+        </div>
+    </div>
+</div>

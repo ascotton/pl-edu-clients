@@ -1,0 +1,51 @@
+<div class="pl-referral-cycles-modal">
+    <pl-modal-header-wrapper [headerText]="'Referral Cycles'">
+        <div *ngIf="client && client.firstName && client.lastName && referral.productTypeCode" class="margin-b">
+            <b> {{ client.firstName }} {{ client.lastName }} - {{ productTypeName() }} </b>
+        </div>
+        <div>
+            <div class="margin-b">
+                Listed below are the unmatched cycles for this referral:
+            </div>
+            <div class="providers margin-large-b">
+                <div *ngIf="errorInModal" class="errMsg">
+                    There was an error getting the cycles, please close this window and try again.
+                </div>
+
+                <div *ngIf="!errorInModal">
+                    <div class="header-row padding flexbox">
+                        <div class="header-col">Declined Date</div>
+                        <div class="header-col">Provider</div>
+                        <div class="header-col">Unmatched By</div>
+                        <div class="header-col">Decline Reason</div>
+                    </div>
+    
+                    <div class="verticalScroll">
+                        <div class="rows">
+                            <pl-dot-loader *ngIf="loadingDeclineHistory" [align]="'center'"></pl-dot-loader>
+    
+                            <div *ngFor="let referral of referralDeclineHistory" class="body-row padding flexbox">
+                                <div class="body-col">
+                                    {{ referral.referralCreatedOn }}
+                                </div>
+                                <div class="body-col">
+                                    {{ referral.providerFirstName }} {{referral.providerLastName}}
+                                </div>
+                                <div class="body-col">
+                                    {{ referral.unmatchedBy }}
+                                </div>
+                                <div class="body-col">
+                                    {{ referral.declineReason}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="requestLink" class="margin-b footer">
+                Need another provider?
+                <a href="{{ requestLink }}" target="_blank">Request Provider Assignment.</a>
+            </div>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

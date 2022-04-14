@@ -1,0 +1,42 @@
+<div class="pl-client-iep-metric-item" [ngClass]="{'debug-show-div': util.showDivs(_state)}">
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <div *ngIf="metric" class="metric-container" [ngClass]="{'deleted': metric.deleted}">
+    <h3 class="metric-header blue-medium columns">
+      <div class="col left" *ngIf="metric.id">Edit Metric</div>
+      <div class="col left add-metric" *ngIf="!metric.id">Add Metric</div>
+      <a class="col right delete-metric-button blue-medium"
+        (click)="onClickDelete()" *ngIf="metric.id && !metric.deleted">Delete</a>
+        <a class="col right delete-metric-button remove blue-medium"
+          (click)="onClickDelete()" *ngIf="!metric.id">Remove</a>
+      <a class="col right delete-metric-button blue-medium"
+        (click)="onClickUnDelete()" *ngIf="metric.id && metric.deleted">Restore</a>
+    </h3>
+    <div class="metric-item" [ngClass]="{'deleted': metric.deleted}">
+      <div class="metric-input">
+        <div class="metric-label columns">
+          <div class="col left">Metric (Benchmark/Objective)
+            <span tooltip="<div class='pl-tooltip'>
+                  A smaller, more manageable task for the student to master on the way to achieving the goal; a way to quantify goal progress.</div>" placement="top" theme="light">
+              <pl-icon [svg]="'info'" [height]="18" [width]="18" [class]="'inline-block blue-medium margin-small-l cursor-hand'"
+                style="position: relative;top: -1px;left: 5px;"></pl-icon>
+            </span>
+          </div>
+          <div class="col right" *ngIf="!getNameChars()">50 character limit</div>
+          <div class="col right" *ngIf="getNameChars()">{{50-getNameChars()}}/50 characters left</div>
+        </div>
+        <pl-input-text [(model)]="metric.name" [maxlength]="50"></pl-input-text>
+      </div>
+      <div class="metric-target-accuracy margin-large-t">
+        <div class="metric-label">
+          <b>Target Accuracy (%)</b>
+        </div>
+        <pl-input-text class="inline-block" style="width: 70px" [placeholder]="'0%'" [type]="'number'"
+          [wholeNumber]="true" [maxlength]="3" [(model)]="metric.goalPercentage" (onChange)="validateForm()"></pl-input-text>
+        <div class="validation-message metric-percentage">{{getValidationMessageGoalPercent()}}</div>
+      </div>
+    </div>
+  </div>
+</div>

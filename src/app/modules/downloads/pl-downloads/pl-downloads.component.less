@@ -1,0 +1,59 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+pl-anchored-dialog {
+    width: 350px;
+}
+
+.download-items {
+    list-style: none;
+
+    .download-item {
+        display: grid;
+        font-size: 0.857rem;
+        grid-gap: @spacing-normal-large;
+        grid-template-columns: 1fr 15% min-content;
+
+        .padding-nl;
+
+        &.error {
+            background-color: @red-light;
+
+            .error-message {
+                grid-column: ~"1 / 4";
+                grid-row: 2;
+            }
+        }
+
+        .cancel-button {
+            grid-column: 3;
+            align-items: center;
+            background-color: transparent;
+            border-width: 0;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .download-link {
+            text-decoration: underline;
+        }
+
+        .progress-bar {
+            grid-column: 2;
+            height: 1.666em;
+            width: 100%;
+        }
+
+        .status {
+            grid-column: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            .title {
+                font-style: italic;
+            }
+        }
+    }
+}

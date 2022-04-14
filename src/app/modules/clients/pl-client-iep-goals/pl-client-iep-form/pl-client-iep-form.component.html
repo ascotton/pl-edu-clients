@@ -1,0 +1,73 @@
+<div class="pl-client-iep-form"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  *ngIf="_state.initialized"
+  [@enterAnimation]
+  >
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <div>
+    <pl-icon [svg]="'star-flag'" [height]="24" [width]="24" [class]="'blue-medium margin-small-r'" [verticalAlign]="'-5px'"></pl-icon>
+    <span class="title">
+      <b> · {{getNewEditLabel()}} <span *ngIf="isEditIep()">{{getActiveFutureLabel()}}</span></b> 
+      <span>{{service.getTypeDisplayName(_state.model)}}</span>
+    </span>
+  </div>
+
+  <div class="container">
+    <div>Enter the dates for the {{service.getTypeDisplayName(_state.model)}} service. All fields are required.</div>
+    <div class="instructions banner padding margin-tb">
+      <span class="icon">
+        <span class="text">i</span>
+      </span>
+      <span class="banner-text">
+        <span class="message">Make sure that the dates in this form don't overlap with the dates in the previous IEP/Progress Tracker.</span>
+      </span>
+    </div>
+    <div class="form-section date-fields" *ngIf="isNewIep()">
+      <pl-input-select [label]="'Type'" class="inline-block" [(model)]="_state.model.type" 
+        *ngIf="_state.model.data.typesSelectOpts" [options]="_state.model.data.typesSelectOpts"
+        (onChange)="setFieldsForType()">
+      </pl-input-select>
+      <div class="validation-message"></div>
+    </div>
+    <div class="form-section date-fields">
+        <div class="date-input inline-block margin-large-r">
+          <pl-input-datepicker [label]="getStartDateLabel()" [(model)]="_state.model.startDate"
+            [required]="true" [scrollToYearByValue]="_state.currentYear" [placeholder]="'MM/DD/YYYY'" [minDate]="_state.model.data.calendarMin2"
+            [maxDate]="_state.model.data.calendarMax2" (onChange)="validateForm()">
+          </pl-input-datepicker>
+          <div class="validation-message start">{{getValidationMessageStart()}}</div>
+        </div>
+        <div  class="date-input inline-block margin-large-r">
+          <pl-input-datepicker [label]="getEndDateLabel()" [(model)]="_state.model.nextAnnualIepDate"
+            [required]="true" [placeholder]="'MM/DD/YYYY'" [scrollToYearByValue]="_state.currentYear" [minDate]="_state.model.data.calendarMin2"
+            [maxDate]="_state.model.data.calendarMax2" (onChange)="validateForm()">
+          </pl-input-datepicker>
+          <div class="validation-message next">{{getValidationMessageNext()}}</div>
+        </div>
+    </div>
+    <div class="form-section date-fields" *ngIf="isTypeIep()">
+      <div class="date-input inline-block margin-large-r">
+        <pl-input-datepicker [label]="'Last Triennial Evaluation Date'" [(model)]="_state.model.lastTriEvalDate"
+          [required]="true" [scrollToYearByValue]="_state.currentYear" [placeholder]="'MM/DD/YYYY'" [minDate]="_state.model.data.calendarMin3"
+          [maxDate]="_state.model.data.calendarMax3" (onChange)="validateForm()">
+        </pl-input-datepicker>
+        <div class="validation-message prev-tri">{{getValidationMessagePrevTri()}}</div>
+      </div>
+      <div class="date-input inline-block margin-large-r">
+        <pl-input-datepicker [label]="'Next Triennial Evaluation Date'" [(model)]="_state.model.nextTriEvalDate" [required]="true" [scrollToYearByValue]="_state.currentYear" [placeholder]="'MM/DD/YYYY'" [minDate]="_state.model.data.calendarMin3" [maxDate]="_state.model.data.calendarMax3" (onChange)="validateForm()">
+        </pl-input-datepicker>
+        <div class="validation-message next-tri">{{getValidationMessageNextTri()}}</div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button pl-button class="pl-button primary action-save" [disabled]="!canClickSave()" (click)="onClickSave()">Save</button>
+      <button pl-button class="pl-button secondary action-cancel" (click)="onClickCancel()">Cancel</button>
+      <button pl-button class="pl-button bare action-delete" (click)="onClickDelete()" *ngIf="canDeleteIep()">Delete</button>
+    </div>
+  </div>
+
+</div>

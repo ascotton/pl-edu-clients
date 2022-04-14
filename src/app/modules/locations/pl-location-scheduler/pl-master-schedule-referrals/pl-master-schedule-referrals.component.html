@@ -1,0 +1,79 @@
+<pl-referral-filters [filters]="referralFilters$ | async" [fields]="filterBy">
+</pl-referral-filters>
+<ng-template #missingInfo>
+    <span class="missing">?</span>
+</ng-template>
+
+<div class="pl-master-schedule_referral-container padding" *ngIf="(list$ | async) as list">
+    <pl-dot-loader *ngIf="(loading$ | async); else refTemp"></pl-dot-loader>
+    <ng-template #refTemp>
+        <div class="margin-b showing-count">
+            Showing {{ list.length }} Referrals
+        </div>
+        <div *ngFor="let referral of list"
+            class="pl-master-schedule_referral margin-b padding-large-tb padding-lr"     
+            [class.missing-information]="referral.isMissingInformation"
+            [class.active]="referral.active">
+            <div class="flexbox margin-b referral-name">
+                <pl-input-checkbox
+                    label="{{ referral.client.firstName }} {{ referral.client.lastName }}"
+                    matTooltip="Missing Info" matTooltipPosition="left" [matTooltipDisabled]="!referral.isMissingInformation"
+                    [model]="isSelected(referral)"
+                    (modelChange)="toggleSelection(referral, $event)"
+                    [disabled]="isReferralDisabled(referral)">
+                </pl-input-checkbox>
+                <pl-icon style.margin-left="auto" *ngIf="mayEdit && referral.state !== 'CONVERTED'"
+                    svg="pencil" scale="0.7" class="pointer gray" 
+                    routerLink="/client-referral-save" [queryParams]="{ client: referral.client.id, referral: referral.id }"></pl-icon>
+            </div>
+            <div class="referral-info padding-b padding-small-t padding-small-lr">
+                <div class="referral-info-row margin-small-t">
+                    <div>
+                        {{ referral.providerType.shortName }}
+                    </div>
+                    <div>
+                        <ng-container *ngIf="referral.grade; else missingInfo">
+                            {{ gradeName(referral.grade) }}
+                        </ng-container>
+                    </div>
+                    <div>
+                        {{ stateMapper(referral.state) }}
+                    </div>
+                </div>
+                <div class="referral-info-row margin-small-t">
+                    <div>
+                        <span *ngIf="referral.duration; else missingInfo">{{ referral.duration }}</span>
+                        mins,
+                        <span *ngIf="referral.frequency; else missingInfo">{{ referral.frequency }}</span>
+                        /
+                        <span *ngIf="referral?.interval; else missingInfo">{{ intervalMapper(referral?.interval) }}</span>
+                    </div>
+                    <div>
+                        Group:
+                        <span *ngIf="referral.grouping && referral.grouping !== 'unspecified'; else missingInfo">
+                            {{ referral.grouping === 'individual_only' ? 'N' : 'Y' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="flexbox">
+                <div class="provider-name">
+                    Provider: 
+                    <ng-container *ngIf="referral.provider; else missingInfo">
+                        {{ referral.provider?.lastName }}, {{ referral.provider?.firstName }} 
+                    </ng-container>
+                </div>
+                <!--
+                <pl-icon [style.marginLeft]="'auto'" *ngIf="!providerView && mayEdit && referral.state !== 'CONVERTED'"
+                    (click)="editReferralProvider(referral)"
+                    svg="pencil" scale="0.7" class="pointer gray"></pl-icon>
+                -->
+            </div>
+            <pl-simple-meter *ngIf="getFullfillment(referral) as fullfillment" 
+                [isFullWidth]="true" [color]="meterColor" [bgColor]="meterBackgroundColor"
+                text="{{ fullfillment.scheduledTime }} / {{ fullfillment.expectedTime }} Mins."
+                [value]="(fullfillment.scheduledTime / fullfillment.expectedTime) * 100" ></pl-simple-meter>
+        </div>
+    </ng-template>
+</div>

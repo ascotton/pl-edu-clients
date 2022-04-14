@@ -1,0 +1,41 @@
+.DS_Store
+.idea
+*.swp
+.vscode/
+node_modules
+npm-debug.log
+cypress/videos
+cypress/reports
+cypress/screenshots
+cypress/logs
+cypress/**/transient/*
+cypress/results
+cypress-scripts/transient/*
+mochawesome*
+reporter-config.json
+test-results.xml
+test-results/
+___test-data/
+coverage/
+
+# IDEs and editors
+.editorconfig
+
+# temporary node_modules copy
+src/lib-components
+
+dist
+#src/build
+
+# testing
+test-data
+
+# environment
+src/environments
+.env
+
+aot/
+test-results/
+playwright-report/
+test-results/
+playwright-report/

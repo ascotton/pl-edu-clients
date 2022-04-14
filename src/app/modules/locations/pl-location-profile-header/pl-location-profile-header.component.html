@@ -1,0 +1,26 @@
+<div class="pl-location-profile-header padding-large">
+    <div class="inner">
+        <div class="icon" [ngClass]="iconClass()">
+            <pl-icon *ngIf="isVirtual()" [svg]="'virtual-school'" [width]="30" [height]="26"></pl-icon>
+            <pl-icon *ngIf="!isVirtual()" [svg]="'location'" [width]="30"></pl-icon>
+        </div>
+        <div class="fields">
+            <div>
+                <a [routerLink]="['/locations']" class="link-no-color link-underline">Your Organizations and Locations</a> /
+                <a *ngIf="showOrgLink()" [routerLink]="['/organization', location.organization.id]" class="link-no-color link-underline">
+                    {{ location.organizationName }}
+                </a>
+                <span *ngIf="!showOrgLink()">{{ location.organizationName }}</span>
+            </div>
+            <h1>
+                {{ location.name }}
+            </h1>        
+        </div>
+        <div class="close-button" [hidden]="!backLink">
+            <div (click)="onClose()" class="pointer margin-r x-qa-back-button">
+                <!-- <pl-icon class="white margin-small-r" [svg]="'close-inverted'"></pl-icon> <span>Back to {{ backLink }}</span> -->
+                <pl-icon class="white margin-small-r" [svg]="'close-inverted'" [scale]="1.5"></pl-icon>
+            </div>
+        </div>
+    </div>
+</div>

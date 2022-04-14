@@ -1,0 +1,14 @@
+<div class="wrapper" [attr.data-priority]="priority" [ngClass]="wrapperClasses()">
+    <div class="count">{{ count }}</div>
+
+    <div class="description">
+        <ng-content></ng-content>
+    </div>
+
+    <button pl-button class="filter-button {{filterButtonAnalyticsClass}}" (click)="onFilterButtonClick()">{{ filterButtonLabel() }}</button>
+
+    <button class="download {{downloadButtonAnalyticsClass}}" (click)="onDownloadClick()" [disabled]="!canDownload">
+        <pl-icon [ngClass]="downloadIconClasses()" [svg]="'download'" [scale]="0.9"></pl-icon>
+        <span class="label">Download Report</span>
+    </button>
+</div>

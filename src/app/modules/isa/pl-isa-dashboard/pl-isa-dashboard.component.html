@@ -1,0 +1,69 @@
+<pl-dot-loader *ngIf="currentFeatureState !== isaFeatureStates.available" [align]="'center'">
+</pl-dot-loader>
+
+<div class="pl-isa-dashboard" *ngIf="currentFeatureState === isaFeatureStates.available">
+    <div class="sticky-dashboard">
+        <div class="dashboard-header padding-t padding-large-b">
+            <a *ngIf="!isReadOnlyView" 
+                class="flex-aligned-center header-link-width" 
+                (click)="onLinkClick()">
+                <div> <span class="material-icons"> arrow_back </span> </div>
+                <div class="margin-l"> <h3> <u> View Signed ISAs </u> </h3> </div>   
+            </a>
+            
+            <h1>
+                <span [hidden]="isReadOnlyView"> Manage </span>
+                <span [hidden]="!isReadOnlyView"> Signed </span>
+                Independent Service Agreements <span [hidden]="!currentSchoolOrgName">for {{ currentSchoolOrgName }}</span>
+            </h1>
+
+            <p class="margin-t" 
+                [hidden]="!isReadOnlyView">
+                To receive a digital file of ISAs please contact your Customer Success Manager
+            </p>
+        </div>
+
+        <div class="dashboard-subheader flex-aligned-center">
+            <div class="flex-aligned-center" [class.flex2]="isReadOnlyView">
+                <button pl-button id="pl-isa-dashboard-primary-button" 
+                    [disabled]="isPrimaryButtonDisabled()"
+                    (click)="onPrimaryButtonClick(primaryButton.mode)">
+                    {{ primaryButton?.label }}
+                </button>
+    
+                <div *ngIf="isReadOnlyView" 
+                    class="flex-aligned-center padding-small radius-five-px"
+                    [class.background-green-light]="unsignedISAs === 0"
+                    [class.background-yellow-light]="unsignedISAs > 0">
+                        <span class="material-icons icon" 
+                            [class.green]="unsignedISAs === 0" 
+                            [class.yellow]="unsignedISAs > 0"> info 
+                        </span>
+                        <p class="margin-l">
+                            You have {{ unsignedISAs === 0 ? 'no' : unsignedISAs }} unsigned ISA<span [hidden]="unsignedISAs === 1">s</span>
+                        </p> 
+                </div>
+            </div>
+    
+            <div *ngIf="!isReadOnlyView">
+                <button pl-button
+                    [disabled]="isSecondaryButtonDisabled()"
+                    (click)="onSecondaryButtonClick()">
+                    {{ secondaryButton?.label }}
+                </button>
+            </div>
+    
+            <div class="margin-l" [hidden]="isReadOnlyView">
+                <p> Review the unsigned ISAs and sign or remove them. A maximum of 50 ISAs will be displayed at a time. </p>
+                <p> Showing {{ isas.results.length }} of {{ isas.count }} ISAs. </p>
+            </div>
+        </div>
+    
+        <hr>
+    </div>
+
+    <pl-isa-table
+        [tableMode]="tableMode"
+        (tableDataEmitter)="onTableDataReceived($event)">
+    </pl-isa-table>
+</div>

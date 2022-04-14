@@ -1,0 +1,51 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/flexbox.less';
+
+.pl-isa-dashboard {
+    .padding-large-lr;
+
+    .flex-aligned-center {
+        .flexbox;
+        align-items: center;
+    }
+
+    .sticky-dashboard {
+        top: 46px;
+        z-index: 100;
+        position: sticky;
+        padding-top: 4px;
+        background-color: @white;
+    }
+
+    .dashboard-subheader {
+        #pl-isa-dashboard-primary-button {
+            &:disabled { // Removes focus highlight when button is disabled in Firefox
+                box-shadow: none;
+                border-color: @gray-light !important;
+            }
+            &:not([disabled]) {
+                color: @white;
+                background-color: @slate-dark;
+            }
+        }
+
+        .background {
+            &-green-light{
+                background-color: @green-light;
+            }
+    
+            &-yellow-light {
+                background-color: @yellow-light;
+            }
+        }
+    }
+
+    .radius-five-px {
+        border-radius: 5px;
+    }
+
+    .header-link-width {
+        width: 16em;
+    }
+}

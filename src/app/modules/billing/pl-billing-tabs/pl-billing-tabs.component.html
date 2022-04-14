@@ -1,0 +1,7 @@
+<div class="pl-billing-tabs">
+    <div *ngIf="isW2Provider && isValidRoute" class="tabs-container">
+        <pl-tabs [tabs]="tabs"></pl-tabs>
+    </div>
+
+    <router-outlet></router-outlet>
+</div>

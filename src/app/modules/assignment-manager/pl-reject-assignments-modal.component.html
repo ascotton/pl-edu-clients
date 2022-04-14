@@ -1,0 +1,53 @@
+<div class="pl-reject-assignments-modal">
+    <pl-modal-header-wrapper [headerText]="headerText">
+        <div class="modal-content">
+            <div class="margin-large-b">
+                <div class="reject-assignments-blurb">
+                    <div>
+                        Select a <b>Reason</b> for {{rejectDeclineVerb}} this proposal.
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="rejectAssignmentsFormGroup">
+                <div class="form-content">
+                    <div class="margin-large-tb">
+                        <pl-input-select
+                            [label]="'Reason'"
+                            [placeholder]="'Select a reason'"
+                            [(model)]="model.reason"
+                            [options]="rejectedReasonsOpts"
+                            [required]="true"
+                            [ignoreDeactivateScroll]="true"
+                            [formCtrl]="rejectAssignmentsFormGroup">
+                        </pl-input-select>
+                    </div>
+                    <div [hidden]="!isReasonOther()">
+                        <div>
+                            <pl-input-textarea
+                                [height]="'120px'"
+                                [label]="'Notes'"
+                                [(model)]="model.notes"
+                                [required]="true"
+                                [maxlength]="250"
+                                [disabled]="!isReasonOther()"
+                                [formCtrl]="rejectAssignmentsFormGroup">
+                            </pl-input-textarea>
+                        </div>
+                        <div class="right" *ngIf="!getNotesChars()">250 character limit</div>
+                        <div class="right" *ngIf="getNotesChars()"><b>{{250-getNotesChars()}}</b> / 250 characters left</div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button pl-button type="button" class="success x-qa-save-user-button"
+                        [disabled]="inFlight || !this.rejectAssignmentsFormGroup.valid" (click)="onClickReject()">
+                        {{ providerAssignment ? 'Reject' : 'Decline' }}
+                    </button>
+                    <button pl-button type="button" class="gray-outline x-qa-cancel-user-button" (click)="onClickCancel()">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

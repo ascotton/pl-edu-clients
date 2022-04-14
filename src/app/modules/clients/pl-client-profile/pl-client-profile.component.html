@@ -1,0 +1,49 @@
+<div class="pl-client-profile">
+    <div class="card-section-header"><pl-icon class="blue-medium" [svg]="'user-outline'"></pl-icon> <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display> Information
+        <span *ngIf="mayEditClient" [hidden]="saveProfileVisible" class="margin-l">
+            <button pl-button class="link x-qa-client-edit-profile" (click)="toggleSaveProfileVisible()">
+                Edit
+            </button>
+        </span>
+    </div>
+    <div class="section-body">
+        <div *ngIf="saveProfileVisible">
+            <pl-client-profile-save [client]="client" [languages]="languages" [targetField]="editTarget" (onCancel)="onCancelSaveClient()" (onSave)="onSaveClient()"></pl-client-profile-save>
+        </div>
+
+        <div [hidden]="saveProfileVisible">
+            <div class="card-section">
+                <div *ngFor="let column of displayData">
+                    <div class="student-section-header">{{ column.header }}</div>
+                    <div class="label-fields">
+                        <ng-container *ngFor="let field of column.data" class="margin-lr margin-large-tb padding-large-l">
+                            <!-- Only show computer setup URL for virtual schools; other labels for all schools -->
+                            <div class="bold margin-large-b" *ngIf="field.label !== 'Computer Setup URL' || client.locations[0].locationType === 'VIRTUAL'">{{ field.label }}</div>
+                            <!-- Show a hyperlink for email and setup URL -->
+                            <div class="margin-large-b" *ngIf="field.label === 'Email'">
+                                <div *ngIf="field.value; else editFieldLink"><a class="link-underline" href="mailto:{{ field.value }}">{{ field.value }}</a></div>
+                            </div>
+                            <div class="margin-large-b" *ngIf="field.label === 'Computer Setup URL' && client.locations[0].locationType === 'VIRTUAL'">
+                                <pl-is-available [condition]="field.value"><a href="{{ field.value }}">{{ field.value }}</a></pl-is-available>
+                            </div>
+                            <!-- Show 'Not available' if uneditable field -->
+                            <div class="margin-large-b" *ngIf="field.label === 'Tech Check Status'">
+                                <pl-is-available [condition]="field.value">{{ field.value }}</pl-is-available>
+                            </div>
+                            <!-- All other cases: use Title Case and show 'Add' link -->
+                            <div class="margin-large-b capitalize" *ngIf="field.label !== 'Computer Setup URL' && field.label !== 'Email' && field.label !== 'Tech Check Status'">
+                                <div *ngIf="field.value; else editFieldLink">{{ field.value }}</div>
+                            </div>
+                            <ng-template #editFieldLink>
+                                <div *ngIf="mayEditClient" pl-button class="link" (click)="toggleSaveProfileVisible()">
+                                    <ng-container *ngIf="field.key && field.key === 'teletherapyInformedConsent'; else addFieldLink">Add Update</ng-container>
+                                    <ng-template #addFieldLink>Add {{ field.label }}</ng-template>
+                                </div>
+                            </ng-template>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

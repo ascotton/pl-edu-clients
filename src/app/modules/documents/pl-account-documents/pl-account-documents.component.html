@@ -1,0 +1,91 @@
+<div class="pl-account-documents">
+    <div [hidden]="visible.download || visible.delete" class="margin-large-b">
+        <button *ngIf="mayUpload" pl-button class="gray-outline margin-r x-qa-documents-upload-btn"
+            (click)="toggleVisible('upload')" [disabled]="uploadDisabled">
+            <pl-icon [svg]="'upload-box'" [scale]="0.8" [verticalAlign]="'-4px'"></pl-icon> Upload Documents
+        </button>
+        <button *ngIf="mayDelete" pl-button class="gray-outline" [disabled]="!visible.deleteButton"
+            (click)="clickDelete()">
+            Delete Selected Documents
+        </button>
+    </div>
+    <pl-account-document-upload *ngIf="visible.upload" [locationUuid]="locationUuid"
+        [organizationUuid]="organizationUuid" [schoolYearId]="schoolYearId" (submitted)="uploadDone($event)"
+        (canceled)="toggleVisible('upload')"></pl-account-document-upload>
+
+    <div [hidden]="visible.download || visible.delete">
+        <pl-table-wrapper (onQuery)="onQuery($event)">
+            <pl-table-header>
+                <pl-table-header-cell class="checkbox-cell" *ngIf="mayDelete">
+                    <button pl-button id="pl-account-documents-trash-button" [disabled]="!visible.deleteButton" (click)="clickDelete()">
+                        <pl-icon [svg]="'trash'" [height]="24" [width]="24"></pl-icon>
+                    </button>
+                </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'file_name'"> Document Name </pl-table-header-cell>
+                <pl-table-header-cell>Document Type</pl-table-header-cell>
+                <pl-table-header-cell>Upload Date</pl-table-header-cell>
+                <pl-table-header-cell>Uploaded By</pl-table-header-cell>
+                <pl-table-header-cell>Link</pl-table-header-cell>
+            </pl-table-header>
+            <div *ngIf="loading" class="padding-xlarge-tb">
+                <pl-dot-loader></pl-dot-loader>
+            </div>
+            <pl-table-row *ngFor="let document of documents">
+                <pl-table-cell class="checkbox-cell" *ngIf="mayDelete">
+                    <pl-input-checkbox [(model)]="document._checked" (onChange)="changeSelectRow($event)"
+                        [noPadding]="true"></pl-input-checkbox>
+                </pl-table-cell>
+                <!-- <pl-table-cell>{{ document._schoolYear }}</pl-table-cell> -->
+                <pl-table-cell>{{ document._name }}</pl-table-cell>
+                <pl-table-cell>{{ document._documentType }}</pl-table-cell>
+                <!-- <pl-table-cell>{{ document._shareLevel}}</pl-table-cell> -->
+                <pl-table-cell>{{ document._created }}</pl-table-cell>
+                <pl-table-cell>{{ document._person }}</pl-table-cell>
+                <pl-table-cell>
+                    <span *ngIf="document.download_url">
+                        <a href="{{ document.download_url }}" download="{{ document.download_url }}">Download</a>
+                    </span>
+                </pl-table-cell>
+            </pl-table-row>
+            <pl-table-footer [total]="total" [currentPage]="currentPage" [currentPageForce]="currentPage"
+                [currentPageEnableForceUpdates]="true" [pageSize]="pageSize"></pl-table-footer>
+        </pl-table-wrapper>
+    </div>
+
+    <!-- THE BELOW TABLE IS USED ONLY IN THE LOCATIONS VIEW, NOT IN THE ORGANIZATIONS ONE  -->
+
+    <div *ngIf="organizationDocuments.visible" class="margin-xlarge-t">
+        <h1 class="margin-large-b"> Organization Documents (View Only) </h1>
+
+        <pl-table-wrapper (onQuery)="onQueryOrgDocs($event)">
+            <pl-table-header>
+                <!-- <pl-table-header-cell>School Year</pl-table-header-cell> -->
+                <pl-table-header-cell [orderKey]="'file_name'">Document Name</pl-table-header-cell>
+                <pl-table-header-cell>Document Type</pl-table-header-cell>
+                <!-- <pl-table-header-cell>Access</pl-table-header-cell> -->
+                <pl-table-header-cell>Upload Date</pl-table-header-cell>
+                <pl-table-header-cell>Uploaded By</pl-table-header-cell>
+                <pl-table-header-cell>Link</pl-table-header-cell>
+            </pl-table-header>
+            <div *ngIf="organizationDocuments.loading" class="padding-xlarge-tb">
+                <pl-dot-loader></pl-dot-loader>
+            </div>
+            <pl-table-row *ngFor="let document of organizationDocuments.documents">
+                <!-- <pl-table-cell>{{ document._schoolYear }}</pl-table-cell> -->
+                <pl-table-cell>{{ document._name }}</pl-table-cell>
+                <pl-table-cell>{{ document._documentType }}</pl-table-cell>
+                <!-- <pl-table-cell>{{ document._shareLevel}}</pl-table-cell> -->
+                <pl-table-cell>{{ document._created }}</pl-table-cell>
+                <pl-table-cell>{{ document._person }}</pl-table-cell>
+                <pl-table-cell>
+                    <span *ngIf="document.download_url">
+                        <a href="{{ document.download_url }}" download="{{ document.download_url }}">Download</a>
+                    </span>
+                </pl-table-cell>
+            </pl-table-row>
+            <pl-table-footer [total]="organizationDocuments.total" [currentPage]="organizationDocuments.currentPage"
+                [currentPageForce]="organizationDocuments.currentPage" [currentPageEnableForceUpdates]="true"
+                [pageSize]="organizationDocuments.pageSize"></pl-table-footer>
+        </pl-table-wrapper>
+    </div>
+</div>

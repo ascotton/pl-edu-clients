@@ -1,0 +1,79 @@
+@import 'core/colors.less';
+
+.before-merging-text {
+  width: 423px;
+  height: 42px;
+  font-family: Roboto;
+  font-size: 36px;
+  font-weight: 300;
+  text-align: center;
+  color: @gray-darkest;
+}
+
+.merge-tips-text {
+  width: 423px;
+  height: 16px;
+  font-family: Roboto;
+  font-size: 18px;
+  line-height: 0.89;
+  text-align: center;
+  color: @gray-darkest;
+}
+
+.tip-number {
+  padding: 4px 10px;
+  border: solid 1px @gray-darkest;
+  border-radius: 50%;
+}
+
+.dotstyle {
+  text-align: center;
+}
+
+.dotstyle ul {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.dotstyle li {
+  position: relative;
+  display: block;
+  float: left;
+  margin: 0 16px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.dotstyle li a {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border-radius: 50%;
+  background-color: @slate-light;
+  text-indent: -999em; /* make the text accessible to screen readers */
+  cursor: pointer;
+  position: absolute;
+}
+
+.dotstyle li a:focus {
+  outline: none;
+}
+
+.dotstyle-scaleup li a:hover,
+.dotstyle-scaleup li a:focus,
+.dotstyle-scaleup li.current a {
+  background-color: @slate-medium;
+}

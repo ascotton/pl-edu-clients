@@ -1,0 +1,16 @@
+@import 'core/colors.less';
+
+.pl-client-referral-reassign {
+    min-width: 630px;
+    .providers, .referrals {
+        border: solid 1px @gray;
+    }
+    .estimated-col {
+        min-width: 200px;
+    }
+    .rows {
+        .row:nth-child(odd) {
+            background-color: lighten(@gray-lightest, 5%);
+        }
+    }
+}

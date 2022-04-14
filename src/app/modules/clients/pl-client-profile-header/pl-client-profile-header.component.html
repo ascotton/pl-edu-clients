@@ -1,0 +1,79 @@
+<div class="pl-client-profile-header flexbox padding-large">
+    <div class="icon">
+        <pl-icon *ngIf="!client._isVirtual" [svg]="'clients'" [width]="35" [height]="35"></pl-icon>
+        <pl-icon *ngIf="client._isVirtual" [svg]="'virtual-student'" [width]="22" [height]="29" class="virtual"></pl-icon>
+    </div>
+    <div class="flex1 margin-l">
+        <div class="margin-b">
+            <h1 class="inline-block margin-large-r x-qa-header-client-name">
+                {{ client.firstName }} {{ client.lastName }}
+            </h1>
+            <div *ngIf="mayRemoveFromCaseload" class="inline-block margin-large-l remove-caseload-btn">
+                <div [hidden]="removingClient">
+                    <button type="button" pl-button class="x-qa-remove-from-caseload-button"
+                        (click)="removeFromCaseload()">Remove From Caseload</button>
+                </div>
+                <pl-dot-loader [hidden]="!removingClient" [align]="'left'"></pl-dot-loader>
+            </div>
+            <div *ngIf="mayAddToCaseload" class="inline-block margin-large-l remove-caseload-btn">
+                <div [hidden]="addingClient">
+                    <button type="button" pl-button class="x-qa-add-to-caseload-button"
+                        (click)="addToCaseload()">Add To Caseload</button>
+                </div>
+                <pl-dot-loader [hidden]="!addingClient" [align]="'left'"></pl-dot-loader>
+            </div>
+            <div *ngIf="client.permissions && client.permissions.deleteClient" class="inline-block margin-large-l delete-client-btn">
+                <button type="button" pl-button class="x-qa-delete-client-button"
+                    (click)="showDeleteConfirm()" [disabled]="!client.canDelete">Delete <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display></button>
+            </div>
+        </div>
+        <ul class="margin-large-b x-qa-header-client-basic-info">
+            <li>
+                <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display> ID:
+                <pl-client-id [externalId]="client.externalId" [internalId]="client.id"></pl-client-id>
+            </li>
+            <li>Age: {{ client.age }}</li>
+            <li>Grade: {{ client.gradeDisplay }}</li>
+            <li>{{ client._isVirtual ? 'Virtual School' : 'Brick & Mortar School' }}</li>
+        </ul>
+        <div class="">
+            <div class="inline-block margin-large-r">
+                <h5>Next IEP Due Date</h5>
+                <div><pl-icon class="blue-medium margin-small-r" [svg]="'schedule'" [scale]="0.75" [verticalAlign]="'-3px'"></pl-icon> {{ _state.model.annualIepDueDate }}<span *ngIf="!_state.model.annualIepDueDate">None</span></div>
+            </div>
+            <div class="inline-block margin-large-r">
+                <h5>Triennial Eval Due Date</h5>
+                <div><pl-icon class="blue-medium margin-small-r" [svg]="'schedule'" [scale]="0.75" [verticalAlign]="'-3px'"></pl-icon> {{ _state.model.triennialEvaluationDueDate }}<span *ngIf="!_state.model.triennialEvaluationDueDate">None</span></div>
+            </div>
+            <div class="inline-block margin-large-r">
+                <div>
+                    <h5 class="status-header">Status</h5>
+                    <button pl-button class="bare learn-more" (click)="displayLearnMore()">
+                        <pl-icon [svg]="'info'" [width]="14" [height]="14"></pl-icon>
+                    </button>
+                </div>
+                <div>
+                    <pl-status-dot *ngIf="client && client.status" [status]="'Client_' + client.status.toUpperCase()">
+                    </pl-status-dot>
+                    <span>{{ client.statusDisplay }}</span>
+                </div>
+            </div>
+            <div class="inline-block margin-large-r">
+                <h5>Locations</h5>
+                <div>
+                    {{ client._locations }}
+                    <a class="change-location-link" *ngIf="client.permissions && client.permissions.transferLocation"
+                        [routerLink]="['/client', client.id, 'change-location']">
+                        Change
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="buttons" [hidden]="!backLink">
+        <div (click)="onClose()" class="pointer margin-r x-qa-back-button">
+            <!-- <pl-icon class="white margin-small-r" [svg]="'close-inverted'"></pl-icon> <span>Back to {{ backLink }}</span> -->
+            <pl-icon class="white margin-small-r" [svg]="'close-inverted'" [scale]="1.5"></pl-icon>
+        </div>
+    </div>
+</div>

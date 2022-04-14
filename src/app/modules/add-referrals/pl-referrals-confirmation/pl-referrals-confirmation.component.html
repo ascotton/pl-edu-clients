@@ -1,0 +1,148 @@
+<div class="pl-referrals-confirmation">
+    <div class="container top-container">
+        <pl-location-banner [locationName]="locationName"></pl-location-banner>
+        <button pl-button (click)="downloadSummary()" class="x-qa-download-bulk-upload-summary"
+            *ngIf="!loading && !dupeCount && (errorRows.length > 0 || warningRows.length > 0 || nameChanges.length > 0 || templateErrors.length > 0)">
+            <pl-icon [svg]="'download'"  [width]="16" [height]="16"></pl-icon>
+            <span>Download summary</span>
+        </button>
+    </div>
+
+    <div *ngIf="loading">
+        <div class="container loading" *ngIf="isCheckingUpload">
+            <pl-simple-meter
+                [width]="450"
+                [text]="getMeterInfo('dryRun').text"
+                [value]="getMeterInfo('dryRun').value"
+                [color]="getMeterInfo('dryRun').color"
+                [bgColor]="getMeterInfo('dryRun').bgColor"
+                [animateProgress]="true"
+            ></pl-simple-meter>
+            <pl-icon *ngIf="isCheckingUploadDone" class="green" [svg]="'check-circle'"></pl-icon>
+        </div>
+
+        <div class="container loading" *ngIf="isUploading">
+            <pl-simple-meter
+                [width]="450"
+                [text]="getMeterInfo('upload').text"
+                [value]="getMeterInfo('upload').value"
+                [color]="getMeterInfo('upload').color"
+                [bgColor]="getMeterInfo('upload').bgColor"
+                [animateProgress]="true"
+            ></pl-simple-meter>
+            <pl-icon *ngIf="isUploadDone" class="green" [svg]="'check-circle'"></pl-icon>
+        </div>
+    </div>
+
+
+
+    <div *ngIf ="!loading && dupeCount" class="dupe-resolver">
+        <div class="dupe-resolver-header">
+            {{dupeCount - dupeIndex}}/{{dupeCount}} <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display>s Need Review
+        </div>
+        <div class="dupe-resolver-body">
+            <pl-referral-duplicate
+                [clientOriginal]="duplicatesToResolve[dupeIndex].originalClient"
+                [referralOriginal]="duplicatesToResolve[dupeIndex].originalReferral"
+                [originalIndex]="duplicatesToResolve[dupeIndex].originalIndex"
+                [clientsDuplicates]="duplicatesToResolve[dupeIndex].potentialDuplicateClients"
+                (useExisting)="handleDupeWithExisting($event.existing, $event.originalIndex)"
+                (useUpdate)="handleDupeWithClientUpdate($event.update, $event.originalIndex)">
+            </pl-referral-duplicate>
+            <div class="dupe-buttons">
+                <button pl-button class="bare" (click)="nextDupe()">
+                    Skip (referral will not be created)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && !dupeCount" class="results-tables">
+        <div class="container">
+            <div class="result-header flexbox success">
+                <pl-icon [svg]="'check-circle'"  [width]="24" [height]="24"></pl-icon>
+                <span>{{successRows.length}} Referrals were added successfully</span>
+                <button pl-button class="name-change-button reverse" *ngIf="nameChanges.length"
+                    (click)="toggleDisplayNameChanges()">
+                    <pl-icon *ngIf="!displayNameChanges" [svg]="'caution'"  [width]="24" [height]="24"></pl-icon>
+                    <pl-icon *ngIf="displayNameChanges" [svg]="'close'"  [width]="24" [height]="24"></pl-icon>
+                    <span>{{nameChanges.length}} names changed</span>
+                </button>
+            </div>
+            <div class="result-body success">
+                <div>
+                    <label>Location: </label><span>{{locationName}}</span>
+                </div>
+                <div>
+                    <label>Organization: </label><span>{{organizationName}}</span>
+                </div>
+            </div>
+            <pl-add-referrals-table
+                *ngIf="successRows.length"
+                [referralsRows]="successRows"
+                [parentDataSubject]="tableDataSubject"
+            >
+            </pl-add-referrals-table>
+            <pl-name-change-table *ngIf="displayNameChanges" class="x-qa-name-change-table" [nameChanges]="nameChanges"
+                [parentDataSubject]="tableDataSubject">
+            </pl-name-change-table>
+        </div>
+
+        <div class="container" *ngIf="templateErrors.length">
+            <div class="result-header flexbox failure">
+                <pl-icon [svg]="'caution'"  [width]="24" [height]="24"></pl-icon>
+                <span>
+                    {{templateErrors.length}} Referrals were not added and need attention. Download the referral summary as your template to fix any errors and upload again.
+                </span>
+            </div>
+            <pl-add-referrals-table
+                class="x-qa-errors-confirmation-table"
+                [referralsRows]="templateErrors"
+                [parentDataSubject]="tableDataSubject"
+                (resolveDupeClient)="resolveDupeClient($event)"
+                (resolveTransferClient)="resolveTransferClient($event)"
+                (ignoreDuplicate)="ignoreDuplicate($event)">
+            </pl-add-referrals-table>
+        </div>
+
+        <div class="container" *ngIf="errorRows.length">
+            <div class="result-header flexbox info">
+                <pl-icon [svg]="'question-mark-circle'" [width]="24" [height]="24"></pl-icon>
+                <span>
+                    {{errorRows.length}} Referrals were not added and need attention. The following referrals may already exist for this school year. <br>Please check the services for each student in the list.
+                </span>
+                <button
+                    pl-button
+                    *ngIf="!loadingResend"
+                    class="action-button"
+                    [disabled]="!isResendEnabled"
+                    (click)="resendDuplicates()">
+                    Ignore Warning & Add
+                </button>
+                <button pl-button *ngIf="loadingResend" class="action-button">
+                    <pl-dot-loader [align]="'center'"></pl-dot-loader>
+                </button>
+            </div>
+            <pl-add-referrals-table
+                class="x-qa-errors-confirmation-table"
+                [referralsRows]="errorRows"
+                [parentDataSubject]="tableDataSubject"
+                [hasBulkAction]="true"
+                (resolveDupeClient)="resolveDupeClient($event)"
+                (resolveTransferClient)="resolveTransferClient($event)"
+                (ignoreDuplicate)="ignoreDuplicate($event)">
+            </pl-add-referrals-table>
+        </div>
+
+        <div class="container" *ngIf="warningRows.length">
+            <div class="result-header flexbox warning">
+                <pl-icon [svg]="'alert'"  [width]="24" [height]="24"></pl-icon>
+                <span>{{warningRows.length}} Referrals not uploaded, no further action possible at this time.</span>
+            </div>
+            <pl-add-referrals-table [referralsRows]="warningRows" [parentDataSubject]="tableDataSubject"
+                (resolveDupeClient)="resolveDupeClient($event)" (resolveTransferClient)="resolveTransferClient($event)">
+            </pl-add-referrals-table>
+        </div>
+
+     </div>
+</div>

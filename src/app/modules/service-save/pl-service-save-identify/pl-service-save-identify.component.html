@@ -1,0 +1,130 @@
+<div class="pl-service-save-identify">
+    <form *ngIf="!isLoading" [formGroup]="formCtrl">
+
+        <h4 class="section-header">Identify Services</h4>
+        <div class="section-body">
+
+            <div class="margin-xlarge-b">* Required Fields</div>
+
+            <div class="margin-b"><b>Service Discipline:</b> {{ providerTypeName }}</div>
+
+            <div>
+                <pl-input-select
+                    class="form-input x-qa-service"
+                    [formCtrl]="formCtrl"
+                    [label]="'Service'"
+                    [(model)]="serviceFormVals.service"
+                    [options]="serviceOpts"
+                    [disabled]="isEdit"
+                    [required]="true"
+                    [dropdownContainerSelector]="'.pl-service-save'"
+                    (onChange)="onChangeServiceWrapper($event)">
+                </pl-input-select>
+
+                <div [hidden]="serviceFormVals.serviceCategory !== 'evaluation_with_assessment'">
+                    <form [formGroup]="formCtrlEval">
+                        <pl-input-select class="form-input x-qa-evaluation-type" [formCtrl]="formCtrlEval" [label]="'Evaluation Type'" [(model)]="serviceFormVals.evaluationType" [options]="evaluationTypeOpts" [required]="true" [dropdownContainerSelector]="'.pl-service-save'" (onChange)="onChangeEvalTypeWrapper($event)"></pl-input-select>
+                    </form>
+                </div>
+
+                <pl-input-checkbox-group
+                    *ngIf="serviceFormVals.isShortTerm"
+                    class="form-input"
+                    [(model)]="isShortTerm"
+                    (modelChange)="onChangeIsShortTerm($event)"
+                    [options]="[{ label: 'This referral is to cover the student\'s service provision for a short period of time', value: 'isShortTerm' }]"
+                    [optionWidth]="'30em'"
+                    [label]="'Short Term Coverage'"
+                    [disabled]="true">
+                </pl-input-checkbox-group>
+
+                <div [hidden]="serviceFormVals.serviceCategory !== 'therapy'">
+                    <form [formGroup]="formCtrlDirect">
+
+                        <div [hidden]="isBehaviorOrTraumaGroup()">
+                            <pl-input-text
+                                class="form-input x-qa-input-session-duration"
+                                [type]="'number'"
+                                [formCtrl]="formCtrlDirect"
+                                [label]="'Session Duration (minutes)'"
+                                [(model)]="serviceFormVals.directServiceSession.duration"
+                                [min]="1"
+                                [required]="areServiceTimesRequired"
+                                (onChange)="validate($event)"
+                            ></pl-input-text>
+                            <pl-input-text
+                                class="form-input x-qa-input-session-frequency"
+                                [type]="'number'"
+                                [formCtrl]="formCtrlDirect"
+                                [label]="'Session Frequency'"
+                                [(model)]="serviceFormVals.directServiceSession.frequency"
+                                [min]="1"
+                                [required]="areServiceTimesRequired"
+                                (onChange)="validate($event)"
+                            ></pl-input-text>
+                            <pl-input-select
+                                class="form-input x-qa-session-interval"
+                                [filter]="false"
+                                [formCtrl]="formCtrlDirect"
+                                [label]="'Session Interval'"
+                                [(model)]="serviceFormVals.directServiceSession.interval"
+                                [options]="intervalOpts"
+                                [dropdownContainerSelector]="'.pl-service-save'"
+                                [required]="areServiceTimesRequired"
+                                (onChange)="validate($event)"
+                            ></pl-input-select>
+                        </div>
+
+                        <div [hidden]="!isBehaviorOrTraumaGroup()">
+                            <pl-input-radio-group
+                                class="form-input x-qa-product-type"
+                                [formCtrl]="formCtrlDirect"
+                                [label]="'Frequency'"
+                                [(model)]="bmhServiceFrequency"
+                                [options]="bmhFrequencyOptions"
+                                [optionWidth]="'30em'"
+                                [required]="isBehaviorOrTraumaGroup()"
+                                (onChange)="validate($event)"
+                                (modelChange)="updateFrequencyWhenBmhType($event)">
+                            </pl-input-radio-group>
+                        </div>
+
+                        <div class="form-input row">
+                            <pl-input-datepicker
+                                class="flex1 margin-large-r x-qa-input-start-date"
+                                [formCtrl]="formCtrlDirect"
+                                [label]="'Start Date'"
+                                [(model)]="serviceFormVals.directServiceSession.startDate"
+                                [required]="true"
+                                [minDate]="'2016-01-01'"
+                                (onChange)="validate($event)"
+                                [dropdownContainerSelector]="'.pl-service-save'"
+                            ></pl-input-datepicker>
+                            <pl-input-datepicker
+                                class="flex1 x-qa-input-end-date"
+                                [formCtrl]="formCtrlDirect"
+                                [label]="'End Date'"
+                                [(model)]="serviceFormVals.directServiceSession.endDate"
+                                [minDate]="'2016-01-01'"
+                                (onChange)="validate($event)"
+                                [dropdownContainerSelector]="'.pl-service-save'"
+                            ></pl-input-datepicker>
+                        </div>
+                        <pl-input-text
+                            class="form-input x-qa-minutes-required-input"
+                            [type]="'number'"
+                            [formCtrl]="formCtrlDirect"
+                            [label]="'Minutes Required'"
+                            [(model)]="serviceFormVals.directServiceSession.totalMinutesRequired"
+                            [min]="0"
+                        ></pl-input-text>
+                        <div>
+                            The amount of time that a PresenceLearning therapist will need to provide in order fulfill the time requirement for a <pl-client-student-display [user]="currentUser"></pl-client-student-display>’s prescription/IEP, as of the Start Date entered above. See <a href="https://presencelearning.helpjuice.com/71381-clinical-support/calculating-therapy-minutes" target="_blank">How to Calculate Minutes Required</a> in our Help Center for more information.
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>

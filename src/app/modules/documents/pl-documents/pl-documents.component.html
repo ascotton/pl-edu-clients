@@ -1,0 +1,46 @@
+<div class="pl-documents">
+    <div [hidden]="visible.download || visible.delete" class="margin-large-b">
+        <button *ngIf="mayUpload" pl-button class="gray-outline margin-r x-qa-documents-upload-btn" (click)="toggleVisible('upload')">
+            <pl-icon [svg]="'upload-box'" [scale]="0.8" [verticalAlign]="'-4px'"></pl-icon> Upload Documents
+        </button>
+        <button *ngIf="mayDelete" pl-button class="gray-outline" [disabled]="!visible.deleteButton" (click)="clickMultipleButton('delete')">
+            Delete
+        </button>
+    </div>
+    <pl-document-upload *ngIf="visible.upload" [clientUuid]="clientUuid" (submitted)="uploadDone($event)" (canceled)="toggleVisible('upload')"></pl-document-upload>
+
+    <div [hidden]="visible.download || visible.delete">
+        <pl-table-wrapper (onQuery)="onQuery2($event)">
+            <pl-table-header>
+                <pl-table-header-cell *ngIf="mayDelete" class="may-delete-table-cell-header">
+                    &nbsp;
+                </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'client_service__service__service_type__long_name'">Service</pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'document_type__name'">Document Type</pl-table-header-cell>
+                <pl-table-header-cell>Document Name</pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'created'" [orderDirection]="orderDirection.created">Upload Date</pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'modified_by__first_name'">Uploaded By</pl-table-header-cell>
+                <pl-table-header-cell>Link</pl-table-header-cell>
+            </pl-table-header>
+            <div *ngIf="loading" class="padding-xlarge-tb">
+                <pl-dot-loader></pl-dot-loader>
+            </div>
+            <pl-table-row *ngFor="let document of documents">
+                <pl-table-cell *ngIf="mayDelete" class="may-delete-table-cell">
+                    <pl-input-checkbox [(model)]="document._checked" [noPadding]="true" (onChange)="changeSelectRow($event)"></pl-input-checkbox>
+                </pl-table-cell>
+                <pl-table-cell>{{ document._service }}</pl-table-cell>
+                <pl-table-cell>{{ document._documentType }}</pl-table-cell>
+                <pl-table-cell>{{ document._name }}</pl-table-cell>
+                <pl-table-cell>{{ document._created }}</pl-table-cell>
+                <pl-table-cell>{{ document._person }}</pl-table-cell>
+                <pl-table-cell>
+                    <span *ngIf="document.download_url">
+                        <a href="{{ document.download_url }}" download="{{ document.download_url }}">Download</a>
+                    </span>
+                </pl-table-cell>
+            </pl-table-row>
+            <pl-table-footer [total]="total" [currentPage]="currentPage" [pageSize]="pageSize"></pl-table-footer>
+        </pl-table-wrapper>
+    </div>
+</div>

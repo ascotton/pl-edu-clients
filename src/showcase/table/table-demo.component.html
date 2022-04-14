@@ -1,0 +1,20 @@
+<div class="table-demo">
+    <div class="margin-large-tb">
+        <a routerLink="/table-framework"><h2>Table Framework</h2></a>
+    </div>
+
+    <h2>Default</h2>
+    <div class="margin-large-b x-qa-table-defaults">
+        <pl-table [data]="dataDefault" [alwaysShowFooter]="false" (onQuery)="onQueryDefault($event)" [fixedHeaderTop]="45" [stateName]="'td'"></pl-table>
+    </div>
+
+    <h2>No filters</h2>
+    <div class="margin-large-b x-qa-table-no-filters">
+        <pl-table [data]="dataNoFilters" [columnDefaults]="columnDefaultsNoFilters" [count]="countNoFilters" [queryId]="queryIdNoFilters" [rowHrefFn]="onRowHrefNoFilters" (onQuery)="onQueryNoFilters($event)"></pl-table>
+    </div>
+
+    <h2>Custom Columns</h2>
+    <div class="margin-large-b x-qa-table-custom-columns">
+        <pl-table [data]="dataColumns1" [columns]="columnsCustom1" [count]="dataInfoColumns1.count" [queryId]="dataInfoColumns1.queryId" [pageSize]="dataInfoColumns1.pageSize" [expandRowHtmlFn]="columns1ExpandRow" (onQuery)="onQueryColumns1($event)" (onRowClick)="onRowClickColumns1($event)" (onColumnClick)="onColumnClickColumns1($event)" [stateName]="'tc1'" [pageSizeKey]="dataInfoColumns1.pageSizeKey" [pageNumberKey]="dataInfoColumns1.pageNumberKey" [orderKey]="dataInfoColumns1.orderKey"></pl-table>
+    </div>
+</div>

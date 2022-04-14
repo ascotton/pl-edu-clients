@@ -1,0 +1,24 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+:host {
+    display: block;
+    // overflow: hidden;
+    .pl-referral-filters {
+        &_header {
+            color: @white;
+            background-color: @blue-medium;
+            border-top-right-radius: 4px;
+            border-top-left-radius: 4px;
+        }
+        &_content {
+            overflow: auto;
+            background-color: @slate-lightest;
+        }         
+    }
+    .divider-line {
+        height: 1px;
+        background-color: @gray;
+        .margin-tb;
+    }
+}

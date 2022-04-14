@@ -1,0 +1,194 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/decoration.less';
+@import 'core/typography.less';
+@import 'app/components/pl-button.less';
+@import 'app/client-absences.less';
+
+@priority-3-color: @gray-darkest;
+@priority-3-background-color: @gray-dark;
+
+.wrapper {
+    align-items: center;
+    background-color: @slate-lightest;
+    border-top: 3px solid;
+    box-shadow: @box-shadow-component;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(12, 1fr);
+    justify-items: center;
+
+    .margin-xlarge-tb;
+    .padding-nl;
+
+    .description,
+    .download {
+        align-self: flex-start; // align top
+        grid-row: 2;
+    }
+
+    .count {
+        font-size: @client-absences-summary-number-font-size;
+        grid-column: ~'1 / 7';
+        line-height: 1;
+        min-height: @client-absences-summary-number-font-size;
+        text-align: center;
+        .bold;
+    }
+
+    .description {
+        grid-column: ~'1 / 7';
+    }
+
+    .filter-button {
+        grid-column: ~'7 / 13';
+    }
+
+    .download {
+        align-items: center;
+        display: flex;
+        background-color: @slate-lightest;
+        border-width: 0;
+        cursor: pointer;
+        grid-column: ~'7 / 13';
+        justify-items: flex-start;
+        padding: 0;
+
+        &:disabled {
+            cursor: not-allowed;
+            opacity: .5;
+        }
+
+        .label {
+            text-align: left;
+            .margin-small-lr;
+        }
+    }
+
+    @media (min-width: 1150px) {
+        .description,
+        .download {
+            align-self: unset;
+            grid-row: 1;
+        }
+
+        .count {
+            grid-column: ~'1 / 3';
+        }
+
+        .description {
+            grid-column: ~'3 / 7';
+        }
+
+        .filter-button {
+            grid-column: ~'7 / 10';
+        }
+
+        .download {
+            grid-column: ~'10 / 13';
+        }
+    }
+
+    &[data-priority="1"] {
+        border-top-color: @priority-1-color;
+
+        .count,
+        .download {
+            color: @priority-1-color;
+        }
+
+        .filter-button {
+            .btn-style(
+                white,
+                @priority-1-color,
+                @priority-1-color,
+                white,
+                @priority-1-color,
+                @priority-1-color
+            );
+        }
+    }
+
+    &[data-priority="2"] {
+        border-top-color: @priority-2-color;
+
+        .count,
+        .download {
+            color: @priority-2-color;
+        }
+
+        .filter-button {
+            .btn-style(
+                white,
+                @priority-2-color,
+                @priority-2-color,
+                white,
+                @priority-2-color,
+                @priority-2-color
+            );
+        }
+    }
+
+    &[data-priority="3"] {
+        border-top-color: @priority-3-background-color;
+
+        .count {
+            color: @priority-3-background-color;
+        }
+
+        .filter-button {
+            .btn-style(
+                @priority-3-color,
+                @priority-3-color,
+                white,
+                @priority-3-color,
+                @priority-3-color,
+                white
+            );
+        }
+
+        .download {
+            color: @priority-3-color;
+        }
+    }
+
+    .applied-priority-wrapper(@background-color) {
+        background-color: @background-color;
+
+        .filter-button {
+            .btn-style(
+                white,
+                white,
+                @background-color,
+                white,
+                white,
+                @background-color
+            );
+        }
+    }
+
+    &.applied {
+        .count,
+        .description,
+        .download {
+            background-color: transparent;
+            color: white;
+        }
+
+        .filter-button {
+            color: white;
+        }
+
+        &[data-priority="1"] {
+            .applied-priority-wrapper(@priority-1-color);
+        }
+
+        &[data-priority="2"] {
+            .applied-priority-wrapper(@priority-2-color);
+        }
+
+        &[data-priority="3"] {
+            .applied-priority-wrapper(@priority-3-background-color);
+        }
+    }
+}

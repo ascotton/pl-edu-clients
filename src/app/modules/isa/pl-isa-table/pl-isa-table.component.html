@@ -1,0 +1,83 @@
+<div class="pl-isa-table">
+    <pl-table-wrapper (onQuery)="onTableWrapperQuery($event)">
+        <div class="sticky-table-header" 
+            [class.read-only]="tableMode === isaTableMode.readOnlyISA"
+            [class.removal-modal]="tableMode === isaTableMode.removeISA">
+            <pl-table-filters-top 
+                [hidden]="tableMode !== isaTableMode.readOnlyISA"
+                [total]="isas.count"
+                [filterSelectOpts]="tableFilters">
+            </pl-table-filters-top>
+
+            <pl-table-header>
+                <pl-table-header-cell *ngIf="tableMode === isaTableMode.removeISA">
+                    Unsigned Reason
+                </pl-table-header-cell>
+
+                <pl-table-header-cell class="checkbox-cell" *ngIf="tableMode === isaTableMode.manageISA">
+                    <pl-input-checkbox [(model)]="isCheckAllCheckBoxChecked" (onChange)="onCheckAllCheckboxChange();"></pl-input-checkbox>
+                </pl-table-header-cell>
+
+                <pl-table-header-cell>Full Name</pl-table-header-cell>
+                <pl-table-header-cell>ID</pl-table-header-cell>
+                <pl-table-header-cell>DOB</pl-table-header-cell>
+                <pl-table-header-cell>Grade</pl-table-header-cell>
+                <pl-table-header-cell>Discipline</pl-table-header-cell>
+                <pl-table-header-cell>Service Period</pl-table-header-cell>
+                <pl-table-header-cell>Hourly Cost</pl-table-header-cell>
+                <pl-table-header-cell>Location</pl-table-header-cell>
+            </pl-table-header>
+        </div>
+
+        <div *ngIf="isLoadingISAs" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        
+        <div *ngIf="!isas.results.length && !isLoadingISAs" class="center padding-xlarge-tb">
+            No matching.
+        </div>
+
+        <div *ngIf="!isLoadingISAs">
+            <pl-table-row *ngFor="let isa of isas.results">
+                <div *ngIf="tableMode === isaTableMode.removeISA" class="unsign-reason-cell margin-t">
+                    <pl-input-select 
+                        [options]="unsignReasons" 
+                        [(model)]="isa.unsignReason"
+                        (onChange)="onInputSelectChange(isa)">
+                    </pl-input-select>
+
+                    <br [hidden]="isa.unsignReason !== 'Other'">
+
+                    <pl-input-textarea
+                        [hidden]="isa.unsignReason !== 'Other'"
+                        [(model)]="isa.unsignReasonComment" 
+                        [height]="'100px'"
+                        (onChange)="onTextAreaChange(isa)">
+                    </pl-input-textarea>
+                </div>
+
+                <pl-table-cell class="checkbox-cell" *ngIf="tableMode === isaTableMode.manageISA">
+                    <pl-input-checkbox [(model)]="isa.selected" (onChange)="onSingleCheckBoxChange(isa);"></pl-input-checkbox> 
+                </pl-table-cell>
+
+                <pl-table-cell>{{ isa.fullName }}</pl-table-cell>
+                <pl-table-cell>{{ isa.id }}</pl-table-cell>
+                <pl-table-cell>{{ isa.birthday }}</pl-table-cell>
+                <pl-table-cell> {{ isa.grade }} </pl-table-cell>
+                <pl-table-cell>{{ isa.discipline }}</pl-table-cell>
+                <pl-table-cell>{{ isa.servicePeriod }}</pl-table-cell>
+                <pl-table-cell>{{ isa.rate | plCurrency }}</pl-table-cell>
+                <pl-table-cell>{{ isa.location }}</pl-table-cell>
+            </pl-table-row>
+        </div>
+
+        <pl-table-footer 
+            *ngIf="tableMode === isaTableMode.readOnlyISA"
+            [pageSize]="50"
+            [currentPage]="1" 
+            [total]="isas.count" 
+            [stickyFooter]="true"
+            [useFixedPageSize]="true">
+        </pl-table-footer>
+    </pl-table-wrapper>
+</div>

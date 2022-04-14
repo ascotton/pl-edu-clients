@@ -1,0 +1,45 @@
+
+/**
+ * circled-icon - styles a squared, centered pl-icon wrapped in a circle.
+ *
+ * If the SVG icon _content_ runs to the edges of the image, or the image is
+ * already centered within the viewbox, then you only need to specify the size
+ * of the circle/element wrapping the icon.
+ *
+ * However, if the image content isn't centered within the viewbox, then you'll
+ * have to tap it over by specifying additional offsets. Example:
+ *
+ * ┌────┐  In this "image" of a euro mark, the content of the image is not
+ * |   €│  visually centered. As a result, if you used this icon in a
+ * |    │  circled-icon, then you would need to manually center it visually
+ * └────┘  by adding right and bottom offset parameters.
+ *
+ * simple example:
+ * <div class="icon">
+ *    <pl-icon [svg]="'blah'" [width]="30"></pl-icon>
+ * </div>
+ *
+ * .icon {
+ *    background-color: green; // the background color of the circle
+ *    .circled-icon(30px);
+ * }
+ *
+ * @param  {dimension} @width                square dimension of the circle
+ * @param  {dimension} @svg-offset-left: 0  distance to bump icon content to right
+ * @param  {dimension} @svg-offset-top: 0 distance to bump icon content to bottom
+ */
+.circled-icon(@width: 44px, @svg-offset-left: 0, @svg-offset-top: 0) {
+    align-items: center;
+    border-radius: @width;
+    display: flex;
+    height: @width;
+    justify-content: center;
+    width: @width;
+
+    pl-icon {
+        // actual svg image may not be centered within pl-icon, so
+        // bump it over with a margin
+        margin-left: @svg-offset-left;
+        margin-top: @svg-offset-top;
+    }
+}

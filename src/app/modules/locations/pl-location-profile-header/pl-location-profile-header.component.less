@@ -1,0 +1,39 @@
+@import 'core/colors.less';
+@import 'core/colors-classes.less';
+@import 'core/spacing.less';
+@import 'app/icons.less';
+
+.pl-location-profile-header {
+    background-color: @slate-darkest;
+    color: @white;
+
+    .inner {
+        max-width: 1400px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-gap: @spacing-normal;
+
+        .icon {
+            margin-left: 16px;
+            background-color: @blue-medium;
+            .white;
+            .circled-icon;
+        }
+
+        .fields {
+            .margin-l;
+
+            .info {
+                width: 170px;
+            }
+            .no-wrap {
+                white-space: nowrap;
+            }
+        }
+
+        .close-button {
+            float: right;
+        }
+    }
+}

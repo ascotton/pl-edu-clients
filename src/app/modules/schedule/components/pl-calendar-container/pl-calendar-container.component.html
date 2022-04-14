@@ -1,0 +1,68 @@
+<ng-container *ngIf="(data$ | async) as data">
+  <pl-tabs [tabs]="data.tabs"></pl-tabs>
+  <div class="pl-calendar">
+    <!-- This can be a generic component Check iDA warning -->
+    <div class="warning padding margin-large-lr margin-tb" *ngIf="availability?.status.code === 'WARNING'">
+      <span class="warning-icon white"> ! </span>
+      <span class="warning-text">
+        <span class="message">
+          Please review and confirm your Availability time blocks
+          <ng-container *ngIf="availability?.daysLeft > 1; else tomorrow">within
+                the <b>next {{availability?.daysLeft}} days</b>
+          </ng-container>
+          <ng-template #tomorrow>
+            <b>by tomorrow</b>
+          </ng-template>.
+          We need to keep your information fresh!
+        </span>
+        <a routerLink="/availability">Update Availability</a>
+      </span>
+    </div>
+
+    <div class="pl-calendar-overlay" *ngIf="isLoading$ | async">
+      <pl-dot-loader></pl-dot-loader>
+    </div>
+    <div class="flexbox">
+      <div #filtersContainer class="calendar-filters-container">
+        <pl-calendar-filters class="padding-large-lr padding-t"
+            [user]="data.user"
+            [filterDate]="selectedDate"
+            [timezone]="data.provider?.timezone"
+            [idaData]="data.idaData"
+            [billingCodes]="billingCodes$ | async"
+            [unsigned]="data.view.unsigned ? 'unsigned' : 'all'"
+            [viewOnly]="data.permissions.isViewOnlyUser"
+            (filtersChanged)="onFiltersChanged(data.params, $event)">
+            <div *ngIf="data.permissions.isViewOnlyUser" class="warning margin-large-b padding-small">
+            {{ data.provider.user.firstName }}
+            {{ data.provider.user.lastName }}
+            (view only)
+            </div>
+        </pl-calendar-filters>
+      </div>
+      <div #calendarContainer class="pl-calendar-calendar padding-large-lr flex1">
+        <pl-calendar
+          [events]="events$ | async"
+          [user]="data.user"
+          [timezone]="data.provider?.timezone"
+          [provider]="data.providerUuid"
+          [providerProfile]="data.provider"
+          [view]="data.view"
+          [caseload]="caseload$ | async"
+          [locations]="locations$ | async"
+          [billingCodes]="billingCodes$ | async"
+          [readonly]="data.permissions.isViewOnlyUser"
+          [lastKnownDate]="selectedDate"
+          [selectedDate]="selectedDate"
+          [dateState]="data.amendmentDate"
+          (today)="goToday(data.params, data.provider?.timezone)"
+          (openModal)="openEventModal(data.amendmentDate, $event, data.permissions.isViewOnlyUser)"
+          (document)="openDocumentEvent($event, data.permissions.isViewOnlyUser)"
+          (delete)="deleteEvent($event, data.amendmentDate)"
+          (editTime)="editTime($event)"
+          (dateChanged)="onDateChange($event)"></pl-calendar>
+      </div>
+    </div>
+    <pl-calendar-footer class="padding-large-lr padding-tb" [timezone]="data.provider?.timezone"></pl-calendar-footer>
+  </div>
+</ng-container>

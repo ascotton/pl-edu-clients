@@ -1,0 +1,52 @@
+<h1 class="margin-xlarge-tb">
+    <button mat-icon-button routerLink="../user-management">
+        <mat-icon>
+            arrow_back_ios_new
+        </mat-icon>
+    </button>
+    Add User
+</h1>
+<div class="mat-elevation-z1 padding-xlarge margin-large-tb">
+    <div class="header flexbox margin-b">
+        <div class="title">
+            <strong>
+                {{ view === 'single' ? singleTitle : multipleTitle }}
+            </strong>
+        </div>
+        <button mat-stroked-button class="pl-view-toggle" (click)="toggleView()">
+            {{ view !== 'single' ? singleTitle : multipleTitle }}
+            <mat-icon class="margin-xlarge-l">
+                {{ view !== 'single' ? singleIcon : multipleIcon }}
+            </mat-icon>
+        </button>
+    </div>
+    <mat-error *ngIf="syWarning" class="margin-tb">
+        You cannot add users to a previous school year.  Please select the current or upcoming school year.
+    </mat-error>
+    <pl-user-form *ngIf="view === 'single'; else addMultiple"
+        [reset]="resetForm"
+        [contact]="csContact$ | async"
+        [loading]="loading$ | async"
+        [ocupations]="userTypes"
+        [licenseTypes]="licenseTypes"
+        (saveTrigger)="saveSingleUser($event)"></pl-user-form>
+    <ng-template #addMultiple>
+        <pl-bulk-platform-users 
+            [progress]="progress$ | async"
+            [currentStep]="bulkStep" 
+            (currentStepChange)="setpChanged($event)"
+            (changed)="filDataChanged($event)"></pl-bulk-platform-users>
+    </ng-template>
+</div>
+<div *ngIf="view === 'multiple' && bulkStep === 'review'" class="margin-large-t">
+    <pl-editable-table-v2 
+        [maxRows]="100"
+        [header]="headerData"
+        [data]="workingData" 
+        [columns]="bulkColumns"
+        [validator]="dataValidator"
+        (validData)="usersToAdd = $event"
+        (invalidRows)="invalidRows = $event"
+        (dataChange)="backupData = $event">
+    </pl-editable-table-v2>
+</div>

@@ -1,0 +1,42 @@
+<div class="pl-client-contact-save padding-large">
+    <form [formGroup]="contactSaveForm">
+        <div class="flexbox">
+            <pl-input-checkbox-group class="flex1 form-input" [formCtrl]="contactSaveForm" [label]="'Type of Contact (Select all that apply)'" [model]="contactRelationship" [options]="contactRelationshipOpts" [required]="true"></pl-input-checkbox-group>
+        </div>
+
+        <div class="flexbox">
+            <pl-input-text class="flex1 margin-large-r form-input x-qa-contact-edit-first-name" [formCtrl]="contactSaveForm" [label]="'First Name'" [(model)]="contact.first_name" [required]="true"></pl-input-text>
+            <pl-input-text class="flex1 margin-large-l form-input x-qa-contact-edit-last-name" [formCtrl]="contactSaveForm" [label]="'Last Name'" [(model)]="contact.last_name" [required]="true"></pl-input-text>
+        </div>
+        <div class="flexbox">
+            <pl-input-select class="flex1 margin-large-r form-input x-qa-contact-edit-relationship" [formCtrl]="contactSaveForm" [label]="'Relationship'" [(model)]="contact.contact_type" [options]="selectOptsRelationship" [required]="true"></pl-input-select>
+            <pl-input-select class="flex1 margin-large-l form-input x-qa-contact-edit-primary-language" [formCtrl]="contactSaveForm" [label]="'Primary Language'" [(model)]="contact.primary_language" [options]="selectOptsLanguage" [required]="true"></pl-input-select>
+        </div>
+        <div>
+            <div class="flexbox">
+                <pl-input-text class="flex1 margin-large-r form-input" [formCtrl]="contactSaveForm" [label]="'Street'" [(model)]="contact.street"></pl-input-text>
+                <pl-input-text class="flex1 margin-large-l form-input" [formCtrl]="contactSaveForm" [label]="'City'" [(model)]="contact.city"></pl-input-text>
+            </div>
+            <div class="flexbox">
+                <pl-input-select class="flex1 margin-large-r form-input" [formCtrl]="contactSaveForm" [label]="'State'" [(model)]="contact.state" [options]="selectOptsStates"></pl-input-select>
+                <pl-input-text class="flex1 margin-large-l form-input" [type]="'zipcode'" [formCtrl]="contactSaveForm" [label]="'Zip Code'" [(model)]="contact.postal_code" ></pl-input-text>
+            </div>
+        </div>
+
+        <div class="flexbox">
+            <pl-input-radio-group class="flex1 form-input x-qa-contact-edit-contact-preference" [formCtrl]="contactSaveForm" [label]="'Preferred Contact Method'" [(model)]="contact.contact_preference" [options]="selectOptsContactPreference" [required]="true"></pl-input-radio-group>
+        </div>
+
+        <div class="flexbox">
+            <pl-input-text class="flex1 margin-large-r form-input" [type]="'email'" [formCtrl]="contactSaveForm" [label]="'Email'" [(model)]="contact.email" [required]="true"></pl-input-text>
+            <pl-input-text class="flex1 margin-large-l form-input x-qa-contact-edit-phone-number" [formCtrl]="contactSaveForm" [label]="'Phone'" [pattern]="'^[\+]?[ ]?[0-9]{0,3}[ ]?[(]?[0-9]{3}[)]?[- \.]?[0-9]{3}[- \.]?[0-9]{4,6}[ ,]{0,2}(x|ex|ext)?[ \.]?[0-9]*$'" [validationMessages]="{ pattern: 'Must be a valid phone number' }" [(model)]="contact.phone" [required]="true"></pl-input-text>
+        </div>
+
+        <div [hidden]="savingContact">
+            <button pl-button class="success x-qa-save-contact-button" (click)="save(contactSaveForm)" [disabled]="!contactSaveForm.touched || !contactSaveForm.valid">Save</button>
+            <button type="button" pl-button class="gray-outline x-qa-cancel-contact-button" (click)="cancel(contactSaveForm)">Cancel</button>
+            <button *ngIf="contact.uuid" type="button" pl-button class="bare x-qa-delete-contact-button" (click)="delete(contactSaveForm)">Delete</button>
+        </div>
+        <pl-dot-loader [hidden]="!savingContact" [align]="'left'"></pl-dot-loader>
+    </form>
+</div>

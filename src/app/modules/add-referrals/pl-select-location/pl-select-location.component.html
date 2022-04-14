@@ -1,0 +1,49 @@
+<div class="pl-select-location">
+    <div class="pl-selection-location-container">
+        <div class="location-prompt">Select the Organization, Location, and School Year for which you want to upload referrals.</div>
+
+        <div class="location-loading" *ngIf="model.loadingLocations">
+            <pl-dot-loader [align]="'left'"></pl-dot-loader>
+            <div>Loading Organizations and Locations</div>
+        </div>
+
+        <div *ngIf="!model.loadingLocations">
+            <div class="location-input">
+                <pl-input-select  class="form-input x-qa-organization-select" [formCtrl]="locationSelectForm"
+                    [label]="'Organization'" [(model)]="model.selectedOrganizationID" [options]="model.organizationOpts"
+                    [sortByLabel]="true"
+                    [clearSelectFilter]="clearDropDownOrganizationFilter" [disabled]="organizationLocked"
+                    (onChange)="organizationSelected($event)">
+                </pl-input-select>
+                <button pl-button class="x-qa-organization-clear"  (click)="clearOrganization()"
+                    [disabled]="!model.selectedOrganizationID || organizationLocked">Clear</button>
+                <pl-error-message class="x-qa-no-organization-error" [message]="'Select an Organization'"
+                    *ngIf="!orgSelected"></pl-error-message >
+            </div>
+
+            <div class="location-input">
+                <pl-input-select class="form-input x-qa-location-select" [formCtrl]="locationSelectForm"
+                    [label]="'Location'" [(model)]="model.selectedLocationID" [options]="model.locationOpts"
+                    [sortByLabel]="true"
+                    [clearSelectFilter]="clearDropDownLocationFilter" [disabled]="locationLocked"
+                    (onChange)="locationSelected($event)">
+                </pl-input-select>
+                <button pl-button class="x-qa-location-clear" [disabled]="!model.selectedLocationID || locationLocked"
+                    (click)="clearLocation()">Clear</button>
+                <pl-error-message class="x-qa-no-location-error" [message]="'Select a Location'" *ngIf="!locSelected">
+                </pl-error-message >
+            </div>
+
+            <div class="location-input">
+                <pl-input-select  class="form-input x-qa-year-select" [formCtrl]="locationSelectForm"
+                    [label]="'School Year'" [(model)]="model.selectedSchoolYearCode" [options]="model.schoolYearOpts"
+                    [highlightSelected]="true" (onChange)="schoolYearSelected($event)"></pl-input-select>
+                <button pl-button class="x-qa-year-clear" [disabled]="!model.selectedSchoolYear" (click)="clearYear()">
+                    Clear
+                </button>
+                <pl-error-message class="x-qa-no-year-error" [message]="'Select a School Year'" *ngIf="!yearSelected">
+                </pl-error-message>
+            </div>
+        </div>
+    </div>
+</div>

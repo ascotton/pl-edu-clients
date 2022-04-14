@@ -1,0 +1,85 @@
+<div class="pl-client-end-iep-goal-status"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  *ngIf="_state.initialized"
+  [@enterAnimation]
+  >
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <!-- client profile header (exitable) -->
+  <pl-closable-page-header [headerText]="_state.model.clientName" [closeCallback]="onClickClose()">
+  </pl-closable-page-header>
+
+  <div class="content">
+    <!-- period header -->
+    <h1 *ngIf="_state.model.iepYear">End {{service.getTypeDisplayName(iep)}} &nbsp;<b>·</b>&nbsp; {{_state.model.iepYear.start}} - {{_state.model.iepYear.end}}</h1>
+    <div class="divider-line"></div>
+
+    <!-- stepper: step1: Goal Status-->
+    <div class="stepper">
+      <pl-steps [steps]="_state.model.steps"></pl-steps>
+    </div>
+
+    <!-- Warning message: other open SA exist-->
+    <div class="banner margin-tb">
+      <div class="columns">
+        <span class="left">
+          <pl-icon [svg]="'info'" [height]="18" [width]="18" [class]="'blue'"></pl-icon>
+        </span>
+        <span class="banner-message right">
+          This process will end the <b>{{_state.model.serviceTypeInfo.label}}</b> portion of this {{service.getTypeDisplayName(iep)}}.
+          <br/>
+          <span *ngIf="_state.model.data.labelsForOtherOpenSA.length">
+            <span *ngFor="let saLabel of _state.model.data.labelsForOtherOpenSA; index as idx">
+              <b>{{saLabel}}</b>
+              <span *ngIf="(idx < _state.model.data.labelsForOtherOpenSA.length-1)">and</span>
+            </span>
+            will also need to be ended in order for this {{service.getTypeDisplayName(iep)}} to be marked as "Past".
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <h4 class="instructions">
+      Update Final Goal Status for {{_state.model.serviceTypeInfo.label}}
+    </h4>
+
+    <!-- goal status list-->
+    <div class="goals-container">
+      <div class="goal-item" *ngFor="let goal of _state.model.goals; index as idx">
+        <!-- TODO: model goalStatus needs to be maintained in an array-->
+        <div class="columns">
+          <div class="col col-1">
+            <div class="goal-status-label">
+              <b>Final Goal Status</b>
+            </div>
+            <div class="goal-status-item">
+              <pl-goal-status [goal]="goal"></pl-goal-status>
+            </div>
+          </div>
+          <div class="col col-vertical-line"></div>
+          <div class="col col-2">
+            <div class="goal-label">
+              Goal
+            </div>
+            <div class="goal-text">
+              {{goal.description}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <div class="divider-line" style="margin-bottom: 0"></div>
+      <div class="actions">
+        <button pl-button class="primary next" (click)="onClickNext()" [disabled]="!canContinue()">Next &nbsp; &gt;</button>
+        <button pl-button class="bare cancel margin-small-l" (click)="onClickCancel()">Cancel</button>
+      </div>
+    <div class="divider-line" style="margin-top: 0"></div>
+  </div>
+
+</div>

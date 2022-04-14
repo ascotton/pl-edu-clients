@@ -1,0 +1,28 @@
+<div class="pl-time-grid_column-header">
+    <ng-content></ng-content>
+</div>
+<div class="pl-time-grid_column-container" >
+    <div class="pl-time-grid_column-container-slots">
+        <div *ngFor="let slot of slots" class="pl-time-grid-slot">
+            <ng-container *ngIf="slotTemplate" [ngTemplateOutlet]="slotTemplate">
+            </ng-container >
+        </div>
+    </div>
+    <div class="pl-time-grid_column-container-blocks">
+        <div #drawingBox class="drawing-box"></div>
+        <!--
+        [matTooltip]="block.configuration?.tooltip"
+        matTooltipShowDelay="1000"
+        matTooltipPosition="above"
+        -->
+        <pl-time-grid-block *ngFor="let block of blocks" [block]="block"
+            [title]="block.configuration?.tooltip || ''"
+            [class.hover]="block.hovered"
+            (action)="manageBlockAction($event)">
+            <ng-container *ngIf="blockTemplate" [ngTemplateOutlet]="blockTemplate">
+            </ng-container >
+        </pl-time-grid-block>
+        <pl-time-grid-block *ngIf="tempBlock" [block]="tempBlock">
+        </pl-time-grid-block>
+    </div>
+</div>

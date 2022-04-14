@@ -1,0 +1,51 @@
+<section class="pl-billing-preview-summary">
+    <div *ngFor="let details of summary">
+        <br />
+        <div class="flexbox header col-rate">
+            <h1> {{ details.rate_holder }} </h1>
+        </div>
+
+        <div class="flexbox subheader">
+            <div class="col-code">Code</div>
+            <div class="col-hours">Qty | Hours</div>
+            <div class="col-rate" [hidden]="type === billingTypeEnum.Timesheet">Rate</div>
+            <div class="col-amount" [hidden]="type === billingTypeEnum.Timesheet">Amount</div>
+        </div>
+
+        <div class="flexbox details-row" *ngFor="let detail of details.details">
+            <div class="col-code">
+                {{ type === billingTypeEnum.Timesheet ? detail.billing_code : detail.name }}
+            </div>
+            <div class="col-hours">
+                <ng-container
+                    *ngIf="type === billingTypeEnum.Invoice && detail.name && detail.name.includes('Eval'); else displayWithTimingPipe">
+                    {{ detail.count }}
+                </ng-container>
+                <ng-template #displayWithTimingPipe>
+                    {{ detail.duration | plTiming }}
+                </ng-template>
+            </div>
+            <div class="col-rate" [hidden]="type === billingTypeEnum.Timesheet">
+                {{ detail.rate | plCurrency }}
+            </div>
+            <div class="col-amount" [hidden]="type === billingTypeEnum.Timesheet">
+                {{ detail.amount | plCurrency }}
+            </div>
+        </div>
+
+        <div class="flexbox subheader subtotal">
+            <div class="col-rate">
+                Subtotal: {{ type === billingTypeEnum.Timesheet ? (details.subtotal | plTiming) : (details.subtotal | plCurrency) }}
+            </div>
+        </div>
+    </div>
+
+    <br /><br />
+
+    <div class="flexbox total">
+        <div class="flex3">&nbsp;</div>
+        <div class="flex1 subheader subtotal total-right">
+            Total: <b> {{ type === billingTypeEnum.Timesheet ? (totalAmount | plTiming) : (totalAmount | plCurrency) }} </b>
+        </div>
+    </div>
+</section>

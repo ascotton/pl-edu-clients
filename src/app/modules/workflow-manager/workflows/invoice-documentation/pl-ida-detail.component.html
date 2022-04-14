@@ -1,0 +1,815 @@
+<div class="pl-invoice-documentation-detail {{BO.getTelemetryInfoClasses(item)}}"
+    [ngClass]="getDocumentationDetailClasses(item)">
+
+  <!-- start / HEADER -->
+    <div id="invoice-student-header" [class.signed]="BO.isSigned(item)">
+        <div class="details">
+        <h3 class="name" [ngClass]="{'standalone-appointment': BO.isStandaloneAppointment()}">
+            <span *ngIf="BO.isClientAppointment(item)">
+                <span>{{ item.client.first_name }} {{ item.client.last_name }}</span>
+                <span class="location"> - {{ item.location.name }}</span>
+            </span>
+            <span *ngIf="BO.isLocationAppointment(item)">
+                <span>{{ item.eBillingCode.name }}</span>
+                <span class="location"> - {{ item.location.name }}</span>
+            </span>
+            <span *ngIf="!BO.isLocationAppointment(item) && BO.isOtherIndirectAppointment(item)">
+                <span>{{ item.eBillingCode.name }}</span>
+            </span>
+            <span *ngIf="canChangeDateTime(item)"
+                class="change-date-time margin-l"
+                (click)="onClickEditDateTime()">
+                change date-time
+            </span>
+        </h3>
+        <span class="datetime" [ngClass]="{'standalone-appointment': BO.isStandaloneAppointment()}">
+            <span *ngIf="BO.isSigned(item)" class="signed signed-mark">[
+                <pl-icon [svg]="'check'" [width]="14" [height]="15" class="green"></pl-icon> Signed ]
+            </span>
+            <span *ngIf="BO.isClientAppointment(item)">{{ item.eBillingCode.name | uppercase }} - </span>
+            {{ getAppointmentTimeDisplay() }}
+        </span>
+        </div>
+
+        <pl-icon *ngIf="BO.isStandaloneAppointment()"
+            class="close-button pointer white margin-small-r"
+            [svg]="'close-inverted'"
+            [scale]="1.5"
+            (click)="onClickCloseButton()">
+        </pl-icon>
+
+        <div *ngIf="BO.isDevDebug('TYPE')" class="debug-type">
+        {{BO.getAppointmentType(item).charAt(0).toUpperCase()}}
+        </div>
+        <div *ngIf="BO.isDevDebug('ROW')" class="debug-row">
+        {{BO.appointmentsList.length - BO.getSelectedIndex()}}
+        </div>
+        <div class="dot-container" [ngClass]="{'hidden': BO.isStandaloneAppointment()}">
+        <div class="dot group-{{BO.getAppointmentGroup(item)}}"></div>
+        </div>
+    </div>
+
+    <!-- LOCKED NOTICE BANNER -->
+    <div class="locked-banner margin-b" *ngIf="BO.cannotChangeDocumentation(item) || util.flagLocalStorage('DEBUG_EVENT_LOCKED')">
+        THIS EVENT IS LOCKED AND CANNOT BE MODIFIED
+    </div>
+
+    <!-- BLACKOUT DAY NOTICE BANNER -->
+    <div class="blackout-day-banner margin-b" *ngIf="BO.isBlackoutDay(item) && !isEditingDateTime(item)">
+        <div class="header-text">
+            <pl-icon [svg]="'warning-alert-white'"></pl-icon>
+            WARNING - This appointment conflicts with the school’s Non-Service Dates.
+        </div>
+        <div class="secondary-text margin-t">
+            You should not work during established Non-Service Dates
+            unless you have been authorized by the school to do so.
+        </div>
+    </div>
+
+    <!-- AMENDMENT NOTICE BANNERS -->
+    <div class="amendment-banner" *ngIf="BO.isAmendable(item)">
+        <div class="amending-title margin-b" *ngIf="BO.isSignedCheckboxDirty(item) && item.record">
+            YOU ARE AMENDING A PAST EVENT
+        </div>
+
+        <div class="amending-title add-event margin-b" *ngIf="BO.isSignedCheckboxDirty(item) && !item.record">
+            YOU ARE ADDING A PAST EVENT
+        </div>
+    </div>
+
+    <!-- GENERAL ERROR -->
+    <div class="general-error" *ngIf="BO.hasSavingErrors(item) && !isEditingDateTime(item)">
+        <pl-icon class="yellow" [svg]="'caution'"></pl-icon>
+        <span>{{ BO.getSavingErrorMessage() }}</span>
+    </div>
+
+    <div class="general-error" *ngIf="BO.getMappedApiErrorMessage()">
+        <pl-icon class="yellow" [svg]="'caution'"></pl-icon>
+        <span>{{ BO.getMappedApiErrorMessage() }}</span>
+    </div>
+
+    <!-- Change DateTime SECTION-->
+    <div class="edit-date-time" [ngClass]="{'amendable': BO.isAmendable(item)}" *ngIf="isEditingDateTime(item)" [@fadeIn]>
+        <h2 class="margin-large-b">
+            Appointment Date and Time
+        </h2>
+
+        <pl-date-time-range
+            [disabled]="item.model.changeDateTimeSigned"
+            [timezone]="BO.providerTimezone"
+            [startWidth]="400"
+            [inlineErrors]="true"
+            (errors)="item.model.datetimeRangeErrors = $event"
+            [value]="item.model.editableDateRange"
+            (valueChange)="onChangeDateRange($event)">
+        </pl-date-time-range>
+
+        <div *ngIf="item.state.invalidDateTimeOrder" class="invalid-date-time">
+            Appointment Start must be before End.
+        </div>
+
+        <div *ngIf="item.state.invalidDateTimeDuration" class="invalid-date-time">
+            Appointment Duration must be greater than zero and not more 24 hours.
+        </div>
+
+        <div class="margin-xlarge-t">
+        </div>
+
+        <!-- Change DateTime Amendments Diff Display SECTION-->
+        <div *ngIf="BO.isAmendable(item) && BO.hasAmendedDateTime(item) && BO.hasRecord(item)" [@fadeIn]>
+            <div class="amendment-info change-date-time">
+                <h3 class="title amendment-title">Amendment changes</h3>
+                <div class="details">
+                    <div *ngIf="BO.getAmendedField(item, 'dateTime')" [@fadeIn]>
+                        <div class="flex-columns">
+                            <div class="column before">
+                                <span class="datetime-field-label">Start:</span> {{BO.getAmendedField(item, 'dateTime').oldValue.start}} <br/>
+                                <span class="datetime-field-label">End:</span> {{BO.getAmendedField(item, 'dateTime').oldValue.end}}
+                            </div>
+                            <div class="middle">→</div>
+                            <div class="column after">
+                                <span class="datetime-field-label">Start:</span> {{BO.getAmendedField(item, 'dateTime').newValue.start}} <br/>
+                                <span class="datetime-field-label">End:</span> {{BO.getAmendedField(item, 'dateTime').newValue.end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-container *ngIf="BO.canShowAmendmentReasonSection(item) then amendmentReasonSection"></ng-container>
+
+        <!-- Change DateTime Signoff SECTION-->
+        <div class="signoff" *ngIf="BO.isAmendable(item)">
+            <fieldset [class.signed]="item.model.changeDateTimeSigned">
+                <pl-input-checkbox
+                    [style.white-space]="'nowrap'"
+                    [(model)]="item.model.changeDateTimeSigned"
+                    [noPadding]="true"
+                    [label]="BO.getSignoffLabel(item)"
+                    [disabled]="isDisabledSignoffDateTime(item)"></pl-input-checkbox>
+            </fieldset>
+        </div>
+
+        <!-- Change DateTime Save SECTION-->
+        <button pl-button class="save-date-time info"
+            [disabled]="isDisabledSaveDateTime(item)"
+            (click)="onClickSaveDateTime(item)">
+            Save
+        </button>
+        <button pl-button class="cancel-date-time secondary" (click)="onClickCancelDateTime()">
+            Cancel
+        </button>
+    </div>
+
+  <!-- start / DETAIL OUTER -->
+  <div class="detail-outer" *ngIf="!isEditingDateTime(item)">
+
+    <!-- start / DETAIL CONTAINER -->
+    <div class="detail-container" [ngClass]="{'visible': BO.getToggle()}" *ngIf="!isEditingDateTime(item)" [@fadeIn]>
+        <div #detailTopElement></div>
+
+        <!-- start / SAVING ERRORS -->
+        <div class="saving-errors" *ngIf="BO.isDevDebug('ERR_DETAIL') && BO.hasSaveErrors(item)">
+          <fieldset>
+            <legend>Please provide this error information to support</legend>
+            <div class="button-copy-to-clipboard" *ngIf="util.canCopyToClipboard()">
+            <button pl-button class="pl-button info" (click)="copyErrorInfoToClipboard()">
+                Copy to clipboard
+            </button>
+            </div>
+            <div id="errorDataSupport">
+            <div class="saving-errors-header">
+                <div class="provider-info" *ngIf="BO.provider && BO.provider.xProvider">
+                <span class="username">{{BO.provider.xProvider.username}}</span>
+                <span class="uuid">{{BO.provider.xProvider.uuid}}</span>
+                </div>
+            </div>
+            <ul class="error-info">
+                <li *ngFor="let err of BO.getSaveErrors(item)">
+                    <ngx-json-viewer [json]="err"></ngx-json-viewer>
+                </li>
+            </ul>
+            </div>
+          </fieldset>
+        </div>
+
+        <div id="telemetry" *ngIf="BO.isDevDebug('TELEMETRY')">
+            <h4 class="header">
+                <span class="header-title">TELEMETRY</span>
+            </h4>
+            <fieldset>
+                <div class="telemetry-info">{{BO.getTelemetryInfoClasses(item).split(' ').sort().join(' &nbsp;&nbsp;&nbsp; ')}}</div>
+            </fieldset>
+        </div>
+
+        <div *ngIf="!!BO.getDataParsingErrors(item)" class="data-parse-errors">
+            <h4 class="header">
+                <span class="header-title">Unable to retrieve this appointment</span>
+            </h4>
+            <ul>
+                <li *ngIf="BO.hasDataParsingError(item, 'ERR_CLIENT_NOT_IN_CASELOAD')" class="detail-error err-client-not-in-caseload">
+                <a href="/c/clients/all-clients?ctf_fullName_Icontains={{item.client.first_name}}%20{{item.client.last_name}}">Please add {{item.client.first_name}} {{item.client.last_name}} to your caseload</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- start / BILLING INFO SECTION-->
+        <h3 class="header" *ngIf="!BO.getDataParsingErrors(item)">
+            <span class="header-title">Billing Information</span>
+        </h3>
+
+        <div class="detail-error" *ngIf="shouldShowAddServiceMessage(item)">
+            Please add a service to this <a (click)="viewClient(item.client)">client's profile</a> in order to document this appointment.
+        </div>
+
+        <div id="billing-info" *ngIf="!BO.getDataParsingErrors(item)">
+            <div id="details">
+                <span
+                    class="billing-code"
+                    [ngClass]="{ 'half': !BO.isLocationTrackingRequired(item), 'third': BO.isLocationTrackingRequired(item) }">
+                    <h5 class="title">
+                        Billing Code <span class="required-field-text">*</span>
+                    </h5>
+                    <pl-input-select
+                        [(model)]="item.model.billingCode"
+                        [options]="item.billingCodesOpts"
+                        (onChange)="BO.onChangeBillingCode($event)"
+                        [disabled]="!BO.isEditable(item)">
+                    </pl-input-select>
+                </span>
+                <span
+                    class="client-service"
+                    [ngClass]="{ 'half': !BO.isLocationTrackingRequired(item), 'third': BO.isLocationTrackingRequired(item) }"
+                    *ngIf="BO.hasSelectedBillingCode(item) && BO.hasClientServices(item)">
+                    <h5 class="title" [class.no-selected-client-service]="item.state.clientServiceReadyFlag && !item.model.clientService">
+                        Client Service <span class="required-field-text">*</span>
+                    </h5>
+                    <pl-input-select
+                        [(model)]="item.model.clientService"
+                        [options]="item.clientServicesOpts"
+                        (onChange)="onChangeClientService($event)"
+                        [disabled]="!BO.isEditable(item)">
+                    </pl-input-select>
+                </span>
+                <span
+                    id="tracking-type"
+                    class="third tracking-type"
+                    *ngIf="BO.hasSelectedBillingCode(item) && BO.isLocationTrackingRequired(item)">
+                    <h5 class="title">
+                        Tracking Type <span class="required-field-text">*</span>
+                    </h5>
+                    <div class="flexbox">
+                        <pl-input-select
+                            [(model)]="item.model.trackingType"
+                            [options]="getLocationTrackingOpts()"
+                            [disabled]="!BO.isEditable(item)">
+                        </pl-input-select>
+                        <span matTooltip="Choose from Regular, Compensatory or ESY to provide more detailed information on the type of service provided.">
+                            <pl-icon svg="info" [height]="16" [width]="16" class="pointer inline-block blue-medium margin-t margin-small-l"></pl-icon>
+                        </span>
+                    </div>
+                </span>
+            </div>
+        </div>
+
+        <!-- start / CLINICAL INFO SECTION-->
+        <div id="clinical-info" *ngIf="!BO.getDataParsingErrors(item) && BO.hasSelectedBillingCode(item)">
+            <h3 class="header">
+                <span class="header-title">Clinical Information</span>
+            </h3>
+            <div id="details">
+                <div id="session-notes" *ngIf="BO.requiresSoapNotes(item)" class="margin-large-r margin-small-t">
+                    <div class="note-tabs" style="display:inline-block">
+                        <span
+                            class="soap-tab"
+                            [ngClass]="{'active': showingNote === 'subjective', 'missingNotes': !BO.hasNotes(item, 's')}"
+                            (click)="onClickSoapNote('subjective')">
+                                S
+                        </span>
+                        <span
+                            class="soap-tab"
+                            [ngClass]="{'active': showingNote === 'objective', 'missingNotes': !BO.hasNotes(item, 'o')}"
+                            (click)="onClickSoapNote('objective')">
+                                O
+                        </span>
+                        <span
+                            class="soap-tab"
+                            [ngClass]="{'active': showingNote === 'assessment', 'missingNotes': !BO.hasNotes(item, 'a')}"
+                            (click)="onClickSoapNote('assessment')">
+                                A
+                        </span>
+                        <span
+                            class="soap-tab"
+                            [ngClass]="{'active': showingNote === 'plan', 'missingNotes': !BO.hasNotes(item, 'p')}"
+                            (click)="onClickSoapNote('plan')">
+                                P
+                        </span>
+
+                    </div>
+                    <pl-input-textarea
+                        id="soap_note_subjective"
+                        [hidden]="showingNote !== 'subjective'"
+                        [(model)]="item.model.notes.subjective"
+                        [placeholder]="'Enter Subjective'"
+                        [height]="'155px'"
+                        [disabled]="!BO.isEditable(item)"
+                        (onKeydownTab)="handleNotesTab($event, 'objective', null)">
+                    </pl-input-textarea>
+                    <pl-input-textarea
+                        id="soap_note_objective"
+                        [hidden]="showingNote !== 'objective'"
+                        [(model)]="item.model.notes.objective"
+                        [placeholder]="'Enter Objective'"
+                        [height]="'155px'"
+                        [disabled]="!BO.isEditable(item)"
+                        (onKeydownTab)="handleNotesTab($event, 'assessment', 'subjective')">
+                    </pl-input-textarea>
+                    <pl-input-textarea
+                        id="soap_note_assessment"
+                        [hidden]="showingNote !== 'assessment'"
+                        [(model)]="item.model.notes.assessment"
+                        [placeholder]="'Enter Assessment'"
+                        [height]="'155px'"
+                        [disabled]="!BO.isEditable(item)"
+                        (onKeydownTab)="handleNotesTab($event, 'plan', 'objective')">
+                    </pl-input-textarea>
+                    <pl-input-textarea
+                        id="soap_note_plan"
+                        [hidden]="showingNote !== 'plan'"
+                        [(model)]="item.model.notes.plan"
+                        [placeholder]="'Enter Plan'"
+                        [height]="'155px'"
+                        [disabled]="!BO.isEditable(item)"
+                        (onKeydownTab)="handleNotesTab($event, 'general', 'assessment')">
+                    </pl-input-textarea>
+                </div>
+
+                <div id="general-notes" [ngClass]="{'wide-format': !BO.requiresSoapNotes(item)}">
+                    <h5 class="title">
+                        <span>
+                            General Notes <span class="required-field-text" *ngIf="!BO.requiresSoapNotes(item) && !BO.isUserLeadClinician()">*</span>
+                        </span>
+                    </h5>
+                    <pl-input-textarea
+                        [(model)]="item.model.notes.notes"
+                        [placeholder]="'Enter Notes'"
+                        [height]="'155px'"
+                        [disabled]="!BO.isEditable(item)">
+                    </pl-input-textarea>
+                </div>
+                <div *ngIf="showingNote === 'objective' && BO.shouldShowImportMetricsPoints(item)">
+                    <button pl-button class="pl-button" (click)="BO.importMetrics(item)" [disabled]="!BO.isEditable(item)">
+                        <pl-icon [svg]="'download'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon>
+                        Import Metrics
+                    </button>
+                </div>
+
+                <div *ngIf="shouldShowAreasOfConcern(item)">
+                    <div id="concern-areas">
+                        <h5 class="title" *ngIf="!BO.getDataParsingErrors(item)">
+                            Areas of Concern
+                        </h5>
+                        <div class="items">
+                            <pl-input-checkbox-group
+                                class="pl-areas-of-concern"
+                                [horizontal]="true"
+                                [(model)]="item.model.areasOfConcern"
+                                [options]="getAreasOfConcernOpts(item)"
+                                [required]="true"
+                                [disabled]="!BO.isEditable(item)">
+                            </pl-input-checkbox-group>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- start / ACTIVITY COMPONENTS-->
+                <div *ngIf="shouldShowComponentAssessments()" class="eval-components">
+                    <h5 class="title margin-large-b" *ngIf="!BO.getDataParsingErrors(item)">
+                        Assessment Components <span class="required-field-text">*</span>
+                    </h5>
+                    <div class="eval-components-container">
+                        <button
+                            *ngIf="canShowAddActivityButton(item)"
+                            [disabled]="isDisabledAddActivityButton()"
+                            pl-button
+                            class="pl-button add-activity-component gray-outline"
+                            (click)="onClickAddActivityComponent(item)">
+                            <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon>
+                            Add Component
+                        </button>
+
+                        <div class="add-component-active" *ngIf="isActiveAddActivityComponent()">
+                            <div class="activity-component-list">
+                                <h5 class="title">Component</h5>
+                                <div>
+                                    <pl-input-select
+                                    [(model)]="item.model.selectedActivityComponent"
+                                    [options]="item.activityComponentOpts"
+                                    (onChange)="onChangeActivityComponent($event)"
+                                    [disabled]="!BO.isEditable(item)">
+                                    </pl-input-select>
+                                    <div *ngIf="item.model.selectedActivityComponent" class="description">
+                                        {{getActivityComponentByUuid(item.model.selectedActivityComponent).description}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="activity-detail-list" *ngIf="selectedActivityComponent && getActivityDetailOpts()">
+                                <h5 class="title">COMPONENT DETAIL</h5>
+                                <div>
+                                    <pl-input-select
+                                    [(model)]="item.model.selectedActivityDetail"
+                                    [options]="getActivityDetailOpts()">
+                                    </pl-input-select>
+                                </div>
+                            </div>
+                            <div class="activity-component-buttons">
+                                <button
+                                    [disabled]="!isEnabledSaveActivityButton(item)"
+                                    pl-button
+                                    class="pl-button save-activity-component info"
+                                    (click)="onClickSaveActivityComponent(item)">
+                                    <span *ngIf="BO.isAmendable(item)">Add Component</span>
+                                    <span *ngIf="!BO.isAmendable(item)">Save Component</span>
+                                </button>
+                                <button pl-button class="pl-button cancel-activity-component bare" (click)="exitActivityComponent()">Cancel</button>
+                            </div>
+                        </div>
+
+                        <div class="saved-activities" *ngIf="getSavedEvaluationActivitiesFiltered(item).length">
+                            <h5 class="title">Components ({{getSavedEvaluationActivitiesFiltered(item).length}})</h5>
+                            <div class="inset">
+                                <div>
+                                    <div>
+                                        This is a history of evaluation components (billable parts of the evaluation) for this service.
+                                    </div>
+                                    <div>
+                                        Newest components are placed at the top of the list.
+                                    </div>
+                                </div>
+                                <div class="saved-activities-list">
+
+                                    <div class="saved-activity" *ngFor="let activityItem of getSavedEvaluationActivitiesFiltered(item); index as idx">
+                                        <div class="saved-activity-header">
+                                            <span class="title table-cell">
+                                                <span>{{idx+1}}. {{activityItem.activity.name}}</span>
+                                                <span *ngIf="activityItem.activityDetail"> / {{activityItem.activityDetail.name}}</span>
+                                            </span>
+                                            <span class="actions table-cell">
+                                                <button
+                                                    *ngIf="canShowDeleteActivityButton(item, activityItem)"
+                                                    [disabled]="deletingActivity || BO.isSavedEvaluationStatusFinal(item)"
+                                                    pl-button
+                                                    class="bare action-remove"
+                                                    (click)="onClickDeleteActivityComponent(item,activityItem.evalActivityUuid, idx)">
+                                                    <span *ngIf="!activityItem.evalActivityUuid || (activityItem.evalActivityUuid && !activityItem.queuedForDelete)">Remove</span>
+                                                    <span *ngIf="activityItem.evalActivityUuid && activityItem.queuedForDelete">Restore</span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class="saved-activity-detail">
+                                            <div class="detail-row status">
+                                                <span class="table-cell label">
+                                                    Status
+                                                </span>
+                                                <div class="table-cell value">
+                                                    <pl-input-select
+                                                        *ngIf="canShowActivityStatusOpts(item, activityItem)"
+                                                        class="select-status"
+                                                        [disabled]="BO.isSavedEvaluationStatusFinal(item)"
+                                                        [(model)]="activityItem.savedEvalActivity.status"
+                                                        [options]="getActivityStatusOpts()"
+                                                        (onChange)="BO.onChangeEvalActivityStatus($event, activityItem)">
+                                                    </pl-input-select>
+                                                    <span *ngIf="!canShowActivityStatusOpts(item, activityItem)" class="status-label">
+                                                        {{getActivityStatusDisplayValue(activityItem)}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="detail-row date-completed">
+                                                <span class="table-cell label">
+                                                    Date completed
+                                                </span>
+                                                <span class="table-cell value">
+                                                    <pl-input-datepicker
+                                                        *ngIf="canShowActivityCompletedDatePicker(item, activityItem)"
+                                                        [(model)]="activityItem.savedEvalActivity.modelCompletedDate"
+                                                        [placeholder]="'MM/DD/YYYY'"
+                                                        [maxDate]="getMaxActivityCompletedDateForPicker()"
+                                                        (onChange)="BO.onChangeEvalActivityCompletedDate($event, activityItem)">
+                                                  </pl-input-datepicker>
+                                                  <span *ngIf="!canShowActivityCompletedDatePicker(item, activityItem)">
+                                                    {{BO.getActivityDateCompletedDisplayValue(activityItem) || 'N/A'}}
+                                                  </span>
+                                                </span>
+                                            </div>
+                                            <div class="detail-row date-submitted">
+                                                <span class="table-cell label">
+                                                    Invoice status
+                                                </span>
+                                                <span class="table-cell value">
+                                                    <span *ngIf="activityItem.savedEvalActivity.invoice_submitted_on">
+                                                        Invoiced on {{getActivityInvoiceSubmittedDate(activityItem)}}
+                                                    </span>
+                                                    <span *ngIf="!activityItem.savedEvalActivity.invoice_submitted_on">
+                                                        Not yet invoiced
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- start / DOCUMENT UPLOAD-->
+                <div *ngIf="shouldShowUpload(item)">
+                    <div id="assessments-document-upload" *ngIf="BO.getToggle()">
+                        <pl-input-file
+                            class="form-input x-qa-file"
+                            [(model)]="item.model.fileForUpload"
+                            [mimeTypes]="'application/pdf'"
+                            [extensions]="'pdf'"
+                            [maxFileSize]="30"
+                            [dropzone]="true"
+                            [existingFiles]=""
+                            [customDragText]="'Drag and drop a PDF file here'"
+                            [customClickText]="'Select a PDF file from your computer'"
+                            [errorMode]="noFileInputError"
+                            [multiple]="false"
+                            [disabled]="!BO.isEditable(item)"
+                            (onValidateSingleFileExtension)="onEvalUploadFileExtensionValidation($event)">
+                        </pl-input-file>
+                    </div>
+                    <div class="validation-error-container">
+                        <div class="validation-error-message final-eval-upload-required"
+                            *ngIf="shouldShowEvaluationUploadValidationMessage(item)">
+                            Upload the final evaluation report to mark this service as completed.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="status" *ngIf="BO.isEvaluationAppointment(item) && BO.hasSelectedClientService(item)">
+                    <h5 class="title margin-large-t">Evaluation Status</h5>
+                    <pl-input-select
+                        [(model)]="item.model.evaluationStatus"
+                        [options]="getEvaluationStatusOpts()"
+                        (onChange)="BO.onChangeEvaluationStatus($event)"
+                        [disabled]="!BO.isEditable(item)">
+                    </pl-input-select>
+                </div>
+
+                <div class="validation-error-message cannot-complete-eval margin-t"
+                    *ngIf="shouldShowEvaluationActivityNotDoneValidationMessage(item)">
+                    Cannot save evaluation as COMPLETED unless all Components are marked DONE.
+                </div>
+            </div>
+
+            <!-- Amendments Diff Display SECTION: don't show the diff section for a new event-->
+            <div *ngIf="BO.isAmendable(item) && BO.hasAmendments(item) && BO.hasRecord(item)" [@fadeIn]>
+                <div class="amendment-info">
+                    <h3 class="title amendment-title">Amendment changes</h3>
+                    <div class="details">
+                        <div *ngIf="BO.hasSelectedBillingCode(item) && BO.getAmendedField(item, 'billingCode')" [@fadeIn]>
+                            <div class="title">Billing Code</div>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'billingCode').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'billingCode').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.hasSelectedBillingCode(item) && BO.hasClientServices(item) && BO.getAmendedField(item, 'clientService')" [@fadeIn]>
+                            <div class="title">Client Service</div>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'clientService').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'clientService').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.hasSelectedBillingCode(item) && BO.isLocationTrackingRequired(item) && BO.getAmendedField(item, 'trackingType')" [@fadeIn]>
+                            <div class="title">Tracking Type</div>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'trackingType').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'trackingType').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.getAmendedField(item, 'subjective')" [@fadeIn]>
+                            <div class="title">Subjective Notes</div>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'subjective').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'subjective').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.getAmendedField(item, 'objective')" [@fadeIn]>
+                            <div class="title">Objective Notes</div>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'objective').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'objective').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.getAmendedField(item, 'assessment')" [@fadeIn]>
+                            <div class="title">Assessment Notes</div>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'assessment').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'assessment').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.getAmendedField(item, 'plan')" [@fadeIn]>
+                            <div class="title">Plan Notes</div>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'plan').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'plan').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.getAmendedField(item, 'notes')" [@fadeIn]>
+                            <div class="title">General Notes</div>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'notes').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'notes').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.getAmendedField(item, 'areasOfConcern')" [@fadeIn]>
+                            <h5 class="title">Areas Of Concern</h5>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    <li *ngFor="let _ of BO.getAmendedField(item, 'areasOfConcern').oldValue">{{_}}</li>
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    <li *ngFor="let _ of BO.getAmendedField(item, 'areasOfConcern').newValue">{{_}}</li>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.getAmendedField(item, 'evalActivities')" [@fadeIn]>
+                            <h5 class="title">Evaluation Components</h5>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    <li *ngFor="let _ of BO.getAmendedField(item, 'evalActivities').oldValue">{{_}}</li>
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    <li *ngFor="let _ of BO.getAmendedField(item, 'evalActivities').newValue">{{_}}</li>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="BO.getAmendedField(item, 'evalStatus')" [@fadeIn]>
+                            <h5 class="title">Evaluation Status</h5>
+                            <div class="flex-columns">
+                                <div class="column before">
+                                    {{BO.getAmendedField(item, 'evalStatus').oldValue}}
+                                </div>
+                                <div class="middle">→</div>
+                                <div class="column after">
+                                    {{BO.getAmendedField(item, 'evalStatus').newValue}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end / AMENDMENTS DIFF-->
+        </div>
+        <!-- end / CLINICAL INFO-->
+
+        <ng-container *ngIf="BO.canShowAmendmentReasonSection(item) then amendmentReasonSection"></ng-container>
+
+        <div *ngIf="!isEditingDateTime(item) && !BO.cannotChangeDocumentation(item) then signoffSection"></div>
+
+    </div>
+    <!-- end / DETAIL CONTAINER-->
+  </div>
+  <!-- end / DETAIL OUTER-->
+
+  <ng-template #amendmentReasonSection>
+    <div class="amendment-reason-container">
+        <div class="amendment-reason">
+            <h5 class="title">
+                Amendment Reason <span class="required-field-text">*</span>
+            </h5>
+            <pl-input-select
+                [(model)]="item.model.amendmentReason"
+                [options]="getAmendmentReasonOpts()">
+            </pl-input-select>
+        </div>
+        <div class="amendment-note margin-t">
+            <h5 class="title">
+                Amendment Notes - Provide additional context if possible
+            </h5>
+            <pl-input-textarea
+                class="amendment-note"
+                [(model)]="item.model.amendmentNotes"
+                [placeholder]="'Enter Amendment Notes (optional)'"
+                [height]="'155px'">
+            </pl-input-textarea>
+        </div>
+    </div>
+  </ng-template>
+
+
+  <ng-template #signoffSection>
+        <!-- signoff section-->
+        <div>
+            <h3 class="header verify-signoff">
+                <span class="header-title">Sign-off And Save</span>
+            </h3>
+            <div class="signoff">
+                <fieldset [class.signed]="item.model.signed">
+                    <pl-input-checkbox
+                        [style.white-space]="'nowrap'"
+                        [(model)]="item.model.signed"
+                        [noPadding]="true"
+                        [label]="BO.getSignoffLabel(item)"
+                        (click)="onClickSignedCheckbox(item)"
+                        [disabled]="isDisabledSignoff(item)"></pl-input-checkbox>
+                </fieldset>
+            </div>
+        </div>
+        <!-- save section-->
+        <div id="actions" class="actions" *ngIf="BO.canSave(item)">
+            <button
+                *ngIf="canShowSaveAndContinueButton()"
+                pl-button
+                class="primary save-and-continue"
+                (click)="saveAndContinue(item)"
+                [disabled]="isDisabledSave(item)">
+                Save & Continue
+            </button>
+            <button
+                *ngIf="BO.isStandaloneAppointment() && !BO.isSaving()"
+                pl-button
+                class="info save-and-exit"
+                (click)="saveAndExit(item)"
+                [disabled]="isDisabledSave(item)">
+                Save & Exit
+            </button>
+            <button
+                *ngIf="BO.isStandaloneAppointment() && !BO.isSaving()"
+                pl-button
+                class="gray-outline save-and-remain"
+                (click)="saveAndRemain(item)"
+                [disabled]="isDisabledSave(item)">
+                Save
+            </button>
+            <button
+                *ngIf="BO.isStandaloneAppointment() && !BO.isSaving()"
+                pl-button
+                class="bare cancel"
+                (click)="onClickCloseButton()"
+                >
+                Cancel
+            </button>
+            <pl-dot-loader [align]="left" *ngIf="BO.isSaving()" class="saving-dot-loader"></pl-dot-loader>
+            <span class="saving-text" *ngIf="BO.isSaving()">
+            <span *ngIf="item.model.signed">Signing off and</span>
+            Saving...
+            </span>
+            <pl-icon class="yellow" [svg]="'caution'" *ngIf="BO.hasSavingErrors(item)"></pl-icon>
+        </div>
+
+        <div id="actions" class="actions already-signed-message" *ngIf="!BO.canSave(item)">
+            This appointment has been signed. To make changes, first unsign.
+        </div>
+  </ng-template>
+
+</div>

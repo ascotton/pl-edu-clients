@@ -1,0 +1,95 @@
+<div class="row bottom-xs">
+    <div class="col-lg-1 col-md-2">
+        <button *ngIf="currentStep !== 'download'" mat-button (click)="previous()">
+            <mat-icon>
+                chevron_left
+            </mat-icon>
+            Back
+        </button>
+    </div>
+    <div class="col-lg-10 col-md-8 center-xs padding-large-tb">
+        <mat-horizontal-stepper [linear]="true" (selectionChange)="moveStep($event)">
+            <mat-step label="Download" state="download" [optional]="true">
+                <div class="margin-xlarge-tb">
+                    <!--
+                    <button mat-stroked-button 
+                        [style.marginRight.px]="16"
+                        (click)="downloadExisting()">
+                        Download Existing
+                        <mat-icon>
+                            download
+                        </mat-icon>
+                    </button>
+                    -->
+                    <a mat-stroked-button
+                        target="_blank"
+                        [style.marginRight.px]="16"
+                        [href]="downloadTemplate$ | async"
+                        (click)="download()">
+                        Download Template
+                        <mat-icon>
+                            download
+                        </mat-icon>
+                    </a>
+                    <button mat-stroked-button (click)="next()">
+                        I have a list  to upload
+                        <mat-icon>
+                            upload
+                        </mat-icon>
+                    </button>
+                </div>
+                <p class="margin-xlarge-tb">
+                    Add and edit users on the downloaded list on your hard drive. Delete users you do not wish to activate from the spreadsheet. <br/>
+                    If you already have a completed list, please proceed to the next step.
+                </p>
+            </mat-step>
+            <mat-step label="Upload" state="upload" [completed]="hasData">
+                <div class="pl-input-file-stepper">
+                    <pl-input-file name="file"
+                        [maxFileSize]="2"
+                        [dropzone]="true"
+                        mimeTypes="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
+                        customDragText="Drag and drop an Excel file here"
+                        customClickText="Select an Excel file from your computer"
+                        (onChange)="onFileChange($event)">
+                    </pl-input-file>
+                </div>
+                <p class="margin-xlarge-tb">
+                    Upload a completed list of users to review and activate for this school year
+                </p>
+            </mat-step>
+            <mat-step label="Review" state="review">
+                Preview & Confirm<br/>
+                Your updated list is ready to preview below
+            </mat-step>
+            <mat-step label="Confirm" state="confirm">
+                <ng-container *ngIf="progress.inProgress">
+                    <div class="margin-large">
+                        Uploading users {{ progress.completed }} / {{ progress.total }}
+                        <mat-progress-bar mode="buffer" [value]="(progress.completed / progress.total) * 100"></mat-progress-bar>
+                    </div>
+                </ng-container>
+            </mat-step>
+            <ng-template matStepperIcon="download">
+                <mat-icon>file_download</mat-icon>
+            </ng-template>
+            <ng-template matStepperIcon="upload">
+                <mat-icon>file_upload</mat-icon>
+            </ng-template>
+            <ng-template matStepperIcon="review">
+                <mat-icon>visibility</mat-icon>
+            </ng-template>
+            <ng-template matStepperIcon="confirm">
+                <mat-icon rounded>playlist_add_check</mat-icon>
+            </ng-template>
+        </mat-horizontal-stepper>
+    </div>
+    <div class="end-xs col-lg-1 col-md-2">
+        <button *ngIf="currentStep !== 'confirm'" mat-button (click)="next()">
+            Next
+            <mat-icon>
+                chevron_right
+            </mat-icon>
+        </button>
+    </div>
+</div>

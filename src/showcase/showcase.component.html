@@ -1,0 +1,22 @@
+<!-- <div>
+  <a routerLink="/typography" routerLinkActive="active">Typography</a>
+  <a routerLink="/config" routerLinkActive="active">Config</a>
+  <a routerLink="/colors" routerLinkActive="active">Colors</a>
+  <a routerLink="/buttons" routerLinkActive="active">Buttons</a>
+  <a routerLink="/icons" routerLinkActive="active">Icons</a>
+  <a routerLink="/inputs" routerLinkActive="active">Inputs</a>
+  <a routerLink="/tables" routerLinkActive="active">Tables</a>
+  <a routerLink="/table-framework" routerLinkActive="active">Table Framework</a>
+  <a routerLink="/profile" routerLinkActive="active">Profile</a>
+  <a routerLink="/other" routerLinkActive="active">Other</a>
+</div> -->
+<pl-app-nav [pageLinks]="pageLinks" [appLinks]="appLinks" [supportLinks]="supportLinks" [userMenuLinks]="userMenuLinks" [logo]="logo" [user]="currentUser" [version]="gitSha">
+  This is a test
+</pl-app-nav>
+<div class="content">
+    <!-- <pl-e2e-output></pl-e2e-output> -->
+    <pl-toast></pl-toast>
+    <pl-confirm-dialog></pl-confirm-dialog>
+    <pl-modal></pl-modal>
+    <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,36 @@
+@import 'core/colors.less';
+
+.row {
+  display:flex;
+  margin: 10px 0;
+}
+
+.swatch {
+  margin: 0 10px;
+}
+
+.chip {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  width:100px;
+  height:100px;
+  border: 1px @gray solid;
+  border-radius: 4px;
+
+  // this is super slow, don't do it in a real app
+  // for a 'real app' check this out:
+  // http://tobiasahlin.com/blog/how-to-animate-box-shadow/
+  transition: box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 0 2em @gray;
+  }
+  &:active {
+    box-shadow: 0 0 1em @gray;
+  }
+
+  div {
+    pointer-events: none;
+  }
+}

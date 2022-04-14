@@ -1,0 +1,10 @@
+<pl-header 
+    *ngIf="displayHeader$ | async" 
+    [sideNav]="sideNav$ | async"
+    [sideNavOpened]="sideNavOpened$ | async"
+    [isHandset]="isHandset$ | async"
+    [version]="gitSha"
+    [user]="currentUser"
+    [menuItems]="gloablNav">
+</pl-header>
+<router-outlet></router-outlet>

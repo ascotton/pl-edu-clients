@@ -1,0 +1,32 @@
+<pl-sidenav [menuItems]="menuItems">
+    <!-- DISTRICT SELECTOR -->
+    <div *ngIf="(organizations$ | async) as organizations" sidenav [hidden]="!(organizations.length > 1)" >
+        <mat-form-field 
+            class="dark margin-t"
+            [floatLabel]="plDesign.components.formField.floatLabel"
+            [appearance]="plDesign.components.formField.appearance">
+            <mat-label>
+                {{ isGroup ? 'Account' : 'District' }}
+            </mat-label>
+            <mat-icon matPrefix class="margin-small-r pl-form-field-icon">
+                business
+            </mat-icon>
+                <mat-select
+                    [value]="(selectedOrganization$ | async)?.id" 
+                    (valueChange)="districtChanged($event, organizations)">
+                    <mat-option *ngFor="let org of organizations" [value]="org.id">
+                        {{ org.name }}
+                    </mat-option>
+                </mat-select>
+        </mat-form-field>
+    </div>
+    <!-- SCHOOL YEAR SELECTOR -->
+    <mat-form-field *ngIf="!schoolYearHidden && !isGroup">
+        <mat-select [value]="selectedSY$ | async" (valueChange)="schoolYearChanged($event)">
+            <mat-option *ngFor="let SY of (schoolYears$ | async)" [value]="SY.id">
+                {{ SY.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <router-outlet></router-outlet>
+</pl-sidenav>

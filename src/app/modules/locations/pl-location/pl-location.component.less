@@ -1,0 +1,50 @@
+@import 'app/main.less';
+
+@content-max-width: 100rem; // 1440/10px;
+
+.pl-location {
+
+    .width-control {
+        max-width: @content-max-width;
+        width: 100%;
+        display: block;
+        margin: auto;
+    }
+    
+    .outer-container {
+        position: absolute;
+        left: 0;
+        width: 100vw;
+    
+        .header-container {
+            position: sticky;
+            top: 45px;
+            z-index: 101; // closed select box is 51 and open is 100?
+    
+            .profile-container {
+                background-color: @slate-darkest;
+                .profile-wrapper {
+                    .width-control;
+                }
+            }
+    
+            .tabs-container {
+                background-color: @gray-really-light;
+                padding-bottom: 5px;
+                border-bottom: 1px solid @gray-lightest;
+                .tabs-wrapper {
+                    .width-control;
+                }
+            }
+        }
+    
+        .location-content-container {
+            .width-control;
+            position: relative;    
+            .inner {
+                .padding-large;
+            }
+        }
+    }
+
+}

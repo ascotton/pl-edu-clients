@@ -1,0 +1,17 @@
+<div class="pl-add-referrals">
+    <div class="add-referrals-column">
+        <pl-closable-page-header [headerText]="'Upload Referrals'" [closeCallback]="goHome">
+        </pl-closable-page-header>
+        <pl-steps [steps]="steps"></pl-steps>
+        <router-outlet></router-outlet>
+        <div class="steps-buttons-container" *ngIf="plAddReferralsNavigationService.showNavigation">
+            <pl-steps-buttons
+                [steps]="steps"
+                [refresh]="stepsRefresh"
+                (onCancel)="stepsCancel($event)"
+                (onFinish)="stepsFinish($event)"
+                (onNext)="stepsNext($event)">
+            </pl-steps-buttons>
+        </div>
+    </div>
+</div>

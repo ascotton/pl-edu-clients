@@ -1,0 +1,63 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/bootstrap-parts.less';
+
+:host {
+    .pl-cam-account-details {
+        .padding;
+
+        h2 {
+            line-height: @line-height-base;
+        }
+
+        .cam-account-details-wrapper {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            width: 100%;
+
+            .charts {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(4em, 1fr));
+            }
+
+            .locations {
+                table {
+                    background-color: @white;
+                    border-collapse: collapse;
+
+                    thead {
+                        background-color: @slate-lighter;
+                    }
+
+                    th, td {
+                        .padding;
+                    }
+
+                    .column-location {
+                        width: 210px;
+                    }
+
+                    .column-total {
+                        font-weight: bold;
+                    }
+
+                    .column-leading-percentage {
+                        border-left: 1px solid @gray-lighter;
+                    }
+                }
+            }
+        }
+
+        .footer {
+            border-top: 1px solid @gray-lighter;
+            display: flex;
+            justify-content: flex-end;
+
+            .padding;
+
+            a {
+                .margin;
+            }
+        }
+    }
+}

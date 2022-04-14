@@ -1,0 +1,76 @@
+@debug-color: rgb(0, 183, 255);
+@import (css) url("https://fonts.googleapis.com/css?family=Roboto:300,400,700|Open+Sans:400,700");
+.app {
+    > .content {
+        max-width: 1400px;
+        min-width: 320px;
+        margin-right: auto;
+        margin-left: auto;
+        &.full {
+            max-width: 100%;
+        }
+    }
+    &.no-nav {
+        pl-app-nav {
+            display: none;
+        }
+    }
+
+    @keyframes waggle {
+        0% { transform: none; }
+        10% { transform: rotateZ(-20deg) scale(1.2); }
+        12.5% { transform: rotateZ(25deg) scale(1.2); }
+        13.5% { transform: rotateZ(-15deg) scale(1.2); }
+        15% { transform: rotateZ(15deg) scale(1.2); }
+        16.5% { transform: rotateZ(-12deg) scale(1.2); }
+        17% { transform: rotateZ(0) scale(1.2); }
+        20% { transform: rotateZ(0) scale(1); }
+      }
+    
+    .task-image {
+        animation: waggle 5s 1s forwards ease-out;
+        animation-iteration-count: 1;
+        opacity: .8;
+        margin-top: 5px;
+    }
+
+    .task-image-unread {
+        animation-iteration-count: infinite;
+    }
+}
+.pl-debug-bar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 999999999;
+    font-size: 13px;
+    border: 1px solid silver;
+    background-color: #85d4f8;
+    color: black;
+    cursor: pointer;
+    .debug-bar-main {
+        font: 12px Roboto;
+        position: relative;
+        top: 0;
+        padding: 7px 15px;
+    }
+    .debug-bar-extra-container {
+        height: 300px;
+        overflow-y: scroll;
+        padding: 10px;
+        padding-bottom: 30px;
+        background-color: #f8f9fa;
+        border-top: 1px solid black;
+    }
+}
+::ng-deep .hidden {
+    visibility: hidden;
+}
+::ng-deep .visible {
+    visibility: visible;
+}
+@media print {
+    pl-app-nav {
+        display: none;
+    }
+}

@@ -1,0 +1,135 @@
+<section class="inputs-demo padding-xlarge">
+    <h1 class="margin-b">Inputs</h1>
+
+    <div class="margin-large-b">
+        <h2>In form, with validation</h2>
+
+        <form [formGroup]="inputsDemoForm" (ngSubmit)="submit(inputsDemoForm)">
+
+            <pl-input-checkbox class="form-input" [label]="'Signed (disable all)'" [(model)]="models.disabled"></pl-input-checkbox>
+
+            <pl-input-text class="form-input" [formCtrl]="inputsDemoForm" [label]="'Text: default'" [(model)]="models.textDefault" [disabled]="models.disabled" [required]="true" [minlength]="4" [maxlength]="12"></pl-input-text>
+
+            <pl-input-text class="form-input" [formCtrl]="inputsDemoForm" [label]="'Text: icon'" [(model)]="models.textIcon" [iconLeft]="'lock'" [disabled]="models.disabled" [minlength]="6"></pl-input-text>
+
+            <pl-input-text class="form-input" [formCtrl]="inputsDemoForm" [label]="'Number with min & max'" [(model)]="models.number" [type]="'number'" [disabled]="models.disabled" [min]="39" [max]="108" (onChange)="onChange($event)"></pl-input-text>
+
+            <pl-input-text class="form-input" [formCtrl]="inputsDemoForm" [label]="'Number with min'" [(model)]="models.number2" [type]="'number'" [disabled]="models.disabled" [min]="0" (onChange)="onChange($event)"></pl-input-text>
+
+            <pl-input-text class="form-input" [formCtrl]="inputsDemoForm" [label]="'Email'" [(model)]="models.email" [type]="'email'" [disabled]="models.disabled"></pl-input-text>
+
+            <pl-input-text class="form-input"  [formCtrl]="inputsDemoForm" [label]="'Url'" [(model)]="models.url" [type]="'url'" [disabled]="models.disabled"></pl-input-text>
+
+            <pl-input-text class="form-input"  [formCtrl]="inputsDemoForm" [label]="'Pattern: Enter 06 followed by exactly 8 digits, e.g. 0612345678'" [(model)]="models.pattern1" [disabled]="models.disabled" [pattern]="'06([0-9]{8})'" [validationMessages]="validationMessagesPattern1"></pl-input-text>
+            <pl-input-text class="form-input"  [formCtrl]="inputsDemoForm" [label]="'Pattern: Enter a first and last name'" [(model)]="models.pattern2" [disabled]="models.disabled" [pattern]="'^[a-zA-Z ,.\'-]+$'"></pl-input-text>
+
+            <pl-input-textarea class="form-input" [formCtrl]="inputsDemoForm" [label]="'Textarea'" [(model)]="models.textarea" [height]="'75px'" [disabled]="models.disabled" [required]="true" [minlength]="10" [maxlength]="100"></pl-input-textarea>
+
+            <pl-input-select class="form-input" [formCtrl]="inputsDemoForm" [label]="'Select: default (no filter)'" [(model)]="models.selectDefault" [options]="selectOpts" [disabled]="models.disabled" [required]="true"></pl-input-select>
+
+            <pl-input-select class="form-input" [formCtrl]="inputsDemoForm" [label]="'Select: filter'" [(model)]="models.selectFilter" [options]="selectOpts" [filter]="true" [disabled]="models.disabled" [required]="true"></pl-input-select>
+
+            <pl-input-select class="form-input" [formCtrl]="inputsDemoForm" [label]="'Select: big filter'" [(model)]="models.selectBigFilter" [options]="selectOptsBig" [bigFilter]="true" [bigFilterDisplayLimit]="20" [disabled]="models.disabled" [required]="true"></pl-input-select>
+
+            <pl-input-select-api class="form-input" [formCtrl]="inputsDemoForm" [label]="'Select: async (api) - search'" [(model)]="models.selectApi" [options]="selectOptsSearch" [modelOptions]="multiSelectApiModelOpts" [loading]="selectLoading" [disabled]="models.disabled" [required]="true" (onSearch)="onSearchSelect($event)" [searchByDefault]="true"></pl-input-select-api>
+
+            <pl-input-multi-select class="form-input" [formCtrl]="inputsDemoForm" [label]="'Multi Select: default (no filter)'" [(model)]="models.multiSelectDefault" [options]="selectOpts" [disabled]="models.disabled" [required]="true"></pl-input-multi-select>
+
+            <pl-input-multi-select class="form-input" [formCtrl]="inputsDemoForm" [label]="'Multi Select: filter'" [(model)]="models.multiSelectFilter" [options]="selectOpts" [filter]="true" [disabled]="models.disabled" [required]="true"></pl-input-multi-select>
+
+            <pl-input-multi-select-api class="form-input" [formCtrl]="inputsDemoForm" [label]="'Multi Select: ansyc (api) - search'" [(model)]="models.multiSelectApi" [options]="multiSelectOptsSearch" [modelOptions]="multiSelectApiModelOpts" [loading]="multiSelectLoading" [disabled]="models.disabled" [required]="true" (onSearch)="onSearchMultiSelect($event)"></pl-input-multi-select-api>
+
+            <pl-input-multi-select-api
+                class="form-input"
+                [formCtrl]="inputsDemoForm"
+                [label]="'Multi Select: ansyc (api) - search with truncated results'"
+                [(model)]="models.multiSelectApi"
+                [options]="multiSelectOptsSearchTruncated"
+                [modelOptions]="multiSelectApiModelOpts"
+                [loading]="multiSelectLoading"
+                [resultsLimitedText]="'Options limited by… (optional text)'"
+                [resultsTotalCount]="multiSelectOptsSearchResultsTotalsCount"
+                [disabled]="models.disabled"
+                [required]="true"
+                (onSearch)="onSearchMultiSelect($event)"
+            ></pl-input-multi-select-api>
+
+            <pl-input-checkbox class="form-input" [formCtrl]="inputsDemoForm" [label]="'Checkbox: I have read the terms'" [(model)]="models.checkbox" [disabled]="models.disabled" [required]="true"></pl-input-checkbox>
+
+            <pl-input-checkbox-group class="form-input" [formCtrl]="inputsDemoForm" [label]="'Checkbox Group: Choose a color'" [(model)]="models.colors" [options]="optionsColors" [horizontal]="true" [optionWidth]="'300px'" [disabled]="models.disabled" [required]="true"></pl-input-checkbox-group>
+
+            <pl-input-radio-group class="form-input" [formCtrl]="inputsDemoForm" [label]="'Radio Group: Choose a size'" [(model)]="models.size" [options]="optionsSizes" [disabled]="models.disabled" [required]="true"></pl-input-radio-group>
+
+            <pl-input-radio-group class="form-input" [formCtrl]="inputsDemoForm" [label]="'Radio Group: Choose a size 2'" [(model)]="models.size2" [options]="optionsSizes" [disabled]="models.disabled" [required]="true"></pl-input-radio-group>
+
+            <pl-input-radio-group class="form-input" [formCtrl]="inputsDemoForm" [label]="'Radio Booleans'" [(model)]="models.radioBooleans" [options]="optionsBooleans" [disabled]="models.disabled"></pl-input-radio-group>
+
+            <pl-input-file class="form-input" [formCtrl]="inputsDemoForm" [label]="'File'" [(model)]="models.file" [maxFileSize]="2" [extensions]="'jpg,jpeg'" [disabled]="models.disabled" [required]="true" (onChange)="onChange($event)"></pl-input-file>
+
+            <pl-input-file class="form-input" [formCtrl]="inputsDemoForm" [label]="'Files (multiple). Documents only.'" [(model)]="models.fileMultiple" [multiple]="true" [dropzone]="true" [mimeTypes]="'application/pdf'" [maxFileSize]="0.2" [existingFiles]="existingFilesMultiple" [disabled]="models.disabled" [required]="true" (onChange)="onChange($event)"></pl-input-file>
+
+            <pl-input-datepicker class="form-input" [formCtrl]="inputsDemoForm" [label]="'Datepicker: Choose a date'" [(model)]="models.datepicker" [disabled]="models.disabled" [required]="true" (onChange)="onChange($event)"></pl-input-datepicker>
+
+            <div class="datepicker-small-width">
+                <pl-input-datepicker class="form-input"  [formCtrl]="inputsDemoForm" [label]="'Datepicker Small Width - choose a date'" [(model)]="models.datepickerSmallWidth" [placeholder]="'Your date here'" [formatDisplay]="'MM/DD/YY'" [format]="'MMM DD, YYYY'" [minDate]="'2016-09-01'" [maxDate]="'2017-03-01'" [todayRange]="'week'" [disabled]="models.disabled" [required]="true" (onChange)="onChange($event)"></pl-input-datepicker>
+            </div>
+
+            <pl-input-time class="form-input" [formCtrl]="inputsDemoForm" [label]="'Time: Choose a time'" [(model)]="models.time" [disabled]="models.disabled" [required]="true" (onChange)="onChange($event)"></pl-input-time>
+
+            <pl-input-time class="form-input" [formCtrl]="inputsDemoForm" [label]="'Time2: Choose a time'" [(model)]="models.time2" [placeholder]="'Choose a time'" [format]="'h:mma'" [start]="'00:00'" [numHours]="15" [minutesStep]="45" [minTime]="'02:15'" [maxTime]="'06:30'" [disabled]="models.disabled" [required]="true" (onChange)="onChange($event)"></pl-input-time>
+
+            <!-- Does not seem to work (well) with validation, just use number -->
+            <!-- <pl-input-text class="form-input" [formCtrl]="inputsDemoForm" [label]="'Tel (phone number)'" [(model)]="models.tel" [type]="'tel'" [disabled]="models.disabled"></pl-input-text> -->
+
+            <!-- Radio buttons do not make sense alone; always use radio group? -->
+            <div class="form-input">
+                <h3>Radio</h3>
+                <pl-input-radio [(model)]="models.size" [label]="'Small'" [value]="'small'" [name]="'radio-size'"></pl-input-radio>
+                <pl-input-radio [(model)]="models.size" [label]="'Medium'" [value]="'medium'" [name]="'radio-size'"></pl-input-radio>
+                <pl-input-radio [(model)]="models.size" [label]="'Large'" [value]="'large'" [name]="'radio-size'"></pl-input-radio>
+                model: {{ models.size }}
+            </div>
+
+            <div class="form-input">
+                <h3>Radio 2</h3>
+                <pl-input-radio [(model)]="models.radio2" [label]="'False'" [value]="false" [name]="'radio-2'"></pl-input-radio>
+                <pl-input-radio [(model)]="models.radio2" [label]="'True'" [value]="true" [name]="'radio-2'"></pl-input-radio>
+                model: {{ models.radio2 }}
+            </div>
+
+            <div class="form-input">
+                <h3>Radio 3</h3>
+                <pl-input-radio [(model)]="models.radio3" [label]="'0'" [value]="0" [name]="'radio-3'"></pl-input-radio>
+                <pl-input-radio [(model)]="models.radio3" [label]="'1'" [value]="1" [name]="'radio-3'"></pl-input-radio>
+                model: {{ models.radio3 }}
+            </div>
+
+            <button pl-button type="submit" [disabled]="!inputsDemoForm.valid">Submit</button>
+
+            <div>modelVals: {{ models | json }}</div>
+            <!-- <div>form: {{inputsDemoForm.valid}} | {{ inputsDemoForm.errors | json }} | {{ inputsDemoForm.value | json }}</div> -->
+        </form>
+    </div>
+
+    <div class="margin-large-b">
+        <h2>Barebones - No form (& thus no validation), no styling</h2>
+
+        <pl-input-checkbox [label]="'Signed (disable all)'" [(model)]="modelsNoForm.disabled"></pl-input-checkbox>
+
+        <pl-input-text [(model)]="modelsNoForm.text" [disabled]="modelsNoForm.disabled"></pl-input-text>
+        <pl-input-textarea [(model)]="modelsNoForm.textarea" [disabled]="modelsNoForm.disabled"></pl-input-textarea>
+        <pl-input-select [(model)]="modelsNoForm.select" [options]="selectOpts" [disabled]="modelsNoForm.disabled"></pl-input-select>
+        <pl-input-select-api [(model)]="modelsNoForm.selectApi" [options]="selectOptsSearch" [loading]="selectLoading" (onSearch)="onSearchSelect($event)" [disabled]="modelsNoForm.disabled"></pl-input-select-api>
+        <pl-input-multi-select [(model)]="modelsNoForm.multiSelectDefault" [options]="selectOpts" [disabled]="modelsNoForm.disabled"></pl-input-multi-select>
+        <pl-input-multi-select-api [(model)]="modelsNoForm.multiSelectApi" [options]="multiSelectOptsSearch" [modelOptions]="multiSelectApiModelOpts" [loading]="multiSelectLoading" (onSearch)="onSearchMultiSelect($event)" [disabled]="modelsNoForm.disabled"></pl-input-multi-select-api>
+        <pl-input-checkbox [label]="'Checkbox'" [(model)]="modelsNoForm.checkbox" [disabled]="modelsNoForm.disabled"></pl-input-checkbox>
+        <pl-input-checkbox-group [(model)]="modelsNoForm.colors" [options]="optionsColors" [disabled]="modelsNoForm.disabled"></pl-input-checkbox-group>
+        <pl-input-radio-group [(model)]="modelsNoForm.size" [options]="optionsSizes" [disabled]="modelsNoForm.disabled"></pl-input-radio-group>
+        <pl-input-file [(model)]="modelsNoForm.file" [disabled]="modelsNoForm.disabled"></pl-input-file>
+        <pl-input-datepicker [(model)]="modelsNoForm.datepicker" [disabled]="modelsNoForm.disabled"></pl-input-datepicker>
+        <pl-input-time [(model)]="modelsNoForm.time" [disabled]="modelsNoForm.disabled"></pl-input-time>
+
+        <div>modelsNoForm: {{ modelsNoForm | json }}</div>
+    </div>
+
+</section>

@@ -1,0 +1,22 @@
+<section class="pl-providers-summary" *ngIf="_state.initialized" [ngClass]="{'debug-show-div': util.showDivs(_state)}">
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+    <div class="flexbox margin-large-b">
+        <div class="flex1">
+            <div *ngFor="let providerType of providersByType" class="provider-type">
+                <div class="inline-block provider-type-count">{{ providerType.count }}</div><div class="inline-block">{{ providerType.label }}</div>
+            </div>
+        </div>
+        <div class="total-circle margin-l">
+            <div class="total-circle-inner">
+                <div class="total">{{ providersTotalText }}</div>
+                <div>Total Providers</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="center">
+        <a [routerLink]="'/providers/'">View All Providers</a>
+    </div>
+</section>

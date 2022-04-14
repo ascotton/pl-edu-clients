@@ -1,0 +1,188 @@
+{
+    "releases": [
+        {
+            "date": "2017-12-11 16:00:00",
+            "displayDate": "2017-12-19 11:30:00"
+        },
+        {
+            "date": "2017-11-13 16:00:00",
+            "displayDate": "2017-11-21 11:30:00"
+        },
+        {
+            "date": "2017-10-31 13:00:00",
+            "displayDate": "2017-11-06 11:30:00"
+        },
+        {
+            "date": "2017-10-14 13:00:00",
+            "displayDate": "2017-10-24 11:30:00"
+        },
+        {
+            "date": "2017-09-29 15:30:00",
+            "displayDate": "2017-10-06 15:30:00"
+        },
+        {
+            "date": "2017-09-19 10:35:00",
+            "displayDate": "2017-09-27 10:00:00"
+        }
+    ],
+    "changes": [
+
+        {
+            "date": "2017-12-11 16:00:00",
+            "features": [
+                "Direct Service Status: The options have changed from \"Active, Inactive\" to \"Not Started, In Therapy, Completed, Discontinued, Idle.\" The system will set the status automatically based on activities in the system. The statuses \"Completed\" and \"Discontinued\" are set manually by the provider.",
+                "Client Detail: Added in-app help for the client status via the \"Learn More\" link in the client detail header (“i” icon).",
+                "Evaluation Transfer: Support and Lead users will have the ability to reassign an evaluation to another provider. In the case of leads, they will only be able to reassign an evaluation if there are no billing implications. Support can reassign regardless of billing implications.",
+                "All Clients: Ability to filter by multiple client locations"
+            ],
+            "fixes": [
+                "Only active locations and organizations are now shown in the add user form",
+                "Legacy migration Ids are hidden in the student absence dashboard",
+                "The cursor now changes to a pointer when over clickable areas in the student absence dashboard",
+                "Clicking “Add a Single Referral”, the close button in the top right corner, and “Upload Referrals” in rapid succession no longer results in an infinite redirect loop and runaway memory consumption."
+            ]
+        },
+        {
+            "date": "2017-11-13 15:30:00",
+            "features": [
+                "Single Referral: Select school year when adding a referral",
+                "All Clients & Referral Manager: Ability to filter by school year (example: 2017-2018)",
+                "Client Profile: Display school year for referral(s) on Services tab",
+                "Client Profile: Display bilingual yes/no in evaluation details",
+                "Add Service/Convert to Service: Evaluation due date is an optional field for Screening",
+                "All Clients: 'Last seen by' column displaying last provider student was seen by",
+                "Student Status: Disabled student status change in preparation for upcoming service and student status updates",
+                "Provider Profile: Within caseload tab highlight referrals provider is matched to with an orange dot",
+                "Users App: Ability for Support Services & Customer Sucess to assume/hijack customer users",
+                "All Clients: Ability to filter by multiple student statuses"
+            ],
+            "fixes": [
+                "Multiple: Date picker default to MM/DD/YYYY",
+                "Clients App: All Clients tab is selected by default for customer users",
+                "Multiple: Column widths in tables are evenly distributed (long text such as email will wrap)",
+                "Favicon: Favicon shall appear for all applications"
+            ]
+        },
+        {
+            "date": "2017-10-30 15:00:00",
+            "features": [
+                "Student Absence: Consecutive student absence dashboard for customer users only.",
+                "User Dropdown: Link to Copyright policy and code of conduct.",
+                "Single Referral & Bulk Upload: School year selection when adding referral(s).",
+                "Provider Profile: Ability for Service & Support to assume another provider.",
+                "Bulk Upload: Trim middle spaces to ensure there is only a single space between names for example: 'Mary   Jane' is 'Mary Jane'",
+                "Bulk Upload: Do not skip location select as school year selection is required."
+            ]
+        },
+        {
+            "date": "2017-10-26 15:00:00",
+            "features": [
+                "Bulk Upload: Display name changes within confirmation table.",
+                "Users: Ability for Service & Support to unsuspend an active user due to 90 days of inactivity."
+            ]
+        },
+        {
+            "date": "2017-10-14 12:00:00",
+            "features": [
+                "All Clients List: Triennials & IEP dates combined into 1 column.",
+                "Client Profile: Ability to Delete student with no clinical data or records (for Customer Success & Services Support only).",
+                "Referral Manager: Added a link to view client profile."
+            ],
+            "fixes": [
+                "Location List: Sorting capabilities.",
+                "Various, Customer User: Remove double search field."
+            ]
+        },
+        {
+            "date": "2017-10-11 11:09:00",
+            "features": [
+                "Client Events: Change no reports message and add session notes section header."
+            ]
+        },
+        {
+            "date": "2017-10-02 15:00:00",
+            "features": [
+                "Bulk Upload: Trim leading / trailing whitespaces, for example 'Joe' will be matched to 'Joe '.",
+                "Bulk Upload: Ability to select a specific sheet within a multisheet Excel file.",
+                "Bulk Upload: Provide users with an option to download a list (excel) of student referrals not added."
+            ],
+            "fixes": [
+                "Bulk Upload: Improve display of Bulk Upload preview data.",
+                "Various: Change mouse cursor to default in unvisited steps in Step navigation."
+            ]
+        },
+        {
+            "date": "2017-09-29 15:00:00",
+            "features": [
+                "Client Profile Header: All legacy-migration Client Ids have changed to please update to prompt user to update the Client Id.",
+                "Client Profile: Ability to edit single field in client profile editor."
+            ]
+        },
+        {
+            "date": "2017-09-26 12:00:00",
+            "features": [
+                "Customer User: Role column removed since all customers are in the same permission group."
+            ]
+        },
+        {
+            "date": "2017-09-25 13:00:00",
+            "fixes": [
+                "Client Profile: Service displays the correct service name."
+            ]
+        },
+        {
+            "date": "2017-09-20 20:00:00",
+            "features": [
+                "All Clients Tab: Show dashes for empty fields instead of leaving it blank."
+            ],
+            "fixes": [
+                "All Clients Tab: Triennial and IEP Due Dates now show up."
+            ]
+        },
+        {
+            "date": "2017-09-19 10:25:00",
+            "fixes": [
+                "Client Services: NOMs does not require final level to be entered during creation.",
+                "Client Services: Service plan displays matched provider (provider who converted the referral).",
+                "Client Profile: Clients profile provider tab now displays the correct list of providers.",
+                "Fixes to the date picker",
+                "Serivce Save: How to calculate minutes required link is fixed.",
+                "Users can now logout from homepage."
+            ]
+        },
+        {
+            "date": "2017-09-18 13:00:00",
+            "fixes": [
+                "Add Single Referral: Fix convert to service error when creating a new client."
+            ]
+        },
+        {
+            "date": "2017-09-15 11:00:00",
+            "fixes": [
+                "Add Referrals: Location list is reloaded every time a user starts bulk upload or location change."
+            ]
+        },
+        {
+            "date": "2017-09-14 09:15:00",
+            "features": [
+                "Remove from Caseload: Add better error messaging."
+            ]
+        },
+        {
+            "date": "2017-09-13 13:25:00",
+            "features": [
+                "Service Save: Add bilingual option on client details step.",
+                "Customers: Customer Success team can now add customer users (create customer login credentials) using the new customer users application."
+            ],
+            "fixes": [
+                "Service Save: Fix Dismissal / Exit error that prevented saving if this status was set."
+            ]
+        },
+        {
+            "date": "2017-09-11 11:15:00",
+            "features": [
+                "Client Details: Referral on client profile displays matched provider."
+            ]
+        }
+    ]
+}

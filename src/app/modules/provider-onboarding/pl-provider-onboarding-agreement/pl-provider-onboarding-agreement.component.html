@@ -1,0 +1,42 @@
+<div class="pl-provider-onboarding-agreement padding-large">
+    <div class="margin-b"><h3>Your Agreement</h3></div>
+    <div class="agreements">
+        <div *ngFor="let agreement of agreements" class="agreement-container">
+            <iframe [src]="agreement.document_url" width="100%" [height]="frameHeight" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+            <div class="download-doc"><a [href]="agreement.document_url" class="blue" target="_blank"><pl-icon [svg]="'download'" [scale]=".5" class="blue"></pl-icon> Download</a></div>
+        </div>
+    </div>
+
+    <div *ngIf="existingRateLabelDisplay" class="flexbox form-input">
+        <div class="margin-xlarge-r">
+            <b>{{ existingRateLabelDisplay }}</b>
+            <span>${{ existingRateDisplay }}</span>
+        </div>
+    </div>
+
+    <div class="margin-large-t flexbox form-input">
+        <div class="margin-xlarge-r">
+            <b>{{ rateLabelDisplay }}</b>
+            <pl-icon class="blue-medium pointer" [svg]="'info'" [height]="16" [width]="16" [verticalAlign]="'-1px'" (click)="displayLearnMore()"></pl-icon>
+        </div>
+    </div>
+    <div class="margin-large-t grid-container">
+        <div>Base Rate:</div>
+        <div>${{ rateDisplay }}</div>
+        <div>Tier 1 Rate:</div>
+        <div>${{ rateDisplay2 }}</div>
+        <div>Tier 2 Rate:</div>
+        <div>${{ rateDisplay3 }}</div>
+    </div>
+    <div class="margin-large-t">
+        <pl-input-checkbox class="form-input" [(model)]="formVals.agree" [label]="'By entering my name, I agree this is a legal representation of my signature for all purposes, the same as a handwritten signature.'" [required]="true" (change)="checkFormValid()"></pl-input-checkbox>
+        <div *ngIf="message" class="message" [innerHTML]="message"></div>
+        <div class="flexbox">
+            <div class="form-input input-initials margin-large-r"><pl-input-text [(model)]="formVals.firstName" [label]="'Your first name'" [required]="true" (change)="checkFormValid()" (keyup)="checkFormValid()"></pl-input-text></div>
+            <div class="form-input input-initials"><pl-input-text [(model)]="formVals.lastName" [label]="'Your last name'" [required]="true" (change)="checkFormValid()" (keyup)="checkFormValid()"></pl-input-text></div>
+        </div>
+    </div>
+    <div class="form-input">
+        <button pl-button class="primary" (click)="save()" [disabled]="!formValid">Save & Continue</button>
+    </div>
+</div>

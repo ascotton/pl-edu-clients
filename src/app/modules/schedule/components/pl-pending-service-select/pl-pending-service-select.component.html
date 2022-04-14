@@ -1,0 +1,16 @@
+<pl-table-header>
+    <pl-table-header-cell></pl-table-header-cell>
+    <pl-table-header-cell orderKey="clientName" (onQuery)="onQuery($event)">Client Name</pl-table-header-cell>
+    <pl-table-header-cell orderKey="dueDate" (onQuery)="onQuery($event)">Due Date</pl-table-header-cell>
+    <pl-table-header-cell orderKey="service" (onQuery)="onQuery($event)">Service</pl-table-header-cell>
+    <pl-table-header-cell orderKey="location" (onQuery)="onQuery($event)">Location</pl-table-header-cell>
+</pl-table-header>
+<pl-table-row *ngFor="let service of tableData">
+    <pl-table-cell>
+        <pl-input-radio [(model)]="selectedService" [value]="service.uuid"></pl-input-radio>
+    </pl-table-cell>
+    <pl-table-cell>{{ service.clientName }}</pl-table-cell>
+    <pl-table-cell>{{ service.dueDate }}</pl-table-cell>
+    <pl-table-cell>{{ service.service }}</pl-table-cell>
+    <pl-table-cell>{{ service.location }}</pl-table-cell>
+</pl-table-row>

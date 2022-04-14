@@ -1,0 +1,103 @@
+<div class="pl-invoice-documentation-list">
+  <div *ngIf="BO.isDataLoaded() && BO.shouldShowList()" class="sort-options">
+    <span>
+      Sort by:
+      <span class="option sort date" [ngClass]="{'selected': (BO.getSortType() === 'natural')}"><a href="javascript:void(0)" (click)="onClickSortNatural()">Date</a></span>
+      | <span class="option sort name" [ngClass]="{'selected': (BO.getSortType() === 'name')}"><a href="javascript:void(0)" (click)="onClickSortName()">Name</a></span>
+      | <span class="option sort location" [ngClass]="{'selected': (BO.getSortType() === 'location')}"><a href="javascript:void(0)" (click)="onClickSortLocation()">Location</a></span>
+    </span>
+  </div>
+  <div class="list-header unsigned-count">
+    <span>
+      <pl-icon [svg]="'blocked'" [width]="16" [height]="16" class="gray"></pl-icon>
+    </span>
+    <span class="count">
+      <span class="unsigned-text">Unsigned</span>
+      <span *ngIf="BO.data.appointmentsList">( {{BO.state.unsignedAppointmentsCount}} )</span>
+    </span>
+    <span class="toggle-show-all" *ngIf="BO.isDataLoaded() && BO.shouldShowList() && BO.isShowSignedItemsFlag()">
+      <a href="javascript:void(0)" (click)="BO.toggleShowSignedItems()">
+        <span *ngIf="BO.isShowSignedItems()">Hide Signed</span>
+        <span *ngIf="!BO.isShowSignedItems()">Show Signed</span>
+      </a>
+    </span>
+    <div class="list-header-bottom-border"></div>
+  </div>
+  <ul class="list-data">
+    <div *ngIf="BO.getSortType() && BO.shouldShowList()">
+      <div *ngFor="let group of BO.getAppointments(); index as groupIndex">
+        <div class="group-header sticky-header" *ngIf="BO.isDateSort() && group.length">
+          <div *ngIf="groupIndex === 0" class="content past">
+            <div class="background-fade text">PAST</div>
+          </div>
+          <div *ngIf="groupIndex === 1" class="content today">
+            <div class="text">TODAY</div>
+          </div>
+          <div *ngIf="groupIndex === 2" class="content future">
+            <div class="text">UPCOMING</div>
+          </div>
+        </div>
+        <li class="list-item" *ngFor="let item of BO.getAppointments(group); index as itemIndex">
+          <div class="pl-row group-{{BO.getAppointmentGroup(item)}}" tabindex="0" (focus)="onClickItem(item)" [ngClass]="{'selected': BO.isSelected(item), 'missing-client-service':!BO.hasClientServices(item), 'active-group-not-selected':
+          BO.isDateSort() && BO.isActiveGroup(item) && !BO.isSelected(item)}" (click)="onClickItem(item)"
+          [id]="'row_'+BO.getGroupedRowIndex(groupIndex, itemIndex)">
+            <div class="row-left">
+              <div class="dot-container">
+                <div class="dot group-{{BO.getAppointmentGroup(item)}}" *ngIf="!BO.isSigned(item)"></div>
+              </div>
+            </div>
+            <div class="row-right" [class.signed]="BO.isSigned(item)">
+              <div *ngIf="BO.isSelected(item) && BO.isDevDebug('TYPE')" class="flags-TYPE">
+                {{BO.getAppointmentType(item).charAt(0).toUpperCase()}}
+              </div>
+              <div *ngIf="BO.isSelected(item) && BO.isDevDebug('ROW')" class="flags-ROW">
+                {{BO.appointmentsList.length - BO.getSelectedIndex()}}
+              </div>
+              <div *ngIf="BO.isDevDebug('RECORD') && BO.hasRecord(item)" class="flags-RECORD"></div>
+              <span *ngIf="BO.isSigned(item)" class="signed-mark">[ <pl-icon [svg]="'check'" [width]="14" [height]="15" class="green"></pl-icon> Signed ]</span>
+              <span [class.unsigned]="!BO.isSigned(item)">{{BO.getListItemDisplayTitle(item)}}</span>
+            </div>
+          </div>
+        </li>
+      </div>
+    </div>
+
+    <div class="empty-list" *ngIf="BO.isDataLoaded() && !BO.shouldShowList()">
+      <div class="unsigned-zero">
+        <div class="header">
+          All events are signed!
+        </div>
+        <div class="message">
+          {{BO.getEndMessage().text}}
+        </div>
+        <div class="graphic">
+          <pl-icon [svg]="BO.getEndMessage().graphic" [width]="BO.getEndMessage().width" [height]="BO.getEndMessage().height"></pl-icon>
+        </div>
+      </div>
+    </div>
+  </ul>
+  <div class="percent-done" *ngIf="BO.isDataLoaded() && BO.shouldShowList()">
+    <div class="_container">
+      <div class="_progress-bar-cell">
+        <div class="signed-progress-bar">
+          <div class="progress-bar" [class.zero-signed]="BO.getPercentCompleteInfo().signedPercent === 0" [ngStyle]="{width: BO.getPercentCompleteInfo().signedPercent+'%'}"></div>
+        </div>
+        </div>
+        <div class="_percentage-cell">
+          <span>{{BO.getPercentCompleteInfo().signedPercent}}%</span>
+        </div>
+    </div>
+  </div>
+  <div class="signed-count">
+    <div class="count">
+      <pl-icon [svg]="'check'" [width]="16" [height]="16" class="gray"></pl-icon>
+      <span class="signed-text">Signed</span>
+      <span class="signed-number" *ngIf="BO.data.appointmentsList">( {{BO.state.signedAppointmentsCount}} )</span>
+    </div>
+    <div class="schedule">
+      <a routerLink="/schedule/calendar" [queryParams]="{ view: 'month', start: BO.data.invoicePeriod?.start }">
+        See Schedule
+      </a>
+    </div>
+  </div>
+</div>

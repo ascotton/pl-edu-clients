@@ -1,0 +1,349 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "edu-clients": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "deployUrl": "/c/",
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "polyfills": "src/polyfills.ts",
+            "assets": [
+              "src/assets",
+              "src/favicon.ico"
+            ],
+            "styles": [
+              "src/styles.css",
+              "src/custom-material-theme.scss",
+              "node_modules/@angular/cdk/overlay-prebuilt.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "src/styles/flexboxgrid.css",
+              "src/app/common/less/app/main.less"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/common/less",
+                "src/lib-components"
+              ]
+            },
+            "scripts": [
+              "node_modules/chart.js/dist/Chart.js",
+              "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "moment-timezone",
+              "lunr",
+              "ng2-charts",
+              "chart.js",
+              "lodash"
+            ]
+          },
+          "configurations": {
+            "local": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ]
+            },
+            "test": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ]
+            },
+            "stag": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stag.ts"
+                }
+              ]
+            },
+            "k8s": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.k8s.ts"
+                }
+              ],
+              "allowedCommonJsDependencies": [
+                "moment-timezone",
+                "lunr",
+                "ng2-charts",
+                "chart.js",
+                "lodash"
+              ]
+            },
+            "stagdev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stagdev.ts"
+                }
+              ]
+            },
+            "jb": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.jb.ts"
+                }
+              ]
+            },
+            "joe": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.joe.ts"
+                }
+              ]
+            },
+            "brian": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.brian.ts"
+                }
+              ]
+            },
+            "localdev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.localdev.ts"
+                }
+              ]
+            },
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.live.ts"
+                }
+              ],
+              "allowedCommonJsDependencies": [
+                "moment-timezone",
+                "lunr",
+                "ng2-charts",
+                "chart.js",
+                "lodash"
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "edu-clients:build",
+            "port": 3010
+          },
+          "configurations": {
+            "local": {
+              "browserTarget": "edu-clients:build:local",
+              "host": "dev.presencek8s.com",
+              "ssl": true,
+              "sslKey": "dev-ssl/pl-dev-ssl.key",
+              "sslCert": "dev-ssl/pl-dev-ssl.crt"
+            },
+            "localdev": {
+              "browserTarget": "edu-clients:build:localdev"
+            },
+            "test": {
+              "browserTarget": "edu-clients:build:test"
+            },
+            "stag": {
+              "browserTarget": "edu-clients:build:stag"
+            },
+            "stagdev": {
+              "browserTarget": "edu-clients:build:stagdev"
+            },
+            "jb": {
+              "browserTarget": "edu-clients:build:jb"
+            },
+            "joe": {
+              "browserTarget": "edu-clients:build:joe"
+            },
+            "production": {
+              "browserTarget": "edu-clients:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "edu-clients:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "scripts": [
+              "node_modules/chart.js/dist/Chart.js",
+              "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"
+            ],
+            "styles": [
+              "src/styles.css",
+              "src/app/common/less/app/main.less"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/common/less",
+                "src/lib-components"
+              ]
+            },
+            "assets": [
+              "src/assets",
+              "src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "tsconfig.app.json",
+              "tsconfig.spec.json"
+            ],
+            "exclude": []
+          }
+        }
+      }
+    },
+    "edu-clients-e2e": {
+      "root": "e2e",
+      "sourceRoot": "e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "./protractor.conf.js",
+            "devServerTarget": "edu-clients:serve"
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "edu-clients",
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "style": "less"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "app"
+    }
+  },
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
+}

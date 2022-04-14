@@ -1,0 +1,23 @@
+<div class="pl-client-referrals-propose-matches">
+    <pl-modal-header-wrapper [headerText]="'Propose Matches'">
+        <p>Select the organization for proposing referral matches.</p>
+
+        <form [formGroup]="form">
+            <dl>
+                <dt>School Year</dt>
+                <dd>{{ schoolYearLabel }}</dd>
+            </dl>
+
+            <pl-input-select
+                [formCtrl]="form"
+                [label]="'Organization'"
+                [(model)]="organizationId"
+                [options]="organizationOptions"
+                [required]="'true'"
+            ></pl-input-select>
+
+            <button pl-button class="primary" (click)="handleProposeMatchesClick()" [disabled]="form.invalid">Propose Matches</button>
+            <button pl-button (click)="handleCancelClick()">Cancel</button>
+        </form>
+    </pl-modal-header-wrapper>
+</div>

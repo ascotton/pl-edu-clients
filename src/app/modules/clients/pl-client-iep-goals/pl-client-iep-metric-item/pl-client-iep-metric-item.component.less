@@ -1,0 +1,79 @@
+@import 'core/colors.less';
+
+@x-green-color : #9ac61e;
+
+.pl-client-iep-metric-item {
+  margin-bottom: 20px;
+
+  .title {
+    margin-bottom: 15px;
+  }
+  .metric-container {
+    border: 1px solid @gray-lighter;
+    border-radius: 5px;
+    background-color: @slate-lighter;
+    padding: 20px;
+    &.deleted {
+      background-color: @gray-really-light;
+    }
+    .metric-header {
+      margin-bottom: 10px;
+    }
+    .metric-item {
+      &.deleted {
+        opacity: 0.1;
+      }
+    }
+    .delete-metric-button {
+      text-decoration: underline;
+      font-size: 13px;
+      &.remove {
+        color: @x-green-color;
+      }
+    }
+    .metric-header .col, .metric-label .col {
+      display: flex;
+      flex: 1;
+      flex-basis: 50%;
+      white-space: nowrap;
+      align-items: baseline;
+      &.left {
+        justify-content: flex-start;
+        &.add-metric {
+          color: @x-green-color;
+        }
+      }
+      &.right {
+        justify-content: flex-end;
+      }
+    }
+    .metric-label .col.left {
+      font-weight: bold;
+    }
+
+    .validation-message {
+      white-space: nowrap;
+      height: 16px;
+      padding-top: 3px;
+      font-weight: bold;
+      color: red;
+      font-size: 11px;
+    }
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+}

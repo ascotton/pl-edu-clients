@@ -1,0 +1,20 @@
+<div class="padding">
+    <div class="center">
+        <div *ngIf="page === ''">
+            <!-- Loading.. -->
+            Thank you!
+        </div>
+        <div *ngIf="page === 'paymentInfo'">
+            Thank you. Your response has been received successfully.
+            <br /><br />
+            Please click the Continue button below.
+        </div>
+        <div *ngIf="page === 'practiceDetails'">
+            Thank you for sharing your qualifications! We know you've worked hard to earn these skills, clearances, and recognition. We're excited to have the opportunity to put your qualifications to use in providing life-changing care.
+            <br /><br />
+            Upon receipt, the PresenceLearning team will review your submission. If they find your qualification is applicable and meets the standards of verification, your qualification will be marked active and published to your profile.
+            <br /><br />
+            Please click the Continue button below.
+        </div>
+    </div>
+</div>

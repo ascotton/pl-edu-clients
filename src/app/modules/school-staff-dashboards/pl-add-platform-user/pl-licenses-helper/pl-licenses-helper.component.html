@@ -1,0 +1,37 @@
+<label>
+    Choose a Therapy Essentials License:
+</label>
+<pl-data-loader [loading]="loading$ | async">
+    <ng-container *ngIf="licenses">
+        <mat-grid-list *ngIf="licenses.length; else empty" [cols]="columns$ | async" rowHeight="115" gutterSize="16px">
+            <mat-grid-tile *ngFor="let license of licenses">
+                <div class="license-card"
+                    [class.selected]="selection.isSelected(license)"
+                    [class.disabled]="disabled || !license.total_quantity"
+                    (click)="select(license)">
+                    <div class="flexbox between-xs margin-large-b">
+                        <div>
+                            {{ license.license_name.replace('Plus Assessments', '') }}<br/>
+                            <strong *ngIf="license.has_assessments && license.license_name.includes('Plus Assessments')">
+                                Plus Assessments
+                            </strong>
+                        </div>
+                        <small *ngIf="license.total_quantity"
+                            class="license-card-left margin-large-l"
+                            [class.red]="!license.quantity_remaining">
+                            {{ license.quantity_remaining }} left
+                        </small>
+                    </div>
+                    <div>
+                        <small>
+                            {{ license.instructions }}
+                        </small>
+                    </div>
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </ng-container>
+    <ng-template #empty>
+        No licenses available
+    </ng-template>
+</pl-data-loader>

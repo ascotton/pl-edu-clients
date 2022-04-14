@@ -1,0 +1,139 @@
+<div class="pl-upload-referrals">
+    <div class="container">
+        <pl-location-banner [locationName]="locationName"></pl-location-banner>
+    </div>
+
+    <div class="" *ngIf="!showImportedData && !loadingFile">
+        <div class="container import">
+            <div>
+                Upload an Excel file containing a worksheet of <pl-client-student-display [user]="currentUser"></pl-client-student-display>s to add to {{locationName}}.
+                Maximum file size is 3 MB. <em>Notes</em> cells are limited to 2000 characters.
+            </div>
+            <pl-input-file class="form-input" name="file" ngModel [(model)]="tableDataService.importedFile"
+                [maxFileSize]=2
+                (onChange)="onFileChange($event)"
+                [dropzone]="true"
+                [mimeTypes]="'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+                [customDragText]="'Drag and drop an Excel file here'"
+                [customClickText]="'Select an Excel file from your computer'"
+                [errorMode]="noFileInputError">
+            </pl-input-file>
+            <pl-error-message [message]="'Please upload a file by dragging a file into the dotted box or clicking the link to select a file.'" *ngIf="noFileInputError"></pl-error-message >
+        </div>
+
+        <div class="container template-download">
+            <div>Need a better Excel Template?</div>
+            <div><a href="https://cdn.presencelearning.com/statics/PL-Referrals-Template.xlsx">Download the PresenceLearning referral template</a></div>
+        </div>
+    </div>
+
+    <div class="file-dot-loader" *ngIf="!showImportedData && loadingFile">
+        <pl-dot-loader [align]="'center'"></pl-dot-loader>
+        <div>Loading</div>
+    </div>
+
+    <div class="" *ngIf="showImportedData">
+        <div class="container">
+            <div class="loaded-file-banner">
+                <pl-icon [svg]="'file'" [width]="18"></pl-icon>
+                <span class="file-name-label">{{tableDataService.getImportedFileName()}}</span>
+                <button pl-button class="import-new-button" (click)="importNewFile()">Import New File</button>
+            </div>
+        </div>
+
+        <div class="container" *ngIf="missingFieldsError">
+            <div class="flexbox align-center">
+                <pl-icon
+                    *ngIf="missingFields"
+                    [svg]="'close'"
+                    [height]="18"
+                    [width]="18"
+                    [class]="'inline-block red margin-small-r'">
+                </pl-icon>
+                <h5>Match Column Header Labels</h5>
+            </div>
+            <div>Select the labels that correspond to your column headers (Example: Student ID, First Name, Last Name).</div>
+        </div>
+        <div class="container" *ngIf="conflictRows.length && tableDataService.mappings.join('').length">
+            <div class="flexbox align-center">
+                <pl-icon
+                    [svg]="'caution'"
+                    [height]="18"
+                    [width]="18"
+                    [class]="'inline-block yellow margin-small-r'">
+                </pl-icon>
+                <h5>Fix Import Errors</h5>
+            </div>
+            <div>Hover over the highlighted row(s) to learn more about the error(s). To edit the field you will need to update your original template and upload again.</div>
+        </div>
+
+        <div class="container" *ngIf="tableDataService.multiSheet">
+            <span>Multiple sheets found in this workbook, please select one to import:</span>
+            <div class="multi-sheet-select">
+                <pl-input-select [placeholder]="'Select Sheet'" [(model)]="tableDataService.currentSheetName"
+                    [options]="tableDataService.sheetChoices"
+                    (onChange)="onSheetChange($event)"></pl-input-select>
+            </div>
+        </div>
+
+        <div class="container import-table-container">
+            <div class="result-header flexbox failure" *ngIf="dataColumnsUnmapped.length">
+                <pl-icon [svg]="'close'"  [width]="24" [height]="24"></pl-icon>
+                <span>
+                    We have identified columns in your spreadsheet with no header. Select a label from the dropdown for those columns before proceeding or the data in those columns will <b>NOT</b> be included in the upload.
+                </span>
+            </div>
+            <div class="result-header warning" *ngIf="conflictRows.length && tableDataService.mappings.join('').length">
+                <pl-icon [svg]="'caution'" [width]="24" [height]="24"></pl-icon>
+                <div>
+                    Problems found with imported data:
+                    <div>
+                        <div *ngIf="tableDataService.incompleteRows.length">
+                            {{tableDataService.incompleteRows.length}} Referrals with missing required information
+                        </div>
+                        <div *ngIf="tableDataService.duplicateRows.length">
+                            {{tableDataService.duplicateRows.length}} Duplicates within spreadsheet
+                        </div>
+                        <div *ngIf="tableDataService.invalidRows.length">
+                            {{tableDataService.invalidRows.length}} Referrals with invalid data
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="editable-table-actions">
+                <button
+                    pl-button
+                    class="warning action-button"
+                    [disabled]="!(conflictRows.length && tableDataService.mappings.join('').length)"
+                    (click)="toggleViewErrors()">
+                    <pl-icon [svg]="'caution'"  [width]="16" [height]="16"></pl-icon>
+                    <span *ngIf="!isViewingErrors">Show only errors</span>
+                    <span *ngIf="isViewingErrors">Show all</span>
+                </button>
+                <button pl-button (click)="downloadEdited()" [disabled]="!hasEditedData">
+                    <pl-icon [svg]="'download'"  [width]="16" [height]="16"></pl-icon>
+                    <span>Download edited data</span>
+                </button>
+            </div>
+
+            <pl-editable-table
+                [fieldChoices]="tableDataService.targetFields"
+                [data]="displayData"
+                [highlighted]="tableDataService.headerRow"
+                [mappings]="tableDataService.mappings"
+                [headerRow]="tableDataService.headerRow"
+                [showHeaderMessage]="missingFieldsError"
+                [headerErrorMessage]="missingFields"
+                [showOnlyErrors]="isViewingErrors"
+                [errorRows]="conflictRows"
+                (columnChanged)="onColumnChanged($event)"
+                (cellChanged)="onCellChanged($event)"
+                (rowClear)="onRowClear($event)"
+                >
+            </pl-editable-table>
+            <p>* Required fields</p>
+            <p><sup>†</sup> Each <em>Notes</em> cell will be limited and clipped to 2000 characters.</p>
+        </div>
+    </div>
+</div>

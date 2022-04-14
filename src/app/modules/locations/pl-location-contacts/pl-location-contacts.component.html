@@ -1,0 +1,9 @@
+<div class="pl-location-contacts">
+    <div *ngIf="isReady">
+        <pl-account-contacts
+            [sfAccountId]="sfAccountId"
+            [organization]="organization"
+            [locations]="[]"
+        ></pl-account-contacts>
+    </div>
+</div>

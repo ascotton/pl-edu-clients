@@ -1,0 +1,17 @@
+<h4 class="header-blue padding-large" mat-dialog-title>
+    <div class="flexbox">
+        <div class="flex1 padding-r"> {{ data.title }} </div>
+        <pl-icon *ngIf="!data.disableClose" mat-dialog-close svg="close-inverted" class="pointer white"></pl-icon>
+    </div>
+</h4>
+<div mat-dialog-content [innerHTML]="data.message"></div>
+<div mat-dialog-actions>
+    <button *ngFor="let opt of data.options" 
+        [style.marginRight.px]="8"
+        type="button"
+        [color]="opt.color"
+        mat-raised-button
+        [mat-dialog-close]="opt.value || opt.label">
+        {{ opt.label }}
+    </button>
+</div>

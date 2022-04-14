@@ -1,0 +1,80 @@
+@import '~@angular/material/theming';
+@import '../../../../styles/pl-colors.scss';
+
+$warn: map-get($pl-light-theme, warn);
+$warn-color: mat-color($warn, text);
+$warn-color-bg: mat-color($warn, background);
+
+:host {
+    display: block;
+
+    .pl-editable-table {
+        &-container {
+            overflow: auto;
+            max-width: 100%;
+            max-height: 400px;
+        }
+        &-banner {
+            border-radius: 4px;
+            border-left: solid 14px $warn-color;
+            background-color: $warn-color-bg;
+            &-title {
+            }
+            &-subtitles {
+                li {
+                    margin-left: 25px;
+                }
+            }
+        }
+    }
+
+    .actions-cell, .selector-cell, .mat-header-cell {
+        background-color: #F6F7F9;
+    }
+
+    .mat-header-cell, .mat-cell {
+        box-sizing: border-box;
+        min-width: 100px;
+    }
+
+    .mat-cell {
+        // border-right: solid 1px rgba(0, 0, 0, 0.12);
+        &.invalid {
+            border: solid 1px $warn-color;
+        }
+        .mat-input-element {
+            &.ng-invalid {
+                color: $warn-color;
+            }
+        }
+        .mat-select {
+            &.ng-invalid {
+                color: $warn-color;
+            }
+        }
+    }
+
+    .mat-row {
+        align-items: stretch;
+    }
+
+    .selector-cell, .actions-cell {
+        width: 40px;
+        min-width: 40px;
+        max-width: 40px;
+        justify-content: center;
+        text-align: center;
+        .row-count {
+            font-weight: 500;
+        }
+    }
+
+    .selector-cell {
+        padding: 0 8px;
+    }
+
+    .actions-cell {
+        padding: 0;
+        border-right: none;
+    }
+}

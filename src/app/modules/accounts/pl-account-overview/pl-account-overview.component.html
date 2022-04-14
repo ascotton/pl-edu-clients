@@ -1,0 +1,195 @@
+<div class="pl-account-overview">
+    <div class="card-section" [style.height.px]="40">
+        <pl-schoolyear-select *ngIf="selectedSchoolYear"
+            [simpleSelect]="true"
+            [(selectedSchoolYear)]="selectedSchoolYearCode"
+            (onYearSelected)="onYearSelected($event)"
+        >
+        </pl-schoolyear-select>
+    </div>
+
+    <div class="card-section margin-t">
+        <div class="card">
+            <div class="card-header">
+                Student Status
+            </div>
+            <div class="card-body">
+                <pl-dot-loader *ngIf="loading.stats"></pl-dot-loader>
+                <pl-account-student-status-chart
+                    *ngIf="!loading.stats"
+                    [sideBySide]="true"
+                    [studentStats]="studentStats"
+                ></pl-account-student-status-chart>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                PL Account Contact
+            </div>
+            <div class="card-body">
+                <div class="label-fields">
+                    <div class="label">Name</div>
+                    <div class="value">
+                        <pl-is-available [condition]="contactData.accountOwnerName">{{ contactData.accountOwnerName }}</pl-is-available>
+                    </div>
+                    <div class="label">Phone</div>
+                    <div class="value">
+                        <pl-is-available [condition]="contactData.accountOwnerPhone">{{
+                            contactData.accountOwnerPhone | plPhone
+                        }}</pl-is-available>
+                    </div>
+                    <div class="label">Email</div>
+                    <div class="value">
+                        <pl-is-available [condition]="contactData.accountOwnerEmail">
+                            <a [href]="'mailto:' + contactData.accountOwnerEmail">{{
+                                contactData.accountOwnerEmail
+                            }}</a>
+                        </pl-is-available>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                PL Clinical Contact
+            </div>
+            <div class="card-body">
+                <div class="label-fields">
+                    <div class="label">Name</div>
+                    <div class="value">
+                        <pl-is-available [condition]="contactData.accountCqmName">{{ contactData.accountCqmName }}</pl-is-available>
+                    </div>
+                    <div class="label">Phone</div>
+                    <div class="value">
+                        <pl-is-available [condition]="contactData.accountCqmPhone">{{
+                            contactData.accountCqmPhone | plPhone
+                        }}</pl-is-available>
+                    </div>
+                    <div class="label">Email</div>
+                    <div class="value">
+                        <pl-is-available [condition]="contactData.accountCqmEmail">
+                            <a [href]="'mailto:' + contactData.accountCqmEmail">{{
+                                contactData.accountCqmEmail
+                            }}</a>
+                        </pl-is-available>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                About
+            </div>
+            <div class="card-body">
+                <div class="label-fields">
+                    <div class="label">Address</div>
+                    <div class="value">
+                        <pl-is-available [condition]="account.street + account.city + account.stateCode + account.postalCode">
+                            {{ account.street }}<br />
+                            {{ account.city }}, {{ account.stateCode }} {{ account.postalCode }}
+                        </pl-is-available>
+                    </div>
+                    <div class="label">Website</div>
+                    <div class="value">
+                        <pl-is-available [condition]="account.website">
+                            <a [href]="account.website" [title]="account.name + ' website'" target="_blank">{{
+                                account.website
+                            }}</a>
+                        </pl-is-available>
+                    </div>
+                    <div class="label">Timezone</div>
+                    <div class="value">
+                        <pl-is-available [condition]="account.timezone">{{ account.timezone }}</pl-is-available>
+                    </div>
+                    <div class="label">Site</div>
+                    <div class="value">
+                        <pl-is-available [condition]="account.stateCode">{{ account.stateCode }}</pl-is-available>
+                    </div>
+                    <div class="label" *ngIf="account.type">Type</div>
+                    <div class="value" *ngIf="account.type">
+                        <pl-is-available [condition]="account.type">{{ account.type }}</pl-is-available>
+                    </div>
+                    <div class="label" *ngIf="clientStats">{{ clientStats.nextMonthName }} IEPs</div>
+                    <div class="value" *ngIf="clientStats">{{ clientStats.nextMonthAnnualIepCount }}</div>
+                    <div class="label" *ngIf="clientStats">{{ clientStats.nextMonthName }} Triennials</div>
+                    <div class="value" *ngIf="clientStats">{{ clientStats.nextMonthEvaluationCount }}</div>
+                    <div class="label" *ngIf="account.equipmentOrderUrl">Equipment</div>
+                    <div class="value" *ngIf="account.equipmentOrderUrl"><a target="_blank" href="{{ account.equipmentOrderUrl }}">Equipment Order Form</a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                School Year Dates
+                <a *ngIf="canEditSchoolYearDates" class="edit" [routerLink]="" (click)="onEditSchoolYearDates()">Edit</a>
+            </div>
+            <div class="card-body">
+                <pl-dot-loader *ngIf="loading.keyDates"></pl-dot-loader>
+                <div *ngIf="!loading.keyDates && flatKeyDates" class="label-fields">
+                    <div class="label">School Year Start</div>
+                    <div class="value">
+                        <pl-is-available [condition]="flatKeyDates.start.formattedDate">{{
+                            flatKeyDates.start.formattedDate
+                        }}</pl-is-available>
+                    </div>
+                    <div class="label">School Year End</div>
+                    <div class="value">
+                        <pl-is-available [condition]="flatKeyDates.end.formattedDate">{{
+                            flatKeyDates.end.formattedDate
+                        }}</pl-is-available>
+                    </div>
+                    <div class="label">Actual Therapy Start</div>
+                    <div class="value">
+                        <pl-is-available [condition]="account.dateTherapyStarted">{{
+                            account.dateTherapyStarted
+                        }}</pl-is-available>
+                    </div>
+                    <div class="label">Projected Therapy Start</div>
+                    <div class="value">
+                        <pl-is-available [condition]="account.projectedTherapyStartDate">{{
+                            account.projectedTherapyStartDate
+                        }}</pl-is-available>
+                    </div>
+                    <div *ngIf="flatKeyDates.esyStart.formattedDate" class="label">ESY Start</div>
+                    <div *ngIf="flatKeyDates.esyStart.formattedDate" class="value">
+                        <pl-is-available [condition]="flatKeyDates.esyStart.formattedDate">{{
+                            flatKeyDates.esyStart.formattedDate
+                        }}</pl-is-available>
+                    </div>
+                    <div *ngIf="flatKeyDates.esyEnd.formattedDate" class="label">ESY End</div>
+                    <div *ngIf="flatKeyDates.esyEnd.formattedDate" class="value">
+                        <pl-is-available [condition]="flatKeyDates.esyEnd.formattedDate">{{
+                            flatKeyDates.esyEnd.formattedDate
+                        }}</pl-is-available>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Non-Service Dates
+                <a *ngIf="canEditBlackoutDates" class="edit" [routerLink]="" (click)="onEditBlackoutDates()">Edit</a>
+            </div>
+            <div class="card-body">
+                <pl-dot-loader *ngIf="loading.blackoutDates"></pl-dot-loader>
+                <div *ngIf="!loading.blackoutDates && flatBlackoutDates && flatBlackoutDates.length === 0">
+                    <h4>No Dates Added Yet</h4><br />
+                    “Non-Service Dates” include holidays, school breaks, in-service days, standardized testing days, etc. when no services are scheduled
+                </div>
+                <div class="label-fields">
+                    <ng-container *ngFor="let item of flatBlackoutDates">
+                        <div class="label month">{{ item.month }}</div>
+                        <div class="value">
+                            <span>{{ item.value.join(', ') }}</span>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

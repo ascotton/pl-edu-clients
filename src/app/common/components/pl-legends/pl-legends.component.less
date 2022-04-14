@@ -1,0 +1,25 @@
+@import 'core/colors.less';
+:host {
+    &.vertical {
+        flex-direction: column;
+    }
+    width: 100%;
+    display: flex;
+    .legend {
+        display: flex;
+        align-items: center;
+        &-box {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            border: solid 1px @gray-dark;
+            margin-right: 5px;
+        }
+        &-label {
+            font-size: 10px;
+            font-weight: normal;
+            color: @gray-dark;
+        }
+    }
+}

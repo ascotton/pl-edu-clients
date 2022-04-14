@@ -1,0 +1,113 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+
+:host {
+    border-right: 1px solid @gray-really-light;
+
+    .padding;
+
+    .chart-wrapper {
+        position: relative;
+        max-width: 140px;
+
+        .margin-b;
+
+        // center heading within chart: the chart will size the height
+        // which will consequently set the chart wrapper height.
+        // Remove heading-wrapper from content flow and use positioning
+        // to fill the entire chart wrapper and chart space. Use flex
+        // to center the h2 text vertically and horizontally.
+        .heading-wrapper {
+            align-items: center;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+
+            h2 {
+                flex: 0 0 auto;
+                text-align: center;
+
+                .service-name {
+                    display: block;
+                    font-size: .75em;
+                }
+            }
+        }
+
+        .chart-canvas {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 10em;
+
+            // http://www.chartjs.org/docs/latest/general/responsive.html#important-note
+            position: relative;
+        }
+    }
+
+    .status-legend {
+        .status-legend-item {
+            @dot-size: .625em;
+            @line-height: calc(1.4 * 1em);
+            @dot-margin: .5ch;
+            font-size: 13px;
+
+            hyphens: auto;
+            padding-left: calc(@dot-size + @dot-margin);
+            position: relative;
+
+            .margin-b;
+
+            // Use absolute positioning to pull this before
+            // block to the left, into the margin. The margin
+            // allows the text to align to the right of the
+            // dot when the text wraps.
+            &::before {
+                display: inline-block;
+                content: ' ';
+                height: @dot-size;
+                left: 0;
+                position: absolute;
+                // align dot center text ->
+                top: calc(@line-height / 2 - @dot-size / 2);
+                width: @dot-size;
+            }
+
+            &.in-service::before {
+                background-color: @green;
+            }
+
+            &.not-in-service::before {
+                background-color: @gray;
+            }
+
+            &.onboarding::before {
+                background-color: @yellow;
+            }
+        }
+    }
+
+    ul,
+    li {
+        list-style: none;
+
+        .margin-small-b;
+    }
+
+    .label,
+    .value {
+        display: block;
+    }
+
+    .value {
+        font-weight: bold;
+    }
+
+    .label {
+        color: @text-color;
+    }
+}

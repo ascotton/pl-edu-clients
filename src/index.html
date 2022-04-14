@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="/c/">
+    <!-- <base href="/educlients/"> -->
+    <title>PresenceLearning</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+      #app-loading {
+        margin-top: 25%;
+        width: 100%;
+        display: block;
+        text-align: center;
+        color: #747678;
+        font-family: 'Roboto', Arial, sans-serif;
+      }
+      .pl-tooltip {
+        font-size: 12px;
+        color: #4c4f52;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript" src="/c/env-config.js"></script>
+    <app-root>
+      <span id="app-loading">Loading...</span>
+    </app-root>
+  </body>
+  <script type='text/javascript' src="https://c.la4-c1-chi.salesforceliveagent.com/content/g/js/37.0/deployment.js"></script>
+  <script>
+    // todo: move to service and configs
+    const plLiveAgent = window.plLiveAgent = {};
+    plLiveAgent.endpoint      = 'https://d.la4-c1-chi.salesforceliveagent.com/chat';
+    plLiveAgent.deploymentId  = '57280000000CbGq';
+    plLiveAgent.orgId         = '00D80000000aMap';
+    plLiveAgent.buttonId      = '57380000000GnQ2';
+    plLiveAgent.chatAvailable = undefined;
+
+    plLiveAgent.setup = () => {
+        return new Promise((resolve, reject) => {
+            var buttonCallback = function(e) {
+                plLiveAgent.chatAvailable = (e === liveagent.BUTTON_EVENT.BUTTON_AVAILABLE);
+                plLiveAgent.chatAvailable_ts = new Date().toString();
+                setTimeout(() => {
+                    resolve(plLiveAgent.chatAvailable);
+                })
+                return (e === liveagent.BUTTON_EVENT.BUTTON_ACCEPTED);
+            };
+
+            if (typeof liveagent !== 'undefined') {
+                liveagent.addButtonEventHandler(plLiveAgent.buttonId, buttonCallback);
+                liveagent.init(plLiveAgent.endpoint, plLiveAgent.deploymentId, plLiveAgent.orgId);
+                liveagent.showWhenOnline(plLiveAgent.buttonId, null);
+            }
+      });
+    };
+
+    plLiveAgent.setup();
+  </script>
+</html>

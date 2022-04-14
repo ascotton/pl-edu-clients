@@ -1,0 +1,27 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-nav-left-steps {
+    .step {
+        &.disabled {
+            .step-inner {
+                cursor: not-allowed;
+            }
+            .text {
+                color: @gray;
+            }
+        }
+    }
+    .step-inner {
+        .padding;
+        .padding-large-tb;
+        border-bottom: solid 1px @gray-light;
+
+        &.active {
+            background-color: @slate-light;
+        }
+    }
+    .icon-wrapper {
+        width: 30px;
+    }
+}

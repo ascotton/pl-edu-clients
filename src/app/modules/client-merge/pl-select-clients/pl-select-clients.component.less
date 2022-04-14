@@ -1,0 +1,27 @@
+@import 'core/colors.less';
+
+.select-clients {
+
+    .instructions {
+        margin-bottom: 20px;
+    }
+
+    .filters {
+        width: 50%;
+    }
+    &.debug-show-div {
+        @debug-color: rgb(0, 183, 255);
+        border: 3px solid @debug-color;
+        padding: 20px;
+        position: relative;
+        .debug-component-name {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 11px;
+            padding: 2px;
+            background-color: @debug-color;
+            color: white;
+        }
+    }
+}

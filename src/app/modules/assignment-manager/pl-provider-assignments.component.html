@@ -1,0 +1,158 @@
+<div class="pl-provider-assignments page-container">
+
+    <div class="tabs-class">
+        <pl-tabs [tabs]="tabs"></pl-tabs>
+    </div>
+
+    <div class="content-container margin-large cards-page-container">
+        <div class="blurb margin-large-b">
+            <h4>Welcome to your assignments!</h4>
+            Any time PL has a new opportunity for you to work with a district it will be displayed here, in order for you to take action, along with any pending or active assignments.<br />
+            <br />
+            <b>Total Hours Assigned:</b> {{ totalHoursProposed }}<br />
+            <b>Total Hours Desired:</b> {{ maxWeeklyHours }}<br />
+            <br />
+            <div *ngIf="!loading && !loadingAvailability">
+                <div *ngIf="totalHoursProposed >= maxWeeklyHours">
+                    To receive additional assignment proposals, increase your total hours on the <a [routerLink]="['/availability']">availability tab</a>.
+                </div>
+                <div *ngIf="totalHoursProposed < maxWeeklyHours">
+                    If you're satisfied with your current assignments, click the button below to stop receiving new requests.<br />
+                    <button pl-button (click)="updateMaxAvailableHours()">I want to stop receiving additional requests</button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div [style.text-align]="'center'">
+            <div *ngIf="!loading && !hasAssignments" class="empty-assignments">
+                You have no assignments at this time
+            </div>
+        </div>
+        <div *ngIf="!loading && hasAssignments" class="cards lanes flexbox">
+            <div class="flex1 lane-1 lane proposed" *ngIf="assignments.initiated.length" [@plFadeInAnimation]>
+                <div class="title-container">
+                    <div class="title proposed">PROPOSED <span class="count">( {{ assignments.initiated.length }} )</span></div>
+                </div>
+                <div class="card-container" [ngClass]="classSingleLane()">
+                    <div class="card proposed" [ngClass]="classSingleLane()" *ngFor="let assignment of assignments.initiated">
+                        <div class="card-data org-name">
+                            <div class="org-name-text">
+                                {{ assignment.orgName }}
+                            </div>
+                            <div class="service-line-text" *ngFor="let serviceLine of assignment.serviceLines">
+                                {{ serviceLine }}
+                            </div>
+                        </div>
+                        <div class="card-data sub" *ngIf="assignment.payRate"><div class="label">Hourly rate</div>${{ assignment.payRate }}</div>
+                        <div class="card-data sub school-type"><div class="label">Type</div>{{ assignment.orgSchoolType }}</div>
+                        <div class="card-data sub state"><div class="label">State</div>{{ assignment.orgState }}</div>
+                        <div class="card-data sub timezone" *ngIf="assignment.orgTimezone"><span class="label">Timezone</span>{{ assignment.orgTimezone}}</div>
+                        <div class="card-data sub est-dir-hours"><span class="label">Est. Hours</span>{{ assignment.estimatedHours | number: '1.1' }}</div>
+                        <div class="card-data sub"><span class="label">FTE?</span>{{ assignment.isFTE ? 'Yes' : 'No'}}</div>
+                        <div class="card-data sub"><span class="label">ESY?</span>{{ assignment.isESY ? 'Yes' : 'No'}}</div>
+                        <div class="card-data qualifications" *ngIf="assignment.unmetRequirements.length">
+                            <div class="margin-large-b qualifications-message">
+                                If you accept this assignment, you will need the following additional credentials.
+                            </div>
+                            <ul *ngFor="let item of assignment.unmetRequirements">
+                                <div>
+                                    <div class="columns">
+                                        <div class="col left">
+                                            <pl-icon class="red" [svg]="'alert'" width="16"></pl-icon>
+                                        </div>
+                                        <div class="col right">
+                                            <div class="gray-darker margin-b unmet-requirement" *ngFor="let option of item.options">
+                                                {{option}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons" [style.whiteSpace]="'nowrap'">
+                            <button pl-button class="pl-button info" (click)="onClickAccept(assignment)" [disabled]="saving">
+                                Accept
+                            </button>
+                            <button pl-button class="pl-button bare" (click)="onClickDecline(assignment)" [disabled]="saving">
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex1 lane-1 lane pending" *ngIf="assignments.pending.length" [@plFadeInAnimation]>
+                <div class="title-container">
+                    <div class="title pending">PENDING <span class="count">( {{ assignments.pending.length }} )</span></div>
+                </div>
+                <div class="card-container" [ngClass]="classSingleLane()">
+                    <div class="card pending" [ngClass]="classSingleLane()" *ngFor="let assignment of assignments.pending">
+                        <div class="card-data org-name">
+                            <div class="org-name-text">
+                                {{ assignment.orgName }}
+                            </div>
+                            <div class="service-line-text" *ngFor="let serviceLine of assignment.serviceLines">
+                                {{ serviceLine }}
+                            </div>
+                        </div>
+                        <div class="card-data sub" *ngIf="assignment.payRate"><div class="label">Hourly rate</div>${{ assignment.payRate }}</div>
+                        <div class="card-data sub school-type"><div class="label">Type</div>{{ assignment.orgSchoolType }}</div>
+                        <div class="card-data sub state"><div class="label">State</div>{{ assignment.orgState }}</div>
+                        <div class="card-data sub timezone" *ngIf="assignment.orgTimezone"><span class="label">Timezone</span>{{ assignment.orgTimezone}}</div>
+                        <div class="card-data sub est-dir-hours"><span class="label">Est. Hours</span>{{ assignment.estimatedHours | number: '1.1' }}</div>
+                        <div class="card-data sub"><span class="label">FTE?</span>{{ assignment.isFTE ? 'Yes' : 'No'}}</div>
+                        <div class="card-data sub"><span class="label">ESY?</span>{{ assignment.isESY ? 'Yes' : 'No'}}</div>
+                        <div class="card-data qualifications" *ngIf="assignment.unmetRequirements.length">
+                            <div class="margin-large-b qualifications-message">
+                                Someone from PL will be in touch within the next few days to help you with acquiring these missing requirements.
+                            </div>
+                            <ul *ngFor="let item of assignment.unmetRequirements">
+                                <div>
+                                    <div class="columns">
+                                        <div class="col left">
+                                            <pl-icon class="red" [svg]="'alert'" width="16"></pl-icon>
+                                        </div>
+                                        <div class="col right">
+                                            <div class="gray-darker margin-b unmet-requirement" *ngFor="let option of item.options">
+                                                {{option}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex1 lane-1 lane active" *ngIf="assignments.active.length" [@plFadeInAnimation]>
+                <div class="title-container">
+                    <div class="title active">ACTIVE <span class="count">( {{ assignments.active.length }} )</span></div>
+                </div>
+                <div class="card-container" [ngClass]="classSingleLane()">
+                    <div class="card active" [ngClass]="classSingleLane()" *ngFor="let assignment of assignments.active">
+                        <div class="card-data org-name">
+                            <div class="org-name-text">
+                                {{ assignment.orgName }}
+                            </div>
+                            <div class="service-line-text" *ngFor="let serviceLine of assignment.serviceLines">
+                                {{ serviceLine }}
+                            </div>
+                        </div>
+                        <div class="card-data sub" *ngIf="assignment.payRate"><div class="label">Hourly rate</div>${{ assignment.payRate }}</div>
+                        <div class="card-data sub school-type"><div class="label">Type</div>{{ assignment.orgSchoolType }}</div>
+                        <div class="card-data sub state"><div class="label">State</div>{{ assignment.orgState }}</div>
+                        <div class="card-data sub timezone" *ngIf="assignment.orgTimezone"><span class="label">Timezone</span>{{ assignment.orgTimezone}}</div>
+                        <div class="card-data sub est-dir-hours"><span class="label">Est. Hours</span>{{ assignment.estimatedHours | number: '1.1' }}</div>
+                        <div class="card-data sub"><span class="label">FTE?</span>{{ assignment.isFTE ? 'Yes' : 'No'}}</div>
+                        <div class="card-data sub"><span class="label">ESY?</span>{{ assignment.isESY ? 'Yes' : 'No'}}</div>
+                        <div class="card-data sub missing-req"><span class="label">End Date</span>{{ assignment.endDate | date:'MM/dd/yyyy'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

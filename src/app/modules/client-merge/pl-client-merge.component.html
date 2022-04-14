@@ -1,0 +1,95 @@
+<div class="pl-client-merge" [ngClass]="{'debug-show-div': util.debugDiv(_state)}" *ngIf="_state.initialized">
+    <div *ngIf="util.debugDiv(_state)" class="debug-component-name">
+        PLClientMergeComponent
+    </div>
+
+    <pl-closable-page-header [headerText]="'Merge Duplicate Clients'" [closeCallback]="goHome">
+    </pl-closable-page-header>
+
+    <div class="margin-xlarge-lr" *ngIf="shouldBlockMerge()">
+        <h2>Cannot merge clients. Please contact the treating provider to update the record.</h2>
+        <ul class="margin-large-tb">
+            <div *ngIf="bothClientsHaveActiveIep()" class="banner margin-tb">
+                <div class="columns">
+                    <span class="left">
+                        <pl-icon [svg]="'info'" [class]="'blue'" [verticalAlign]="'-2px'" [scale]="0.8"></pl-icon>
+                    </span>
+                    <span class="banner-message right">
+                        Both clients have an Active IEP/Progress Tracker
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="bothClientsHaveFutureIep()" class="banner margin-tb">
+                <div class="columns">
+                    <span class="left">
+                        <pl-icon [svg]="'info'" [class]="'blue'" [verticalAlign]="'-2px'" [scale]="0.8"></pl-icon>
+                    </span>
+                    <span class="banner-message right">
+                        Both clients have a Future IEP/Progress Tracker
+                    </span>
+                </div>
+            </div>
+
+            <div *ngIf="futureIepBeforeActiveIep()" class="banner margin-tb">
+                <div class="columns">
+                    <span class="left">
+                        <pl-icon [svg]="'info'" [class]="'blue'" [verticalAlign]="'-2px'" [scale]="0.8"></pl-icon>
+                    </span>
+                    <span class="banner-message right">
+                        There is a Future IEP/Progress Tracker with a start date that is earlier than the other clients's Active IEP/Progress Tracker start date
+                    </span>
+                </div>
+            </div>
+        </ul>
+        <button pl-button class="pl-button primary" (click)="goHome()">Exit</button>
+    </div>
+    <div [hidden]="shouldBlockMerge()">
+        <div class="navigation">
+            <pl-steps *ngIf="!clientMergeService.mergeComplete" [steps]="steps"></pl-steps>
+            <button type="button" pl-button class="bare merge-tips" (click)="showTips()">
+                <pl-icon [svg]="'info'" [scale]="1.0"></pl-icon>
+                Merge Tips
+            </button>
+        </div>
+        <div class="padding-large">
+            <router-outlet></router-outlet>
+
+            <div class="steps-buttons-container padding-large" *ngIf="!clientMergeService.mergeComplete">
+                <!-- This selection-preview really belongs in select-clients, but design wants it inline with navigation -->
+                <div class="selection-preview" *ngIf="clientMergeService.currentStep===0">
+                    <div class="selection-status">{{ clientMergeService.clientsSelected }} of 2 Clients selected.</div>
+                    <div class="preview-boxes">
+                        <div class="preview-box no-client-selected" *ngIf="!clientMergeService.selectedClient1"></div>
+                        <div class="preview-box client-selected" *ngIf="clientMergeService.selectedClient1">
+                            <div class="client-selected-text">
+                                <div class="selected-clients-names">
+                                    {{ clientMergeService.selectedClient1.firstName }} {{ clientMergeService.selectedClient1.lastName }}
+                                </div>
+                                <div>{{ clientMergeService.selectedClient1.externalId }}</div>
+                            </div>
+                            <div class="unselect-button"
+                                (click)="clientMergeService.toggleClientSelection(clientMergeService.selectedClient1)">×</div>
+                        </div>
+                        <div class="preview-box no-client-selected" *ngIf="!clientMergeService.selectedClient2"></div>
+                        <div class="preview-box client-selected" *ngIf="clientMergeService.selectedClient2">
+                            <div class="client-selected-text">
+                                <div class="selected-clients-names">
+                                    {{ clientMergeService.selectedClient2.firstName }} {{ clientMergeService.selectedClient2.lastName }}
+                                </div>
+                                <div>{{ clientMergeService.selectedClient2.externalId }}</div>
+                            </div>
+                            <div class="unselect-button"
+                                (click)="clientMergeService.toggleClientSelection(clientMergeService.selectedClient2)">×</div>
+                        </div>
+                    </div>
+                </div>
+
+                <pl-dot-loader *ngIf="merging"></pl-dot-loader>
+                <pl-steps-buttons *ngIf="!merging" [steps]="steps" [finishText]="'Merge'" (onCancel)="stepsCancel($event)"
+                                (onFinish)="stepsFinish($event)" (onNext)="stepsNext($event)" (onPrev)="stepsPrev($event)"></pl-steps-buttons>
+            </div>
+        </div>
+        <div class="steps-spacer">
+        </div>
+    </div>
+</div>

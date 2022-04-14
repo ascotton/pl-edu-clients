@@ -1,0 +1,46 @@
+@import 'core/colors.less';
+
+.pl-account-student-status-chart {
+    .side-by-side {
+        display: grid;
+        grid-template-columns: 50% 50%
+    }
+
+    .status-legend {
+        .status-row {
+            border-bottom: 1px solid @gray-lighter;
+            padding: 1px 0;
+            margin-bottom: 1px;
+        }
+        .status-indicator {
+            display: table-cell;
+            .color-block {
+                height: 12px;
+                width: 12px;
+                margin-right: 7px;
+                position: relative;
+                top: 1px;                     
+            }
+        }
+        .status-label {
+            display: table-cell;
+            width: 100%;
+            white-space: nowrap;
+        }
+        .status-count {
+            display: table-cell;
+            font-size: 18px;
+            font-weight: bold;
+            padding-right: 5px;            
+        }
+        .in-service {
+            color: @green;
+        }
+        .not-in-service {
+            color: @gray;
+        }
+        .onboarding {
+            color: @yellow;
+        }
+    }
+}

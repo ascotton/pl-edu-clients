@@ -1,0 +1,83 @@
+<div class="pl-client-iep-tab"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  *ngIf="_state.initialized"
+  >
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <div *ngIf="displayIepPage()">
+    <!-- EMPTY IEP-->
+    <div *ngIf="isReadOnly() && hasNoIEPs()">
+        No IEP/Progress Tracker currently on file for this student.
+    </div>
+
+    <div *ngIf="!isReadOnly()">
+      <button pl-button class="gray-outline" [disabled]="!canAddIep()" (click)="onClickAddIep(_state)">
+        <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'" class="margin-small-r"></pl-icon> Add IEP/Progress Tracker
+      </button>
+
+      <div *ngIf="displayEmptyIep()" class="empty-iep-container" [@enterAnimation]>
+        <div class="divider-line"></div>
+        <div class="empty-iep-instructions">
+          Add IEP/Progress Trackers and Goals to enable progress monitoring for your students!
+        </div>
+        <div class="empty-iep-graphic">
+          <pl-icon [svg]="'new-iep-graphic'" [height]="170" [width]="180"></pl-icon>
+        </div>
+        <div class="empty-iep-action">
+          <a class="empty-iep-action-link" (click)="onClickAddIep(_state)">Add IEP/Progress Tracker</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD IEP FORM-->
+    <div *ngIf="util.inFlow('ADD_IEP', _state)">
+      <pl-client-iep-form
+        [activeIep]="service.getActiveIep(_state)"
+        [futureIep]="service.getFutureIep(_state)"
+        [completedIep]="service.getMostRecentCompletedIep(_state)"
+        [client]="_state.client"
+      ></pl-client-iep-form>
+    </div>
+
+    <!-- ACTIVE IEP-->
+    <div class="iep active-iep" *ngIf="displayActiveIep()">
+      <pl-client-iep-item
+        [iep]="service.getActiveIep(_state)"
+        [ieps]="_state.model.data.ieps"
+        [client]="_state.client"
+        ></pl-client-iep-item>
+    </div>
+
+    <!-- FUTURE IEP-->
+    <div class="iep future-iep" *ngIf="displayFutureIep()">
+      <pl-client-iep-item
+        [iep]="service.getFutureIep(_state)"
+        [ieps]="_state.model.data.ieps"
+        [client]="_state.client"
+        ></pl-client-iep-item>
+    </div>
+
+    <!-- COMPLETED IEP-->
+    <div *ngFor="let iep of service.getCompletedIeps(_state)">
+      <div class="iep completed-iep" *ngIf="displayCompletedIep()">
+        <pl-client-iep-item
+          [iep]="iep"
+          [ieps]="_state.model.data.ieps"
+          [client]="_state.client"
+          ></pl-client-iep-item>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="displayGoalStatusPage()" [@enterAnimation]>
+    <pl-client-end-iep-goal-status [iep]="_state.model.endIep"></pl-client-end-iep-goal-status>
+  </div>
+
+  <div *ngIf="displayExitStatusPage()" [@enterAnimation]>
+    <pl-client-end-iep-exit-status [iep]="_state.model.endIep"></pl-client-end-iep-exit-status>
+  </div>
+
+</div>

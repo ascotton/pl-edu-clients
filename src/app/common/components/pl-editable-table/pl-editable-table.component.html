@@ -1,0 +1,179 @@
+<div class="editable-table">
+    <cdk-virtual-scroll-viewport
+        #scrollViewport
+        itemSize="50"
+        class="editable-table-scroller"
+        (scrolledIndexChange)="scrollIndexChanged($event)">
+        <div class="editable-table-body">
+            <div class="editable-table-header" [style.top]="inverseTranslation">
+                <div class="editable-table-row">
+                    <div class="cell init-cell col-header"></div>
+                    <div class="cell col-header" *ngFor="let cell of rows[0].values; let i=index;">
+                        <div *ngIf="!canChangeColumns" class="title" [class.sorted]="hasSorting(i)" (click)="onSortByColumn(i)">
+                            <span class="margin-r">{{formattedFieldChoices[i].label}}</span>
+                            <pl-icon
+                                *ngIf="formattedFieldChoices[i].isSortable && formattedFieldChoices[i].sortDirection === 'ascending'"
+                                class="col-arrow"
+                                [svg]="'chevron-up'"
+                                [scale]="0.6">
+                            </pl-icon>
+                            <pl-icon
+                                *ngIf="formattedFieldChoices[i].isSortable && formattedFieldChoices[i].sortDirection === 'descending'"
+                                class="col-arrow"
+                                [svg]="'chevron-down'"
+                                [scale]="0.6">
+                            </pl-icon>
+                            <pl-icon
+                                *ngIf="formattedFieldChoices[i].isSortable && !formattedFieldChoices[i].sortDirection"
+                                class="col-arrow"
+                                [svg]="'chevron-up-down'"
+                                [scale]="0.7">
+                            </pl-icon>
+                        </div>
+                        <div *ngIf="canChangeColumns">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Select Label</mat-label>
+                                <mat-select [value]="mappings[i]" (selectionChange)="onColumnChange($event, i)">
+                                    <mat-option *ngFor="let option of formattedFieldChoices" [value]="option.value">
+                                        {{option.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div
+                                *ngIf="getColTipMessage(i)"
+                                class="tip-arrow"
+                                matTooltip="{{getColTipMessage(i)}}"
+                                matTooltipPosition="above"
+                                matTooltipClass="editable-table-row-tooltip">
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDeleteRow" class="cell init-cell col-header"></div>
+                </div>
+                <div *ngIf="showHeaderMessage" class="error-message">
+                    <pl-icon [svg]="'close'" [height]="16" [width]="16"></pl-icon>
+                    <span class="error-message-text">{{headerErrorMessage}}</span>
+                </div>
+            </div>
+            <div class="editable-table-rows" #tableRowsRef>
+                <div
+                    class="editable-table-row"
+                    *cdkVirtualFor="let row of rows; let i=index;">
+                    <div
+                        class="cell row-header sticky-cell"
+                        [ngClass] ="{'highlighted-row': i===highlighted && !showOnlyErrors}">
+                        {{i+1}}
+                        <div
+                            *ngIf="row.error"
+                            matTooltip="{{row.error.split('-').join('&#13;')}}"
+                            matTooltipPosition="right"
+                            matTooltipClass="editable-table-row-tooltip">
+                            <pl-icon
+                                [svg]="'caution'"
+                                [height]="18"
+                                [width]="18"
+                                [class]="'cursor-hand inline-block yellow'"
+                                style="position: relative;top: 5px;">
+                            </pl-icon>
+                        </div>
+                    </div>
+                    <div
+                        class="cell value"
+                        title="{{row.error}}"
+                        [ngClass]="{'highlighted-row': i===highlighted, 'error-row': row.error}"
+                        *ngFor="let cell of row.values; let j=index;">
+                        <div
+                            *ngIf="!cell.editable"
+                            class="cell-input"
+                            [class.non-editable]="!cell.editable && i!==highlighted">
+                            <span *ngIf="cell.inputConfig.inputType !== 'date' || headerRow === i">{{cell.value | plTruncate:60:'…'}}</span>
+                            <span *ngIf="cell.inputConfig.inputType === 'date' && headerRow !== i">{{cell.value | date:"M/d/yyyy"}}</span>
+                        </div>
+                        <input
+                            *ngIf="cell.editable && cell.inputConfig.inputType === 'text'"
+                            type="text"
+                            class="cell-input"
+                            [value]="cell.value"
+                            [attr.maxlength]= "cell.inputConfig.maxChars"
+                            [attr.tabindex]= "cell.inputConfig.tabIndex"
+                            [attr.rowindex]="i"
+                            [attr.colindex]="j"
+                            (click)="onCellClick($event, {rowIndex: i, colIndex: j})"
+                            (keyup)="onCellKeyup($event, {rowIndex: i, colIndex: j})"
+                            (change)="onCellChange($event, cell, {rowIndex: i, colIndex: j})"/>
+                        <select
+                            *ngIf="cell.editable && cell.inputConfig.inputType === 'select'"
+                            class="cell-input"
+                            [attr.tabindex]= "cell.inputConfig.tabIndex"
+                            [attr.rowindex]="i"
+                            [attr.colindex]="j"
+                            (click)="onCellClick($event, {rowIndex: i, colIndex: j})"
+                            (keyup)="onCellKeyup($event, {rowIndex: i, colIndex: j})"
+                            (change)="onCellChange($event, cell, {rowIndex: i, colIndex: j})">
+                            <option
+                                *ngIf="!isCellValueInOptions(cell.value, cell.inputConfig.options)"
+                                [value]="cell.value">
+                                {{cell.value | plTruncate:50:'…'}}
+                            </option>
+                            <option
+                                *ngFor="let option of cell.inputConfig.options"
+                                [value]="option.value"
+                                [selected]="option.value.toLowerCase() === cell.value.toLowerCase()">
+                                {{option.label | plTruncate:50:'…'}}
+                            </option>
+                        </select>
+                        <textarea
+                            *ngIf="cell.editable && cell.inputConfig.inputType === 'textarea'"
+                            class="cell-input"
+                            [attr.maxlength]= "cell.inputConfig.maxChars"
+                            [attr.tabindex]= "cell.inputConfig.tabIndex"
+                            [attr.rowindex]="i"
+                            [attr.colindex]="j"
+                            (click)="onCellClick($event, {rowIndex: i, colIndex: j})"
+                            (keyup)="onCellKeyup($event, {rowIndex: i, colIndex: j})"
+                            (change)="onCellChange($event, cell, {rowIndex: i, colIndex: j})">{{cell.value}}</textarea>
+                        <input
+                            *ngIf="cell.editable && cell.inputConfig.inputType === 'date'"
+                            matInput [matDatepicker]="picker" [min]="cell.inputConfig.minDate" [max]="cell.inputConfig.maxDate"
+                            class="cell-input"
+                            [value]="getDateFormControlValue(cell.value)"
+                            [attr.tabindex]= "cell.inputConfig.tabIndex"
+                            [attr.rowindex]="i"
+                            [attr.colindex]="j"
+                            (click)="picker.open(); onCellClick($event, {rowIndex: i, colIndex: j})"
+                            (keyup)="$event.keyCode === 13 && !picker.opened && picker.open()"
+                            (dateChange)="onCellChange($event, cell, {rowIndex: i, colIndex: j})"/>
+                        <div
+                            class="icon-right margin-small-r" *ngIf="cell.editable && cell.inputConfig.inputType === 'date'"
+                            (click)="picker.open(); onCellClick($event, {rowIndex: i, colIndex: j})">
+                            <pl-icon [svg]="'schedule'"></pl-icon>
+                        </div>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </div>
+                    <div
+                        *ngIf="canDeleteRow"
+                        class="cell row-footer sticky-cell"
+                        matTooltip="Clear row data"
+                        matTooltipPosition="left"
+                        matTooltipClass="editable-table-row-tooltip">
+                        <button
+                            *ngIf="row.isDataRow"
+                            mat-mini-fab
+                            color="primary"
+                            aria-label="Clear row data"
+                            (click)="onClearRow($event, row)">
+                            <pl-icon class="clear-icon" [svg]="'trash'"></pl-icon>
+                        </button>
+                    </div>
+                </div>
+                <div
+                    class="editable-table-row"
+                    *ngFor="let row of dummyRows">
+                    <div class="cell row-header sticky-cell"></div>
+                    <div class="cell value" *ngFor="let cell of row"></div>
+                    <div *ngIf="canDeleteRow" class="cell row-footer sticky-cell"></div>
+                </div>
+            </div>
+        </div>
+    </cdk-virtual-scroll-viewport>
+</div>

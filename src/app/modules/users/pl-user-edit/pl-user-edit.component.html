@@ -1,0 +1,7 @@
+<div class="pl-user-edit">
+    <pl-user-view *ngIf="!loading" [user]="user" [assignments]="assignments" (cancel)="onCancel()">
+        <button *ngIf="mayAssumeUser" pl-button class="gray-outline x-qa-assume-user" (click)="assumeUser(user.email)">
+            Assume {{ user.username }}
+        </button>
+    </pl-user-view>
+</div>

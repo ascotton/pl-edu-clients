@@ -1,0 +1,18 @@
+{
+    "projectId": "cvb7dt",
+    "viewportWidth": 1440,
+    "viewportHeight": 2000,
+    "defaultCommandTimeout": 12000,
+    "requestTimeout": 12000,
+    "video": true,
+    "trashAssetsBeforeHeadlessRun": false,
+    "baseUrl": "https://dev.presencek8s.com:3010",
+    "reporter": "mochawesome",
+    "reporterOptions": {
+        "reportDir": "cypress/results",
+        "overwrite": false,
+        "html": false,
+        "json": true
+    },
+    "chromeWebSecurity": false
+}

@@ -1,0 +1,41 @@
+<div class="pl-provider-preagreement">
+    <div class="nav-container">
+        <pl-icon svg="logo-color-no-tm" [width]="50" [height]="27"></pl-icon>
+    </div>
+    <div class="content">
+        <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+        <div *ngIf="isAgreed">
+            <br />
+            <h4><pl-icon class="green" [svg]="'check'"></pl-icon> You're all set!</h4><br />
+            <p>Your agreement is complete. Please contact your PresenceLearning representative to continue.</p>
+        </div>
+        <div *ngIf="!isAgreed && !loading">
+            <div class="margin-large-b">
+                <iframe [src]="documentUrlSafe" class="frame" width="100%" [height]="frameHeight" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>                
+            </div>
+            <div class="download-doc"><a href="{{ documentUrl }}" class="blue" target="_blank"><pl-icon [svg]="'download'" [scale]=".5" class="blue"></pl-icon> Download</a></div>
+            <div class="margin-large-b grid-container">
+                <div>Base Rate:</div>
+                <div>${{ rateDisplay }}</div>
+                <div>Tier 1 Rate:</div>
+                <div>${{ rateDisplay2 }}</div>
+                <div>Tier 2 Rate:</div>
+                <div>${{ rateDisplay3 }}</div>
+            </div>
+            <div class="sig-form">
+                <pl-input-checkbox class="form-input" [(model)]="formVals.agree" [label]="'By entering my name, I agree this is a legal representation of my signature for all purposes, the same as a handwritten signature.'" [required]="true" (change)="checkFormValid()"></pl-input-checkbox>
+                <div *ngIf="message" class="message" [innerHTML]="message"></div>
+                <div class="flexbox">
+                    <div class="form-input input-initials margin-large-r"><pl-input-text [(model)]="formVals.firstName" [label]="'Your first name'" [required]="true" (change)="checkFormValid()" (keyup)="checkFormValid()"></pl-input-text></div>
+                    <div class="form-input input-initials"><pl-input-text [(model)]="formVals.lastName" [label]="'Your last name'" [required]="true" (change)="checkFormValid()" (keyup)="checkFormValid()"></pl-input-text></div>
+                </div>
+                <div class="form-input">
+                    <button pl-button class="primary" (click)="onSave()" [disabled]="!formValid">Agree</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        Questions? Contact <a href="mailto:provider.success@presencelearning.com">provider.success@presencelearning.com</a> or call Support Services at 844-415-4592.
+    </div>
+</div>

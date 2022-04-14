@@ -1,0 +1,99 @@
+@import 'core/colors.less';
+
+.pl-account-contacts {
+    .block {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        z-index: 99999;
+
+        .centered {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+        }
+    }
+
+    div.selected-contact {
+        border: solid 1px #ddd;
+        margin-bottom: 8px;
+
+        &.selected-contact-visible {
+            box-shadow: 0 4px 2px -2px #ddd;
+        }
+
+        .inner {
+            padding: 16px;
+        }
+    }
+
+    div.row-loader {
+        float: left;
+        width: 100%;
+        margin-top: -32px;
+    }
+
+    .row {
+        margin: 0px;
+        padding-top: 4px;
+
+        &.zebra {
+            background-color: #fbfbfb; /* rg todo: get var */
+
+            &:hover {
+                background-color: #e5f6fe; /* rg todo: get var */
+            }
+        }
+
+        .linkish {
+            color: #46b1e1; /* rg todo: get var */
+            fill: #46b1e1; /* rg todo: get var */
+        }
+    }
+
+    table.relations-table {
+        border-collapse: collapse;
+        margin: 4px;
+        margin-top: 16px;
+        width: 60%;
+
+        div.role {
+            min-height: 24px;
+            margin-right: 8px;
+        }
+
+        tr {
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        tr:last-child,
+        tr:nth-last-child(2) {
+            border: none;
+        }
+        th {
+            border-bottom: 1px solid #ccc;
+            background: #ddd; /*#fafafa;*/
+        }
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        td {
+            width: 25%;
+        }
+        td:first-child {
+            width: 50%;
+        }
+    }
+
+    .learn-more {
+        fill: @blue-medium;
+        cursor: pointer;
+        padding-left: 2px;
+        position: relative;
+        top: -2px;
+    }
+}

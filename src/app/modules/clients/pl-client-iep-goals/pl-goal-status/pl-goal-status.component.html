@@ -1,0 +1,20 @@
+<div class="pl-goal-status" [ngClass]="{'debug-show-div': util.showDivs(_state)}" *ngIf="_state.initialized">
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+  <div class="goal-status">
+    <div class="goal-status-select" *ngIf="!isReadOnlyMode() && getStatusOpts()">
+      <pl-input-select [(model)]="_state.model.goal.status"
+      (modelChange)="onChangeGoalStatus($event)" [options]="getStatusOpts()" [placeholder]="'Select Status'"
+      [blurOnSelect]="true" [styleInline]="{}" ></pl-input-select>
+    </div>
+    <div class="goal-status-select" [ngClass]="{'normal-labels': normalLabels}" *ngIf="isReadOnlyMode() && getStatusOpts()">
+      {{getReadOnlyStatusText()}}
+    </div>
+    <div class="goal-status-bars" [ngClass]="{'no-border': getStatus()}">
+      <div *ngIf="getStatus()">
+        <span *ngFor="let color of this.getStatusColors()" class="bar {{color}}" [ngClass]="{'small-bars': smallBars}"></span>
+      </div>
+    </div>
+  </div>
+</div>

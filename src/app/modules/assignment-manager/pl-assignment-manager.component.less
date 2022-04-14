@@ -1,0 +1,338 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+
+.pl-assignment-manager {
+  position: relative;
+
+  #pageTop {
+      position: absolute;
+  }
+  .page-loading {
+      position: relative;
+      top: 40px;
+  }
+  .container {
+    .cols {
+      .col {
+        display: table-cell;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        &.col1 {
+          width: 250px;
+        }
+        &.col2 {
+          width: 100%;
+        }
+        &.col3 {
+          width: 250px;
+        }
+      }
+    }
+  }
+
+  .schoolyear-container {
+    display: table-cell;
+    position: relative;
+    left: 10px;
+    padding-top: 5px;
+  }
+
+  .filters-container {
+    min-height: 100%;
+    position: relative;
+    top: 14px;
+    ::ng-deep {
+        pl-icon {
+            fill: @slate-darker;
+        }
+        .filters {
+            background-color: unset !important;
+            .header {
+                display: none;
+            }
+            button.link {
+                margin: 5px 0;
+            }
+        }
+    }
+  }
+
+  .sticky-container {
+    z-index: 100; // 100 to beat the sub table select boxes
+    background-color: white;
+    position: sticky;
+    top: 46px;
+    padding-top: 5px;
+    &.side {
+      top: 52px;
+    }
+    .title {
+        padding-top: 10px;
+        padding-bottom: 4px;
+        margin-bottom: 5px;
+        margin-right: 15px;
+    }
+  }
+
+  .type-label {
+    width: 55px;
+    padding: 4px 1px 3px 1px;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .fill-total-label {
+    font-weight: 200;
+    font-size: 1rem;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5px;
+    margin-right: 10px;
+    border-bottom: 1px solid @gray-lightest;
+
+    .action.active, .select-all, .refresh-page {
+        border: 1px solid @gray-lightest;
+    }
+    .actions-container {
+      white-space: nowrap;
+      display: inline-block;
+      width: 326px;
+    }
+    .expand-all-container {
+      display: inline-block;
+      width: 95px;
+      text-align: left;
+    }
+    .button-item {
+      margin-left: 3px; // to match button
+      .margin-r;
+      float: left;
+      margin-top: 6px;
+    }
+  }
+
+  .table-container {
+    .org-container {
+        &.loading {
+            opacity: 0.2;
+        }
+        margin: 0 10px 0 0;
+        padding: 10px 0 20px 0;
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+        .org-header {
+            position: relative;
+            padding: 0 5px 5px 5px;
+            .org-title {
+                line-height: 43px;
+                display: table-cell;
+                width: 100%;
+            }
+            .org-name {
+                color: @gray-darkest;
+                font-size: 1.3rem;
+                font-weight: 400;
+            }
+            .fulfillment-headline {
+                font-size: 1rem;
+                padding: 5px 13px;
+                border-left: 1px solid @black;
+                color: @black;
+                &.missing {
+                    background-color: @red;
+                    color: white;
+                }
+            }
+        }
+        .rows-container {
+            margin-left: 5px;
+            .table-header {
+                margin-bottom: 5px;
+            }
+            .oppty-demand-item-header {
+                &-content {
+                    border-bottom: 1px dashed @gray-dark;
+                    border-left: 5px solid @gray-dark;
+                    //border-radius: 3px;
+                    background-color: @gray-lightest;
+                    width: calc(100% - 5px);
+                    .left {
+                        width: 100%;
+                        display: table-cell;
+                        line-height: 20px;
+                        padding-left: 10px;
+                        width: 100%;
+                        &.oppty-name {
+                            color: @slate-darker;
+                            font-weight: 400;
+                        }
+                    }
+                    .right {
+                        display: table-cell;
+                        line-height: 20px;
+                        white-space: nowrap;
+                        &.oppty-row {
+                            white-space: nowrap;
+                            span.col {
+                                margin: 0 2px;
+                            }
+                            .service-type-label {
+                                text-align: right;
+                                display: inline-block;
+                                width: 80px;
+                                margin-right: 8px;
+                                font-weight: 600;
+                                margin-bottom: 2px;
+                            }
+                            .meter {
+                                position: relative;
+                                top: 2px;
+                            }
+                            .add-assignment-button {
+                                white-space: nowrap;
+                            }
+                        }
+                    }
+                }
+            }
+            .row-list {
+                .row {
+                    display: block;
+                    position: relative;
+                    .row-expand-content {
+                        padding: 20px 20px 20px 50px;
+                    }
+                    .checkbox {
+                        margin-left: 10px;
+                        position: absolute;
+                        left: 0;
+                        top: 5px;
+                        z-index: 9;
+                        border-right: 1px solid @gray-light;
+                        .disabled-checkbox {
+                            position: relative;
+                            font-size: 1rem;
+                            padding: 0 15px 0 8px;
+                            vertical-align: middle;
+                            line-height: 30px;
+                            .accent-dot {
+                                display: inline-block;
+                                border-radius: 50%;
+                                height: 6px;
+                                width: 6px;
+                                background-color: @slate-dark;
+                            }
+                        }
+                    }
+                    .columns .col {
+                        display: table-cell;
+                        &.left {
+                            width: 30px;
+                        }
+                    }
+                    .unmet-requirement {
+                        position: relative;
+                        line-height: 18px;
+                        top: 1px;
+                    }
+                }
+                .row-data {
+                    position: relative;
+                    .assignment-status {
+                        &.proposed, &.removed, &.pl_rejected, &.provider_declined, &.capacity_planning, &.capacity_planning_locked {
+                            color: @white;
+                            padding: 2px 6px;
+                            border-radius: 4px;
+                        }
+                        &.proposed {
+                            background-color: @green;
+                        }
+                        &.removed, &.pl_rejected, &.provider_declined {
+                            background-color: #ca5866; /* between red and red-light */
+                        }
+                        &.capacity_planning, &.capacity_planning_locked {
+                            background-color: @yellow;
+                        }
+                    }
+                    .assignment-status-detail {
+                        font-size: 12px;
+                        font-style: italic;
+                        line-height: 16px;
+                    }
+                    .status-date {
+                        font-size: 11px;
+                        position: relative;
+                        bottom: 1px;
+                    }
+                    .separating {
+                        color: @gray-dark;
+                        font-size: 13px;
+                        font-style: italic;
+                        line-height: 16px;
+                    }
+                }
+            }
+        }
+    }
+
+    .cell-data {
+        position: relative;
+        font-weight: 400;
+        color: @slate-darker;
+    }
+    .checkbox {
+        margin-left: 10px;
+        position: absolute;
+        left: 0;
+        top: 5px;
+    }
+    .empty-supply {
+        height: 4px;
+    }
+    .supply-hours {
+        display: inline-block;
+    }
+  }
+
+  ::ng-deep .table-header {
+      .icon-container {
+          background-color: @white !important;
+          border-color: @gray !important;
+      }
+      pl-icon {
+          fill: @gray !important;
+      }
+      .pl-table-header-cell {
+        font-size: 1.1rem;
+        font-weight: 400;
+      }
+  }
+  ::ng-deep .assignment .ccheckbox {
+      .icon-container {
+          background-color: @white !important;
+          border-color: @gray-dark !important;
+      }
+      pl-icon {
+          fill: @blue-medium !important;
+      }
+  }
+  ::ng-deep .assignment.selected {
+      pl-table-row {
+          background-color: @green-light !important;
+      }
+  }
+  ::ng-deep .pl-table-footer {
+      margin-right: 10px;
+      background-color: white;
+      border: none;
+      border-top: 1px solid silver;
+      padding-top: 10px;
+      border-bottom: 1px solid silver;
+      padding-bottom: 10px;
+  }
+}

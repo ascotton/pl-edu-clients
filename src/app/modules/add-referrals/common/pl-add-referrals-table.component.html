@@ -1,0 +1,66 @@
+<div #tableRef class="pl-add-referrals-table">
+    <pl-table-wrapper (onQuery)="onQuery($event)">
+        <pl-table-header class="table-header">
+            <pl-table-header-cell *ngIf="hasBulkAction && hasAnyPerformAction">
+                <pl-input-checkbox
+                    [(model)]="overrideAll"
+                    (onChange)="toggleIgnoreDuplicateFlagAll()">
+                </pl-input-checkbox>
+            </pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'rowIndex'" [orderDirection]="'ascending'">Row Number</pl-table-header-cell>
+            <pl-table-header-cell class="x-qa-lastname-header" [orderKey]="'lastName'">Last Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'firstName'">First Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'externalId'">Student ID</pl-table-header-cell>
+            <pl-table-header-cell class="x-qa-error-header" [orderKey]="'errorReason'">
+                Reason
+            </pl-table-header-cell>
+        </pl-table-header>
+        <cdk-virtual-scroll-viewport
+            *ngIf="referralsRows.length > 10"
+            itemSize="42"
+            class="pl-add-referrals-table-body"
+            [style.height]="tableHeight">
+            <pl-table-row *cdkVirtualFor="let row of localTableService.displayRows">
+                <pl-table-cell *ngIf="hasBulkAction && hasAnyPerformAction">
+                    <pl-input-checkbox
+                        *ngIf="row.canResend"
+                        [(model)]="row.ignoreDuplicateWarning"
+                        (onChange)="toggleIgnoreDuplicateFlag(row)">
+                    </pl-input-checkbox>
+                </pl-table-cell>
+                <pl-table-cell>{{ getRowNumber(row) }}</pl-table-cell>
+                <pl-table-cell>{{ row.lastName }}</pl-table-cell>
+                <pl-table-cell>{{ row.firstName }}</pl-table-cell>
+                <pl-table-cell>{{ row.externalId }}</pl-table-cell>
+                <pl-table-cell>
+                    {{ row.errorReason }}
+                    <a *ngIf="row.dupeClient" class="dupe-client-link" (click)="resolveDupe(row.dupeClient)"> Review</a>
+                    <a *ngIf="row.transferClient" class="dupe-client-link" (click)="resolveTransfer(row.transferClient)"> Review</a>
+                </pl-table-cell>
+            </pl-table-row>
+        </cdk-virtual-scroll-viewport>
+        <div *ngIf="referralsRows.length <= 10" class="pl-add-referrals-table-body">
+            <pl-table-row *ngFor="let row of localTableService.displayRows">
+                <pl-table-cell *ngIf="hasBulkAction && hasAnyPerformAction">
+                    <pl-input-checkbox
+                        *ngIf="row.canResend"
+                        [(model)]="row.ignoreDuplicateWarning"
+                        (onChange)="toggleIgnoreDuplicateFlag(row)">
+                    </pl-input-checkbox>
+                </pl-table-cell>
+                <pl-table-cell>{{ getRowNumber(row) }}</pl-table-cell>
+                <pl-table-cell>{{ row.lastName }}</pl-table-cell>
+                <pl-table-cell>{{ row.firstName }}</pl-table-cell>
+                <pl-table-cell>{{ row.externalId }}</pl-table-cell>
+                <pl-table-cell>
+                    {{ row.errorReason }}
+                    <a *ngIf="row.dupeClient" class="dupe-client-link" (click)="resolveDupe(row.dupeClient)"> Review</a>
+                    <a *ngIf="row.transferClient" class="dupe-client-link" (click)="resolveTransfer(row.transferClient)"> Review</a>
+                </pl-table-cell>
+            </pl-table-row>
+        </div>
+        <pl-table-footer [total]="localTableService.dataRows.length" [currentPage]="localTableService.currentPage"
+            [pageSize]="localTableService.pageSize">
+        </pl-table-footer>
+    </pl-table-wrapper>
+ </div>

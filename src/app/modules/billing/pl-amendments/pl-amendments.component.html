@@ -1,0 +1,126 @@
+<section class="pl-amendments padding-large">
+    <div class="margin-t">
+        <pl-dot-loader *ngIf="displayMainLoader"></pl-dot-loader>
+
+        <!-- Error Message -->
+        <div *ngIf="displayErrorMessage" class="ui-message padding">
+            <p class="paragraph">
+                <span class="material-icons red margin-r"> error </span>
+                There is an error with one or more of your Amendments. Please try again later or contact support.
+            </p>
+        </div>
+
+        <!-- No Amendments Message -->
+        <div *ngIf="displayNoAmendmentsMessage" class="ui-message padding">
+            <p class="paragraph">
+                <span class="material-icons green margin-r"> notification_important </span>
+                There are no Amendments to display.
+            </p>
+        </div>
+
+        <!-- Amendments Table -->
+        <pl-table-wrapper *ngIf="displayAmendmentsTable">
+            <pl-table-header>
+                <pl-table-header-cell [orderKey]="'uuid'" [orderDirection]="amendmentsTable.header.sort.id"
+                    (onQuery)="onQuery($event)"> Amendment ID </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'before.location'"
+                    [orderDirection]="amendmentsTable.header.sort.entity" (onQuery)="onQuery($event)"> Related Entity
+                </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'status'" [orderDirection]="amendmentsTable.header.sort.status"
+                    (onQuery)="onQuery($event)"> Status </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'reason'" [orderDirection]="amendmentsTable.header.sort.reasonNotes"
+                    (onQuery)="onQuery($event)"> Reason/Notes </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'net_duration'"
+                    [orderDirection]="amendmentsTable.header.sort.netChanges" (onQuery)="onQuery($event)"> Net Changes
+                </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'created'" [orderDirection]="amendmentsTable.header.sort.date"
+                    (onQuery)="onQuery($event)"> Date </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'number'" [orderDirection]="amendmentsTable.header.sort.billingId"
+                    (onQuery)="onQuery($event)"> Timesheet/Invoice </pl-table-header-cell>
+                <pl-table-header-cell [orderKey]="'estimated_pay_date'"
+                    [orderDirection]="amendmentsTable.header.sort.payDate" (onQuery)="onQuery($event)"> Estimated Pay Date
+                </pl-table-header-cell>
+            </pl-table-header>
+
+
+            <pl-dot-loader *ngIf="!displayAmendmentData"></pl-dot-loader>
+
+            <ng-container *ngFor="let amendment of amendmentsTable.data">
+                <pl-table-row *ngIf="displayAmendmentData" [isExpanded]="isRowExpanded(amendment)">
+                    <pl-table-cell>
+                        <div class="flexbox">
+                            <a (click)="toggleExpandedRow(amendment)">
+                                <span *ngIf="!isRowExpanded(amendment)" class="material-icons black">
+                                    chevron_right
+                                </span>
+                                <span *ngIf="isRowExpanded(amendment)" class="material-icons black">
+                                    expand_more
+                                </span>
+                            </a>
+                            <span> {{ amendment.uuid }} </span>
+                        </div>
+                    </pl-table-cell>
+                    <pl-table-cell>{{ amendment.relatedEntity }}</pl-table-cell>
+                    <pl-table-cell>{{ amendment.status }}</pl-table-cell>
+                    <pl-table-cell>{{ amendment.reason }}</pl-table-cell>
+                    <pl-table-cell>{{ amendment.net_duration | plTiming }}</pl-table-cell>
+                    <pl-table-cell>{{ amendment.created }}</pl-table-cell>
+                    <pl-table-cell>{{ amendment.number }}</pl-table-cell>
+                    <pl-table-cell> {{ amendment.estimated_pay_date }} </pl-table-cell>
+                    <pl-table-cell expandable *ngIf="isRowInDom(amendment)">
+                        <div class="expandable-row">
+                            <div class="padding-tb padding-xlarge-lr">
+                                <h2 class="padding-tb"> <b> Changes </b> </h2>
+                                <hr>
+
+                                <div class="padding-tb">
+                                    <h5> <b> Event Start </b> </h5>
+                                    <p class="expandable-row paragraph">
+                                        {{ amendment.before.start }}
+                                        <span class="material-icons margin-xlarge-lr"> arrow_forward </span>
+                                        {{ amendment.after.start }}
+                                    </p>
+                                </div>
+                                <hr>
+
+                                <div class="padding-tb">
+                                    <h5> <b> Event End </b> </h5>
+                                    <p class="expandable-row paragraph">
+                                        {{ amendment.before.end }}
+                                        <span class="material-icons padding-xlarge-lr"> arrow_forward </span>
+                                        {{ amendment.after.end }}
+                                    </p>
+                                </div>
+                                <hr>
+
+                                <div class="padding-tb">
+                                    <h5> <b> Billing Code </b> </h5>
+                                    <p class="expandable-row paragraph">
+                                        {{ amendment.before.billing_code }}
+                                        <span class="material-icons padding-xlarge-lr"> arrow_forward </span>
+                                        {{ amendment.after.billing_code }}
+                                    </p>
+                                </div>
+                                <hr>
+
+                                <div class="padding-tb">
+                                    <h5> <b> Service </b> </h5>
+                                    <p class="expandable-row paragraph">
+                                        {{ amendment.before.service }}
+                                        <span class="material-icons padding-xlarge-lr"> arrow_forward </span>
+                                        {{ amendment.after.service }}
+                                    </p>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </pl-table-cell>
+                </pl-table-row>
+            </ng-container>
+
+            <pl-table-footer [total]="amendmentsTable.footer.total" [currentPage]="amendmentsTable.footer.currentPage"
+                [pageSize]="amendmentsTable.footer.pageSize" (onQuery)="onQuery($event)"></pl-table-footer>
+        </pl-table-wrapper>
+
+    </div>
+</section>

@@ -1,0 +1,22 @@
+<div class="pl-client-contact-enable-login">
+    <div class="nav-container">
+        <pl-icon svg="logo-color-no-tm" [width]="50" [height]="27"></pl-icon>
+    </div>
+    <div class="content">
+        <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+        <div *ngIf="!loading">
+            <div *ngIf="missingParams">
+                <h2><pl-icon [svg]="'alert-red'"></pl-icon> Invalid Parameters</h2>
+                Sorry, something about the URL you are accessing is not right. Please try again.
+            </div>
+            <div *ngIf="!missingParams">
+                <h2><pl-icon [svg]="'check-circle-green'"></pl-icon> Thank you for activating!</h2>
+                You're all set.
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        Questions? Contact Support Services at 844-415-4592.
+        <div class="small">&copy; 2020 All Rights Reserved</div>
+    </div>
+</div>

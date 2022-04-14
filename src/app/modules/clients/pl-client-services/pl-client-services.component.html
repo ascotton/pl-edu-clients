@@ -1,0 +1,17 @@
+<div class="pl-client-services">
+    <div *ngIf="mayAddService" class="margin-large-b">
+        <a [routerLink]="['/client-referral-save']" [queryParams]="{ client: client.id }">
+            <button pl-button class="gray-outline">
+                <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon> Add Referral
+            </button>
+        </a>
+        <div>Need to Add Service? Click 'Add Referral' above then 'Convert to Service' to go straight to service creation.</div>
+    </div>
+
+    <div *ngIf="mayViewPhi" class="margin-large-b">
+        <pl-client-direct-services [client]="client" [currentUser]="currentUser"></pl-client-direct-services>
+    </div>
+    <div *ngIf="mayViewPhi" class="margin-large-b">
+        <pl-client-evaluations [client]="client" [currentUser]="currentUser"></pl-client-evaluations>
+    </div>
+</div>

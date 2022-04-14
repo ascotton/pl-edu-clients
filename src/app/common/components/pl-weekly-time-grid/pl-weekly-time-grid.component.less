@@ -1,0 +1,442 @@
+@import 'core/colors.less';
+
+.pl-weekly-time-grid {
+    // named-values
+    @grid-height: 352px;
+    @grid-width: 742px;
+    @row-height: 15px;
+    @cell-width: 125px;
+    @block-width: 123px;
+    @header-footer-height: 34px;
+    @grid-header-height: 34px;
+    @col-2-width: 240px;
+    @tips-padding: 20px;
+
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Opera and Firefox */
+    }
+
+    // selectors are organized from top to bottom in the container
+    .container {
+        .col {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .col1 {
+            //transform: scale(.90); // haxxors - fit a typical size screen without vertical scroll
+            position: relative;
+            flex-basis: @grid-width+40;
+        }
+
+        .col2 {
+            margin-left: 10px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: @col-2-width;
+            position: relative;
+            left: -100px;
+
+            .header {
+                font: 14px Roboto;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+            .tips {
+                padding: @tips-padding;
+                border: 1px solid @gray-light;
+                border-radius: 5px;
+                width: @col-2-width;
+                background-color: #f8f8fa;
+                .tip {
+                    margin-bottom: 20px;
+                    &.last {
+                        margin-bottom: 0;
+                    }
+                    display: flex;
+                    .icon,
+                    .text {
+                        flex-grow: 0;
+                        flex-shrink: 0;
+                    }
+                    .icon {
+                        padding-right: 10px;
+                    }
+                    .text {
+                        flex-basis: @col-2-width - (@tips-padding * 2);
+                        font-family: 'Open Sans', sans-serif;
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            .more-info {
+                position: relative;
+                margin-top: 10px;
+
+                .more-info-content {
+                    width: @col-2-width - 10;
+                    border: 1px solid @gray-light;
+                    border-radius: 5px;
+                    padding: 25px;
+                    font-family: 'Open Sans', sans-serif;
+                    font-size: 12px;
+                    .content-block {
+                        margin-bottom: 15px;
+                        &.last {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        // page title
+        h2.title {
+            margin-bottom: 5px;
+        }
+
+        // page heading blurb
+        p.heading-text {
+            margin-bottom: 15px;
+            width: 700px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+        }
+
+        div.main {
+            /*transform: scale(0.9); // haxxors - fit a typical size screen without vertical scroll*/
+            border-left: 1px solid silver;
+            display: inline-block;
+
+            // main user input form controls
+            div.time-block-controls {
+                border-bottom: 1px solid silver;
+                background-color: @slate-darker;
+                color: @white;
+                height: 80px;
+                &.readOnly {
+                    height: 0px;
+                }
+                div.element {
+                    display: inline-block;
+                    position: relative;
+                    vertical-align: middle;
+                    &.select-day {
+                        width: 110px;
+                        height: 100%;
+                        border-right: 1px solid silver;
+                        text-align: left;
+                        position: relative;
+                        margin-right: 10px;
+                        padding-top: 5px;
+                        .select-day-content {
+                            width: 58px;
+                            margin-left: 30px;
+                            margin-right: 10px;
+                            position: relative;
+                            top: 22px;
+                            font-size: 14px;
+                        }
+                    }
+
+                    width: 120px;
+                    position: relative;
+                    margin-right: 15px;
+
+                    .select-content {
+                        position: relative;
+                        top: -5px;
+                    }
+                }
+            }
+
+            // main visualization table grid consisting
+            // of a table header, rows, cells
+            div.visualization-grid {
+                div.rows {
+                    position: relative;
+                    border-top: 1px solid silver;
+                    overflow: scroll;
+                    height: @grid-height;
+                }
+                div.row {
+                    &.week-names {
+                        border-bottom: 0;
+                        background-color: @slate-light;
+                        height: @grid-header-height;
+                    }
+                    font-size: 0;
+                    &.last-item {
+                        display: none;
+                    }
+                    &.penultimate-item {
+                        border-bottom: none;
+                    }
+
+                    // TODO: revisit someday - a hack to eliminate unwanted spacing after cells
+                    div.cell::after {
+                        content: '0';
+                        opacity: 0;
+                    }
+
+                    div.cell {
+                        border-bottom: 1px solid silver;
+                        border-right: 1px solid silver;
+                        display: inline-block;
+                        width: @cell-width;
+                        height: @row-height;
+                        font-size: 14px;
+                        &.row-odd {
+                            border-bottom: 1px dashed @gray-lighter;
+                        }
+                        &.friday {
+                            width: 124px;
+                        }
+                        &.weekday {
+                            height: @grid-header-height;                            
+                            text-align: center;
+                            color: slate-darker;
+                            font-weight: bold;
+                            position: relative;
+                            line-height: @grid-header-height;
+                            vertical-align: middle;
+                        }
+                        &.weekdaySelectable {
+                            cursor: pointer;
+                            &:hover {
+                                background-color: white;
+                                color: @slate-darker;
+                                .dayname {
+                                    padding: 0 3px 2px 3px;
+                                    border-bottom: 2px solid @slate-dark;
+                                }
+                            }
+                            &.selected-day {
+                                background-color: @slate-darker;
+                                color: white;
+                                .dayname {
+                                    padding: 0 3px 2px 3px;
+                                    border-bottom: 2px solid white;
+                                }
+                            }
+                        }
+                        &.time {
+                            &.timezone {
+                                height: @grid-header-height;
+                                text-align: center;
+                                vertical-align: middle;
+                                font-family: 'Open Sans', sans-serif;
+                                font-size: 11px;
+                            }
+                            &.row-odd {
+                                border-bottom: 1px solid @slate-lighter;
+                            }
+                            background-color: @slate-lighter;
+                            font-weight: bold;
+                            width: 110px;
+                            .label {
+                                position: relative;
+                                left: 27px;
+                                top: 9px;
+                            }
+                        }
+                        &.data {
+                            &.selected-column {
+                                background-color: @cream;
+                            }
+                        }
+                    }
+                }
+                div.time-block {
+                    position: absolute;
+                    border-radius: 7px;
+                    width: @block-width;
+                    font-size: 12px;
+                    text-align: center;
+                    vertical-align: middle;
+
+                    &.mode-active {
+                        position: absolute;
+                        border: 1px dashed @black;
+                        opacity: 0.8;
+                        background-color: @blue-lighter;
+                        color: black;
+                        box-shadow: 0px 0px 20px @gray-darker;
+
+                        &.drawing {
+                            pointer-events: none;
+                        }
+
+                        .active-block-actions {
+                            button.save-button {
+                                position: relative;
+                            }
+                            button.cancel-button {
+                                background: none;
+                                float: right;
+                            }
+                        }
+                    }
+                    &.mode-locked {
+                        position: absolute;
+                        border: 1px solid @blue-medium;
+                        background-color: @blue-medium;
+                        border-radius: 5px;
+                        z-index: 9;
+                        &:hover {
+                            box-shadow: 0px 0px 10px @gray-darker;
+                            &.expand {
+                                border-top: 20px solid @blue-medium;
+                            }
+                        }
+
+                        .block-action {
+                            cursor: pointer;
+                            position: absolute;
+                            width: 20px;
+                        }
+                        .time-block-content {
+                            color: @slate-lightest;
+                            position: relative;
+                            .time-display {
+                                font-size: 11px;
+                            }
+                        }
+                    }
+                }
+                div.footer {
+                    border-left: 1px solid #465460;
+                    margin-left: -1px;
+                    &.row {
+                        background-color: @slate-darker;
+                        .cell {
+                            background-color: @slate-darker;
+                            text-align: center;
+                            color: white;
+                            position: relative;
+                            height: @header-footer-height;
+                            line-height: @header-footer-height;
+                            vertical-align: middle;
+                            border-bottom: 1px solid @slate-darker;
+                            &.title {
+                                width: 110px;
+                            }
+                            &.friday {
+                                border-right: none;
+                                width: 125px;
+                            }
+                            .hours-count {
+                                font-weight: bold;
+                                margin-right: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+        } // end MAIN
+
+        .saving-errors {
+            fieldset {
+                border: 2px solid silver;
+                border-radius: 7px;
+                margin: 15px 0;
+                padding: 5px 20px 20px 20px;
+                width: 600px;
+
+                legend {
+                    padding: 0 10px;
+                    font-size: 20px;
+                    font-weight: bold;
+                    text-align: center;
+                }
+
+                .button-copy-to-clipboard {
+                    width: 100%;
+                    text-align: center;
+                }
+
+                ul.error-info {
+                    padding: 10px;
+                }
+
+                li {
+                    list-style: none;
+                }
+                .saving-errors-header {
+                    margin: 0 5px 0 5px;
+                    font-size: 16px;
+                    .provider-info {
+                        margin-top: 10px;
+                        margin-left: 5px;
+                        .username {
+                            font-weight: bold;
+                            margin-right: 10px;
+                        }
+                        .uuid {
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        } // end SAVE ERROR DISPLAY
+
+        .bottom {
+            position: relative;
+            top: -45px;
+            width: 700px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+
+            .available-hours {
+                .total-hours {
+                    font-weight: bold;
+                }
+            }
+            .max-hours {
+                display: inline-block;
+                position: relative;
+                top: 5px;
+                .max-hours-select {
+                    display: inline-block;
+                    position: relative;
+                }
+                .max-hours-text {
+                    position: relative;
+                    left: 5px;
+                }
+            }
+            .form-submit {
+                position: relative;
+                top: 10px;
+                left: -4px;
+            }
+        }
+        .save {
+            position: relative;
+            top: -40px;
+            .save-message {
+                font-size: 14px;
+                font-weight: bold;
+                display: inline-block;
+                margin-right: 5px;
+            }
+            .save-dot-loader {
+                font-size: 12px;
+                display: inline-block;
+            }
+        }
+    }
+}

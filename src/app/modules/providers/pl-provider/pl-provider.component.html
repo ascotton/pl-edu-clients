@@ -1,0 +1,26 @@
+<div class="pl-provider" [hidden]="!allLoaded">
+    <div *ngIf="!mayViewProvider" class="padding-large">
+        <pl-permissions-denied [code]="permissionCode"></pl-permissions-denied>
+    </div>
+    <div [hidden]="!mayViewProvider">
+        <div class="outer-container">
+            <div class="header-container">
+                <div class="profile-container">
+                    <div class="profile-wrapper">
+                        <pl-provider-profile-header [provider]="provider"></pl-provider-profile-header>
+                    </div>
+                </div>
+                <div class="tabs-container">
+                    <div class="tabs-wrapper">
+                        <pl-tabs [tabs]="tabs" [updatePageTabTitleBasedOnActiveLink]="true"></pl-tabs>
+                    </div>
+                </div>
+            </div>
+            <div class="provider-content-container">
+                <div class="inner">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

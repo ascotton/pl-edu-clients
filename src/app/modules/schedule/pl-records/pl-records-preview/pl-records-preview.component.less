@@ -1,0 +1,92 @@
+@import 'core/colors.less';
+:host {
+    font-size: 13px;
+    display: block;
+    max-width: 300px;
+    box-sizing: border-box;
+    .pl-record-preview {
+        &-billing-code {
+            color: white;
+            border-radius: 2px;
+            font-weight: normal;
+        }
+        &-billing-codes {
+            border-radius: 2px;
+            border: 1px dashed darkgray;
+            font-size: 14px;
+            color: #4c4f52;
+
+            &.clients {
+                background-color: @green;
+                border-color: @green;
+                color: @white;
+            }
+            &.student_absence {
+                background-color: @yellow;
+                border-color: @yellow;
+                color: @white;
+            }
+            &.cancellation {
+                background-color: @red;
+                border-color: @red;
+                color: @white;
+            }
+            &.documentation_planning {
+                background-color: @blue;
+                border-color: @blue;
+                color: @white;
+            }
+            &.other {
+                background-color: @blue-medium;
+                border-color: @blue-medium;
+                color: @white;
+            }
+            &.personal {
+                background-color: @purple;
+                border-color: @purple;
+                color: @white;
+            }
+            &.fte_contract_services {
+                background-color: @blue-lighter;
+                border-color: @blue-lighter;
+                // .pl-record-preview-billing-code;
+            }
+        }
+
+        &-billing-code-name {
+            font-size: 14px;
+            color: white;
+            display: block;
+            position: relative;
+            line-height: 15px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-weight: normal;
+            &.no-record {
+                color: #4c4f52;
+            }
+        }
+
+        .top-line {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            .title {
+                font-weight: bold;
+                line-height: 25px;
+                width: 100%;
+            }
+            .signed {
+                min-width: 70px;
+                justify-content: center;
+                align-items: center;
+                // margin-left: auto;
+            }
+
+            .signed, .notes {
+                span {
+                    vertical-align: 3px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+<div class="pl-providers-list padding-large">
+    <pl-table-wrapper (onQuery)="onQuery($event)" [orderKey]="'orderBy'" [pageSizeKey]="'first'" [stateName]="'pl'">
+        <pl-table-filters-top [filterSelectOpts]="filterSelectOpts" [total]="plProvidersList.total"></pl-table-filters-top>
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'lastName'">Last Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'firstName'" [orderDirection]="'ascending'">First Name</pl-table-header-cell>
+            <pl-table-header-cell>Provider Type</pl-table-header-cell>
+            <pl-table-header-cell>Email</pl-table-header-cell>
+            <pl-table-header-cell>Phone</pl-table-header-cell>
+            <pl-table-header-cell *ngIf="shouldShowSubStatusRow()">Sub-Status</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="plProvidersList.loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!plProvidersList.providers.length && !plProvidersList.loading" class="center padding-xlarge-tb">
+            No matching providers.
+        </div>
+        <pl-table-row *ngFor="let provider of plProvidersList.providers" (click)="onRowClick(provider)" class="pointer">
+            <pl-table-cell>{{ provider.xLastName }}</pl-table-cell>
+            <pl-table-cell>{{ provider.xFirstName }}</pl-table-cell>
+            <pl-table-cell>{{ provider.xProviderTypeName }}</pl-table-cell>
+            <pl-table-cell>{{ provider.email }}</pl-table-cell>
+            <pl-table-cell>{{ provider.phone | plPhone }}</pl-table-cell>
+            <pl-table-cell *ngIf="shouldShowSubStatusRow()">{{ provider.providerSubStatus }}</pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="plProvidersList.total" [currentPage]="plProvidersList.currentPage" [pageSize]="plProvidersList.pageSize"></pl-table-footer>
+    </pl-table-wrapper>
+</div>

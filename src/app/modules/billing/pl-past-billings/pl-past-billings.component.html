@@ -1,0 +1,14 @@
+<section class="pl-past-billings">
+    <h4 class="header">
+        <span class="header-title">Billing History</span>
+        <span class="filter-by-status">
+            <pl-input-checkbox [(model)]="filterShowAll" label="Show Retractions"
+                (onChange)="onChangeShowRetractions()">
+            </pl-input-checkbox>
+        </span>
+    </h4>
+
+    <pl-table [data]="data" [columns]="columns" [count]="dataInfo.count" [queryId]="dataInfo.queryId"
+        [reQuery]="reQuery" (onQuery)="onQuery($event)" (onRowClick)="onRowClick($event)"></pl-table>
+
+</section>

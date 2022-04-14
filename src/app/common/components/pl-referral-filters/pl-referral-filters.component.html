@@ -1,0 +1,32 @@
+<div class="pl-referral-filters_header flexbox padding-tb padding-large-lr">
+    <ng-content></ng-content>
+    <div class="flex1">
+        <pl-icon svg="filter" [scale]="0.7" [verticalAlign]="'-2px'" class="white margin-small-r"></pl-icon>
+        <b>Filters</b>
+    </div>
+    <pl-icon [svg]="collapsed ? 'chevron-down' : 'close-inverted'" class="white pointer" (click)="collapsed = !collapsed"></pl-icon>
+</div>
+<form>        
+    <div class="pl-referral-filters_content" [@collapsed]="collapsed" class="padding-large-lr">
+        <div class="margin-tb">
+            <button type="button" pl-button class="link" (click)="clear()">
+                {{ clearFiltersButtonLabel }}
+            </button>
+        </div>
+        <div class="margin-tb" *ngIf="fields.includes('state_In')">
+            <pl-input-multi-select label="Status" [options]="stateOtps" [(model)]="activeFilters.state_In" 
+                (onChange)="filter()"></pl-input-multi-select >
+        </div>
+        <div class="margin-tb" *ngIf="fields.includes('providerTypeCode_In')">
+            <pl-input-multi-select label="Discipline" [options]="providerTypeOtps$ | async" [(model)]="activeFilters.providerTypeCode_In"
+                (onChange)="filter()"></pl-input-multi-select >
+        </div>
+        <pl-input-checkbox *ngIf="fields.includes('notScheduled')"
+            label="Not Scheduled" [(model)]="notScheduled"
+            (onChange)="filter()"></pl-input-checkbox>
+        <pl-input-checkbox *ngIf="fields.includes('isMissingInformation')" 
+            label="Missing Information" [(model)]="activeFilters.isMissingInformation"
+            (onChange)="filter()"></pl-input-checkbox>
+            <div class="divider-line"></div>
+    </div>
+</form>

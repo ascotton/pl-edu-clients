@@ -1,0 +1,162 @@
+@import 'core/colors.less';
+
+.pl-client-iep-service-area {
+  padding: 0;
+  margin-bottom: 20px;
+  background-color: #F8F8F8;
+
+  .service-type-header {
+    padding: 0;
+    position: relative;
+    .service-type-header-columns {
+      display: flex;
+      padding: 0 5px;
+      .col {
+        display: flex;
+        flex: 1;
+        &.col-1 {
+          flex-basis: 100%;
+          align-items: center;
+          justify-content: flex-start;
+          white-space: nowrap;
+          .header-toggle {
+            margin: 5px;
+            align-self: flex-start;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+          }
+        }
+        &.col-2 {
+          flex-basis: 200px;
+          justify-content: center;
+          white-space: nowrap;
+        }
+      }
+      .toggle-goals-link {
+        align-self: flex-start;
+        font-weight: normal;
+        text-decoration: underline;
+        color: @gray;
+        margin-bottom: 5px;
+        margin-left: 26px;
+      }
+    }
+    .service-area-closed {
+      font-weight: bold;
+      position: relative;
+      top: 15px;
+      right: 17px;
+      font-size: 12px;
+    }
+  }
+  .empty-goals-container {
+    padding-bottom: 30px;
+    text-align: center;
+    &.closed-no-goals {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .empty-goals-action-link {
+      text-decoration: underline;
+    }
+  }
+  .goal-items {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .banner {
+    border-radius: 5px;
+    padding: 10px;
+    background-color: @blue-lighter;
+    white-space: no-wrap;
+    &.INFO-wait-till-active {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+    &.info {
+      background-color: @yellow-light;
+      .icon {
+        background-color: @yellow;
+      }
+    }
+    .icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 20px;
+      background-color: @blue;
+      text-align: center;
+      .text {
+        position: relative;
+        top: 0;
+        font-weight: bold;
+        color: white;
+        font-size: 15px;
+      }
+    }
+    .banner-message {
+      padding-left: 10px;
+      padding-right: 5px;
+      font-size: 13px;
+    }
+  }
+
+  .banner {
+    border-radius: 5px;
+    padding: 10px;
+    background-color: @blue-lighter;
+    white-space: no-wrap;
+    .icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 20px;
+      background-color: @blue;
+      text-align: center;
+      .text {
+        position: relative;
+        top: 0;
+        font-weight: bold;
+        color: white;
+        font-size: 15px;
+      }
+    }
+    &.info {
+      background-color: @yellow-light;
+      .icon {
+        background-color: @yellow;
+      }
+    }
+    .banner-text {
+      .message {
+        padding-left: 10px;
+        padding-right: 5px;
+        font-size: 13px;
+      }
+    }
+  }
+  .divider-line {
+    border-top: 1px solid @gray-lightest;
+    margin: 0;
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+  .title {
+    margin-bottom: 15px;
+  }
+}

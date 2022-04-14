@@ -1,0 +1,21 @@
+<div class="pl-client-goal-status-help"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  >
+<pl-modal-header-wrapper [headerText]="'Learn more about Status Labels'">
+  <div class="introduction">
+    Status labels reflect the student's progress toward meeting the goal.
+    Mark the level of goal progress as it stands when the service period is marked complete.
+  </div>
+  <h3>Status Labels</h3>
+  <div class="definitions">
+    <div *ngFor="let s of statuses">
+      <div class="definition">
+        <div class="goal">
+          <pl-goal-status [goal]="s.goal" [isReadOnly]="true" [normalLabels]="true" [smallBars]="true"></pl-goal-status>
+        </div>
+        <div class="description">{{s.description}}</div>
+      </div>
+    </div>
+  </div>
+</pl-modal-header-wrapper>
+</div>

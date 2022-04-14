@@ -1,0 +1,32 @@
+<div class="pl-select-billing-code">
+    <pl-modal-header-wrapper [headerText]="'Bulk Change Billing Code'">
+        <div *ngIf="!areYouSure && !showProgress">
+            <p>You have selected <b>{{ selectedItemsCount }} event(s)</b> for bulk update.</p><br />
+            <p>Please select a new billing code.</p><br />
+            <pl-input-select
+                [required]="true"
+                [options]="billingCodeOpts"
+                [(model)]="selectedCode"
+                [placeholder]="'Select'"
+                [bigFilter]="false"
+                [filter]="false"
+            >
+            </pl-input-select>
+            <br /><br />
+            <button pl-button class="success" [disabled]="!selectedCode" (click)="onClickBulkUpdate()">Bulk Update</button>
+            <button pl-button class="bare" (click)="onClickCancel()">Cancel</button>
+        </div>
+        <div *ngIf="areYouSure">
+            <p>You are about to update <b>{{ selectedItemsCount }} event(s)</b> to <b>{{ getSelectedBillingCodeName() }}</b>.</p><br />
+            <p>Are you sure?</p>
+            <br /><br />
+            <button pl-button class="success" (click)="onClickSave()">I'm sure!</button>
+            <button pl-button class="bare" (click)="onClickCancel()">Cancel</button>
+        </div>
+        <div *ngIf="showProgress">
+            <p><b>{{ updatedCount }}</b> of <b>{{ selectedItemsCount }}</b> complete.</p><br />
+            <pl-progress class="progress-bar" [value]="(updatedCount * 1.0) / selectedItemsCount"></pl-progress><br />
+            <button *ngIf="updatedCount === selectedItemsCount" pl-button class="success" (click)="onSaveComplete()">OK</button>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

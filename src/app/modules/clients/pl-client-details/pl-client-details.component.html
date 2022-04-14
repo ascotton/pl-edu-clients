@@ -1,0 +1,11 @@
+<div class="pl-client-details">
+    <div class="margin-xlarge-b">
+    <pl-client-contacts *ngIf="client" [hidden]="hideContacts" [client]="client"
+        (editing)="editingContacts($event)"></pl-client-contacts>
+    </div>
+
+    <div class="margin-large-b">
+        <pl-client-profile [hidden]="hideProfile"  [client]="client" (onReQueryClient)="onReQueryClientWrapper()"
+            (editing)="editingProfile($event)"></pl-client-profile>
+    </div>
+</div>

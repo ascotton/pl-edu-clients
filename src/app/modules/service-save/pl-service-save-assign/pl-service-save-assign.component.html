@@ -1,0 +1,8 @@
+<div class="pl-service-save-assign">
+    <form [formGroup]="formCtrl">
+        <h4 class="section-header">Assign Evaluation</h4>
+        <div class="section-body margin-b">
+            <pl-input-radio-group class="form-input" [formCtrl]="formCtrl" [label]="'Who will perform the evaluation?'" [(model)]="serviceFormVals.owner" [options]="ownerOpts" (onChange)="validate($event)"></pl-input-radio-group>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,49 @@
+<div class="pl-account-student-status-chart">
+    <div *ngIf="!studentStatusChartData">
+        <i>After students are added to the system, you'll see a breakdown of their statuses here.</i>
+    </div>
+    <div 
+        *ngIf="studentStatusChartData"
+        [ngClass]="sideBySide ? 'side-by-side' : ''"
+    >
+        <div>
+            <canvas baseChart
+                [chartType]="'doughnut'"
+                [datasets]="studentStatusChartData.datasetsForChart"
+                [labels]="studentStatusChartData.labels"
+                [colors]="studentStatusChartData.colors"
+                [options]="studentStatusChartData.options"
+            ></canvas>
+        </div>
+        <div>
+            <div *ngIf="!sideBySide" class="separator margin-large-tb"></div>
+            <div class="status-legend margin-large-lr">
+                <div class="status-row">
+                    <div class="status-indicator">
+                        <div class="color-block onboarding"></div>
+                    </div>
+                    <div class="status-label">Onboarding </div>
+                    <div class="status-count onboarding">{{ studentStatusChartData.datasets[0].data[0] }}</div>
+                </div>
+                <div class="status-row">
+                    <div class="status-indicator">
+                        <div class="color-block in-service"></div>
+                    </div>
+                    <div class="status-label">In Service </div>
+                    <div class="status-count in-service">{{ studentStatusChartData.datasets[0].data[1] }}</div>
+                </div>
+                <div class="status-row">
+                    <div class="status-indicator">
+                        <div class="color-block not-in-service"></div>
+                    </div>
+                    <div class="status-label">Not In Service </div>
+                    <div class="status-count not-in-service">{{ studentStatusChartData.datasets[0].data[2] }}</div>
+                </div>
+            </div>
+
+            <div class="margin-large-t center">
+                <a [routerLink]="'/clients'">View All Students</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/colors-classes.less';
+@import 'core/typography.less';
+
+@import 'app/icons.less';
+
+.pl-organization-profile-header {    
+    background-color: @slate-darkest;
+    color: @white;
+
+    a {
+        color: white;
+        text-decoration: underline;
+    }
+
+    .inner {
+        max-width: 1400px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-gap: @spacing-normal;
+
+        .icon {
+            margin-left: 16px;
+            background-color: @blue-medium;
+            .white;
+            .circled-icon(@svg-offset-left: 0px);
+    	}
+
+        .name {
+            grid-column: 2;
+            .margin-l;
+        }
+
+        .fields {
+            grid-column: 2;
+            grid-row: 2;
+            list-style: none;
+
+            .field {
+                display: inline-block;
+
+                .label {
+                    .bold;
+                }
+
+                .value {
+                    .margin-xlarge-r;
+                }
+            }
+        }
+    }
+}

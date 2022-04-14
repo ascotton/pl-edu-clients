@@ -1,0 +1,118 @@
+<section class="other-demo padding">
+
+    <div class="margin-large-tb">
+        <a routerLink="/components/carousel"><h2>Carousel</h2></a>
+        <a routerLink="/components/config"><h2>Config</h2></a>
+        <a routerLink="/components/colors"><h2>Colors</h2></a>
+        <a routerLink="/components/buttons"><h2>Buttons</h2></a>
+        <a routerLink="/components/decoration"><h2>Decoration</h2></a>
+        <a routerLink="/components/icons"><h2>Icons</h2></a>
+        <a routerLink="/components/typography"><h2>Typography</h2></a>
+        <a routerLink="/components/profile"><h2>Profile</h2></a>
+    </div>
+
+    <h1 class="margin-b">Other (Miscellaneous) Components</h1>
+
+    <div class="item">
+        <h3>Tabs</h3>
+        <div class="tabs">
+            <pl-tabs [tabs]="tabs"></pl-tabs>
+        </div>
+    </div>
+
+    <div class="item">
+        <h3>Steps</h3>
+        <pl-steps [steps]="steps"></pl-steps>
+        <router-outlet></router-outlet>
+        <pl-steps-buttons [steps]="steps" (onCancel)="stepsCancel()" (onFinish)="stepsFinish()"></pl-steps-buttons>
+    </div>
+
+    <div>
+        backLink: {{ backLink }}
+    </div>
+
+    <div class="item">
+        <h3>Dot Loader</h3>
+        <pl-dot-loader [align]="'left'"></pl-dot-loader>
+        <pl-dot-loader></pl-dot-loader>
+        <pl-dot-loader [align]="'right'"></pl-dot-loader>
+    </div>
+
+    <div class="item">
+        <h3>Toast</h3>
+        <div>
+            <a (click)="toast('error')">Error</a>
+            <a (click)="toast('success')">Success</a>
+            <a (click)="toast('')">Info</a>
+            <a (click)="toast('warning')">Warning</a>
+        </div>
+        <!-- Loaded app wide so can be used elsewhere -->
+        <!-- <pl-toast></pl-toast> -->
+    </div>
+
+    <div class="item">
+        <h3>Confirm Dialog</h3>
+        <div>
+            <a (click)="confirm('')">Confirm</a>
+            <a (click)="dialogToast()">Toast Style</a>
+        </div>
+    </div>
+
+    <div class="item">
+        <h3>Modals</h3>
+        <div>
+            <a (click)="showModal('modal-1')">Modal 1</a>
+            <a (click)="showModal('modal-2')">Modal 2</a>
+        </div>
+    </div>
+
+    <div class="item">
+        <h3>Anchored Dialog</h3>
+        <div>
+            <a (click)="showAnchoredDialog()">Show</a>
+        </div>
+
+        <pl-anchored-dialog [hidden]="!isAnchoredDialogVisible" [title]="'An Anchored Dialog'" (closeAttempt)="onAnchoredDialogClose()">
+            <p>Here's a bunch of content in the anchored dialog. Click on the X to close. Collapse/expand by clickin the chevron icon</p>
+        </pl-anchored-dialog>
+    </div>
+
+    <div class="item">
+        <h3>Mini Calendar</h3>
+        <div class="mini-calendar">
+            <pl-mini-calendar [(model)]="miniCalendarDate"></pl-mini-calendar>
+            selected date: {{ miniCalendarDate }}
+
+            <pl-mini-calendar [(model)]="miniCalendarDate2" [minDate]="'2016-07-09'" [maxDate]="'2017-05-24'" [todayRange]="'week'"></pl-mini-calendar>
+            selected date: {{ miniCalendarDate2 }}
+        </div>
+    </div>
+    
+    <pl-closable-page-header [headerText]="'Closable Page Header'" [closeCallback]="closableClicked">
+            </pl-closable-page-header>
+
+    <div class="item">
+        <h3>Progress Bar</h3>
+
+        <div>
+            <span>In Progress</span>
+            <pl-progress [value]=".5"></pl-progress>
+        </div>
+
+        <div>
+            <span>Complete</span>
+            <pl-progress [value]="1" [isComplete]="true"></pl-progress>
+        </div>
+
+        <div>
+            <span>Error</span>
+            <pl-progress [value]="1" [isError]="true"></pl-progress>
+        </div>
+
+    </div>
+
+    <div class="item">
+        <h3>Liveagent Prechat</h3>
+        <pl-liveagent-prechat [firstName]="'John'"></pl-liveagent-prechat>
+    </div>
+</section>

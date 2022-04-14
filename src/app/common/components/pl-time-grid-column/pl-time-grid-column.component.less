@@ -1,0 +1,57 @@
+@import '../pl-time-grid.less';
+
+.drawable {
+    .drawing-box {
+        cursor: pointer;
+    }
+}
+
+:host {
+    // position: relative;
+    border-right: solid 1px @pl-time-grid-slot-border-color;
+    z-index: 1;
+    .pl-time-grid_column{
+        &-header {
+            display: flex;
+            text-align: center;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0px;
+            z-index: 200;
+        }
+
+        &-container {
+            position: relative;
+            overflow: hidden;
+            background-color: @pl-time-grid-column-color;
+            // cursor: pointer;
+            &-blocks {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                .drawing-box {
+                    z-index: 100;
+                    width: 100%;
+                    height: 100%;
+                    // background-color: green;
+                    position: absolute;
+                }
+            }
+            &-slots {
+                .pl-time-grid-slot {
+                    display: flex;
+                    // padding: 4px;
+                    height: @pl-time-grid-slot-height;
+                    min-height: @pl-time-grid-slot-height;
+                    max-height: @pl-time-grid-slot-height;
+                    box-sizing: border-box;
+                    &:nth-child(2n) {
+                        border-bottom: dashed 1px @pl-time-grid-slot-border-color;
+                    }
+                }
+            }
+        }
+    }
+}

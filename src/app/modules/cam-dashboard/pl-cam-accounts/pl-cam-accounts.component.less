@@ -1,0 +1,33 @@
+@import 'core/colors.less';
+@import 'core/decoration.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+
+:host {
+    background-color: @slate-lightest;
+    box-shadow: @box-shadow-component;
+    display: block;
+
+    header {
+        border-bottom: solid 1px @gray-light;
+        .padding-large;
+
+        h2 {
+            color: @gray-darkest;
+            .font-h3;
+        }
+    }
+
+    .table-wrapper {
+        .padding-large;
+
+        .table-row-org-name {
+            display: flex;
+
+            pl-icon {
+                margin-top: 2px;
+                margin-right: .5ch;
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+<div class="pl-client-profile-save" *ngIf="clientEdit">
+    <form [formGroup]="clientSaveForm">
+        <pl-input-text *ngIf="!targetField || targetField=='externalId'" class="form-input x-qa-client-edit-external_id" [formCtrl]="clientSaveForm" [label]="labelClientId" [(model)]="clientEdit.externalId" [required]="true"></pl-input-text>
+        <pl-input-text *ngIf="!targetField || targetField=='firstName'" class="form-input x-qa-client-edit-first_name" [formCtrl]="clientSaveForm" [label]="'First Name'" [(model)]="clientEdit.firstName" [required]="true"></pl-input-text>
+        <pl-input-text *ngIf="!targetField || targetField=='lastName'" class="form-input x-qa-client-edit-last_name" [formCtrl]="clientSaveForm" [label]="'Last Name'" [(model)]="clientEdit.lastName" [required]="true"></pl-input-text>
+        <pl-input-datepicker *ngIf="!targetField || targetField=='birthday'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Birth Date'" [(model)]="clientEdit.birthday" [scrollToYearByValue]="clientEdit.birthDayYear"></pl-input-datepicker>
+        <pl-input-select *ngIf="!targetField || targetField=='grade'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Grade'" [(model)]="clientEdit.grade" [options]="selectOptsGrades"></pl-input-select>
+        <pl-input-radio-group *ngIf="!targetField || targetField=='sex'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Sex'" [(model)]="clientEdit.sex" [options]="selectOptsSex"></pl-input-radio-group>
+        <pl-input-text *ngIf="!targetField || targetField=='street'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Street'" [(model)]="clientEdit.street"></pl-input-text>
+        <pl-input-text *ngIf="!targetField || targetField=='city'" class="form-input" [formCtrl]="clientSaveForm" [label]="'City'" [(model)]="clientEdit.city"></pl-input-text>
+        <pl-input-select *ngIf="!targetField || targetField=='state'" class="form-input" [formCtrl]="clientSaveForm" [label]="'State'" [(model)]="clientEdit.state" [options]="selectOptsStates"></pl-input-select>
+        <pl-input-text *ngIf="!targetField || targetField=='postalCode'" class="form-input" [type]="'zipcode'" [formCtrl]="clientSaveForm" [label]="'Zip Code'" [(model)]="clientEdit.postalCode" ></pl-input-text>
+        <pl-input-text *ngIf="!targetField || targetField=='phone'" class="form-input" [type]="'tel'" [formCtrl]="clientSaveForm" [label]="'Phone Number'" [(model)]="clientEdit.phone"></pl-input-text>
+        <pl-input-text *ngIf="!targetField || targetField=='email'" class="form-input" [type]="'email'" [formCtrl]="clientSaveForm" [label]="'Email'" [(model)]="clientEdit.email"></pl-input-text>
+        <pl-input-select *ngIf="!targetField || targetField=='contactPreference'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Contact Preference'" [(model)]="clientEdit.contactPreference" [options]="selectOptsContactPreference"></pl-input-select>
+        <pl-input-select *ngIf="!targetField || targetField=='timezone'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Time Zone'" [(model)]="clientEdit.timezone" [options]="selectOptsTimezone"></pl-input-select>
+        <pl-input-select *ngIf="!targetField || targetField=='primaryLanguage'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Primary Language'" [(model)]="clientEdit.primaryLanguage.code" [options]="selectOptsLanguage"></pl-input-select>
+        <pl-input-select *ngIf="!targetField || targetField=='secondaryLanguage'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Secondary Language'" [(model)]="clientEdit.secondaryLanguage.code" [options]="selectOptsLanguage"></pl-input-select>
+        <pl-input-checkbox-group *ngIf="!targetField || targetField=='race'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Race'" [(model)]="clientEdit.raceIds" [options]="optsRaces" [horizontal]="true" [optionWidth]="'275px'"></pl-input-checkbox-group>
+        <pl-input-checkbox-group *ngIf="!targetField || targetField=='ethnicity'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Ethnicity'" [(model)]="clientEdit.ethnicityIds" [options]="optsEthnicities" [horizontal]="true" [optionWidth]="'275px'"></pl-input-checkbox-group>
+        <pl-input-textarea *ngIf="!targetField || targetField=='strategies'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Strategies'" [(model)]="clientEdit.strategies"></pl-input-textarea>
+        <pl-input-select *ngIf="!targetField || targetField=='teletherapyInformedConsent'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Teletherapy Informed Consent'" [(model)]="clientEdit.teletherapyInformedConsent" [options]="selectOptsTeletherapy" [emptyOption]="false"></pl-input-select>
+        <pl-input-radio-group *ngIf="!targetField || targetField=='recordingAllowed'" class="form-input" [formCtrl]="clientSaveForm" [label]="'Recording Consent Obtained'" [(model)]="clientEdit.recordingAllowed" [options]="recordingAllowedOpts" [optionWidth]="400"></pl-input-radio-group>
+
+        <div [hidden]="savingClient">
+            <button pl-button class="success x-qa-save-client-button" [disabled]="!clientSaveForm.valid" (click)="save(clientSaveForm)">Save</button>
+            <button type="button" pl-button class="gray-outline x-qa-cancel-client-button" (click)="cancel()">Cancel</button>
+        </div>
+        <pl-dot-loader [hidden]="!savingClient" [align]="'left'"></pl-dot-loader>
+    </form>
+</div>

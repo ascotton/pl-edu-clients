@@ -1,0 +1,85 @@
+@import 'core/colors.less';
+
+.pl-client-end-iep-exit-status {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 99998;
+
+  .content {
+    margin: 25px;
+  }
+  .title {
+    margin-bottom: 15px;
+  }
+  .divider-line {
+    height: 1px;
+    border-top: 1px solid @gray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .stepper {
+    width: 300px;
+    margin: 25px auto;
+  }
+  .form {
+    .section {
+      padding: 25px;
+      background-color: @gray-lightest;
+      margin-bottom: 10px;
+      &.section-1 {
+        margin-top: 10px;
+      }
+      .form-elements {
+        margin-left: 20px;
+        margin-top: 10px;
+        &.sign-off {
+          display: inline-block;
+          white-space: nowrap;
+          cursor: pointer;
+          font-style: italic;
+          padding: 5px 10px;
+          width: 530px;
+          border: 1px dashed @gray;
+          border-radius: 5px;
+          position: relative;
+          &.signed {
+            font-style: normal;
+            font-weight: bold;
+            border: 1px solid @gray;
+            background-color: @green-light;
+          }
+          .sign-off-label {
+            position: relative;
+            top: 10px;
+            margin-left: 4px;
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+
+  .action-bar {
+    margin-top: 20px;
+    width: 100%;
+    background-color: @slate-lightest;
+    .actions {
+      margin: 0 30px;
+    }
+  }
+
+  &.debug-show-div {
+    @debug-color: rgb(0, 183, 255);
+    border: 3px solid @debug-color;
+    padding: 20px;
+    position: relative;
+    .debug-component-name {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 11px;
+      padding: 2px;
+      background-color: @debug-color;
+      color: white;
+    }
+  }
+}

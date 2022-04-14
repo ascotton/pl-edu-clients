@@ -1,0 +1,119 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+
+.pl-referrals-confirmation {
+
+    .top-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .result-header {
+        align-items: center;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 14px;
+        color: @white;
+        padding: 13px;
+        margin-bottom: @spacing-small;
+        .name-change-button {
+            margin-left: 20px;
+        }
+        pl-icon {
+            fill: @white;
+            margin-right: 9px;
+        }
+        &.success {
+            background-color: @green;
+        }
+        &.failure {
+            background-color: @red;
+        }
+        &.warning {
+            background-color: @yellow;
+        }
+        &.info {
+            background-color: @blue-medium;
+        }
+        .action-button {
+            color: @white;
+            border-color: @white;
+            margin-left: auto;
+            &:not([disabled]) {
+                background-color: @orange;
+            }
+            ::ng-deep .pl-dot-loader {
+                .dot {
+                    background-color: white;
+                }
+            }
+        }
+    }
+    .results-tables {
+        margin-bottom: 50px;
+    }
+
+    .dupe-resolver {
+        width: 500px;
+        margin: auto;
+        font-family: @roboto;
+        .dupe-resolver-header {
+            background-color: @blue-medium;
+            color: @white;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            border: 1px solid @gray-dark;
+            border-bottom: none;
+            font-size: 18px;
+            height: 54px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 54px;
+        }
+        .dupe-resolver-body {
+            border: 1px solid @gray-dark;
+            border-top: none;
+        }
+        .dupe-buttons {
+            padding: 10px;
+        }
+    }
+
+    .loading {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        width: 500px;
+        margin: 10px auto;
+
+        pl-simple-meter {
+            margin-right: 5px;
+        }
+    }
+
+    .result-body {
+        border-radius: 4px;
+        padding: 16px;
+        color: @gray-darkest;
+        margin-bottom: 5px;
+        &.success {
+            background-color: @green-light;
+        }
+        &.failure {
+            // background-color: #f8b217;
+        }
+        label {
+            font-weight: bold;
+            font-weight: 14px;
+        }
+        div {
+            margin: 5px;
+        }
+    }
+
+    .dupe-client-link {
+        padding-left: 15px;
+        font-weight: bold;
+    }
+}

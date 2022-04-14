@@ -1,0 +1,26 @@
+@import 'core/spacing.less';
+
+.pl-organization-availability {
+    .card-section {
+        grid-template-columns: 1fr 1fr;
+    }
+    .card {
+        box-shadow: none;
+        .location-table {
+            border: solid 1px #ddd;
+            .selected {
+                background-color: #d6eaf4;
+            }
+            .hours-list {
+                font-size: 13px;
+                margin-bottom: @spacing-normal;
+            }
+        }    
+        &.location-availability {
+            min-width: 760px;
+            h3 {
+                margin-bottom: @spacing-normal;
+            }
+        }
+    }
+}

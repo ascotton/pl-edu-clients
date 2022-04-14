@@ -1,0 +1,19 @@
+<div class="pl-demo-event-bus-3"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  [style.background-color]="getColor()"
+  >
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} - {{_state.ID}}
+  </div>
+
+  <h1 class="title">Component 3</h1>
+
+  <div style="text-align: center">
+    <pl-demo-event-bus-2></pl-demo-event-bus-2>
+
+    <pl-demo-event-bus-4 class="margin-xlarge-l"></pl-demo-event-bus-4>
+    <pl-demo-event-bus-6 class="margin-xlarge-l"></pl-demo-event-bus-6>
+  </div>
+
+</div>

@@ -1,0 +1,136 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+@import './styles/pl-colors.scss';
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($pl-light-theme);
+
+// mat-button
+@import 'styles/mat-button';
+
+// Mat-Progress
+.mat-progress-bar {
+    &.inline {
+        display: inline-block !important;
+    }
+    &.rounded {
+        height: 10px !important;
+        border-radius: 5px;
+    }
+    &-buffer {
+        background-color: $slate-medium;
+    }
+    &-fill {
+        &:after {
+            background-color: $slate-darkest;
+        }
+    } 
+}
+
+// Mat-spinner
+button.mat-accent {
+    mat-progress-spinner {
+        display: inline-block;
+        circle {
+            stroke: $white !important;
+        }
+    }    
+}
+
+
+// Mat-Menu
+.mat-menu-panel {
+    .mat-menu-item {
+        color: $gray-darkest;
+        fill: $gray-darkest;
+        &:hover {
+            pl-icon {
+                color: $blue-medium;
+                fill: $blue-medium;
+            }
+        }
+    }
+    a.mat-menu-item {
+        text-decoration: none;
+    }
+    &.dense {
+        .mat-menu-item {
+            height: 32px;
+            line-height: 32px;
+        }
+    }
+}
+
+
+// TODO: Move these classes to somewhere else
+.text-center {
+    text-align: center;
+}
+.bold {
+    font-weight: bold;
+}
+.upper {
+    text-transform: uppercase;
+}
+
+.mat-select {
+    &-panel {
+        .mat-option {
+            white-space: normal !important;
+            height: fit-content !important;
+            line-height: 2em !important;
+        }
+    }
+    &-value-text {
+        white-space: normal !important;
+    }
+}
+
+.mat-form-field {
+    &.dark {
+        .mat-form-field-appearance-fill {
+            .mat-form-field {
+                &-label {
+                    color: $white !important;
+                }
+                &-infix {
+                    width: 167px;
+                }
+                &-prefix {
+                    margin-right: 5px;
+                }
+                &-flex {
+                    background-color: $slate-darkest;
+                    color: $white;
+                    .mat-select {
+                        &-arrow, &-value {
+                            color: $white !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@import 'styles/mat-table';
+$warn: map-get($pl-light-theme, warn);
+.pl-warning {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    background-color: mat-color($warn, 50);
+    border: solid 1px mat-color($warn);
+    &-text {
+        text-align: left;
+    }
+}

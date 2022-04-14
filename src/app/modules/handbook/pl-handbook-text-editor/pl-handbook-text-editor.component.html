@@ -1,0 +1,83 @@
+<!-- Text Editor Header -->
+<div class="flexbox">
+    <div class="flex2">
+        <h1> {{ contentInfo.section.name }} </h1>
+        <p> {{ contentInfo.section.description }} </p>
+    </div>
+
+    <div>
+        <div *ngIf="isLoading" class="margin-large-t">
+            <pl-dot-loader [align]="'right'"></pl-dot-loader>
+        </div>
+
+        <div *ngIf="!isLoading">
+            <div *ngIf="!isEditing" class="pl-text-editor-inline-flex">
+                <p class="margin-r pl-text-editor-desc">
+                    <span *ngIf="isCheckedOut">
+                        Document locked while {{ contentInfo.checkoutBy }} is editing
+                    </span>
+                    <span *ngIf="!isCheckedOut && isModifiedAlready">
+                        Last edited on {{ contentInfo.modifiedOn }} by {{ contentInfo.modifiedBy }}
+                    </span>
+                </p>
+
+                <button pl-button 
+                    [ngClass]="{'primary': !isCheckedOut, '': isCheckedOut}"
+                    [disabled]="isCheckedOut" 
+                    (click)="checkEditAvailability();">Edit</button>
+            </div>
+
+            <div *ngIf="isEditing" class="pl-text-editor-inline-flex">
+                <button pl-button class="primary" (click)="save();">
+                    Save
+                </button>
+
+                <button pl-button class="" (click)="cancel();">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Text Editor -->
+<div>
+    <!-- Loaders and Text Editor Read Only -->
+    <div [hidden]="isEditing">
+        <div [hidden]="!isLoading">
+            <hr class="margin-nl-b">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+
+        <div [hidden]="isLoading" class="pl-text-editor-no-content">
+            <!-- If no content; display a generic message -->
+            <span [hidden]="contentInfo.section.textEditorContent">
+                <hr>
+                <pl-icon class="margin-nl-t" [svg]="'cat-laptop'" [height]="160" [width]="300"></pl-icon>
+                <p class="margin-t pl-text-editor-font-bold">
+                    No content added yet! Lend a hand and help us document how things work at {{ orgName }}
+                </p>
+            </span>
+
+            <!-- If content; display the editor in read only -->
+            <span [hidden]="!contentInfo.section.textEditorContent">
+                <div #plHandbookTextEditor [hidden]="isLoading || !contentInfo.section.textEditorContent" class="margin-t">
+                    <editor [apiKey]="TINY_MCE_KEY" [ngModel]="contentInfo.section.textEditorContent" [disabled]="true"
+                        [init]="{ 
+                                height: tinyConfiguration.height, 
+                                menubar: tinyConfiguration.menubar, 
+                                plugins: ['print'], 
+                                toolbar: 'print'
+                            }"></editor>
+                </div>
+            </span>
+        </div>
+    </div>
+
+    <!-- Actual Text Editor -->
+    <div *ngIf="isEditing" class="margin-t pl-text-editor-animate-right pl-text-editor-shadow">
+        <editor [apiKey]="TINY_MCE_KEY" [(ngModel)]="contentInfo.section.textEditorContent"
+            [disabled]="isEditorDisabled" [init]="tinyConfiguration" (onChange)="stopTextEditorTimeout()"
+            (onKeyPress)="stopTextEditorTimeout()" (onClick)="stopTextEditorTimeout()"></editor>
+    </div>
+</div>

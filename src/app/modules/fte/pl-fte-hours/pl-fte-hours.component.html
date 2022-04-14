@@ -1,0 +1,152 @@
+<div class="pl-fte-hours padding-l">
+
+    <div class="bottom-border">
+        <div *ngIf="componentRefreshing" class="fte-loader-padding">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+
+        <div *ngIf="!componentRefreshing">
+            <!-- The div below is only displayed when the component is on the dashboard page -->
+            <div *ngIf="!fteInCalendarProps.inCalendarWeekView" class="flexbox">
+                <div class="spacer">&nbsp;</div>
+                <pl-button-group class="upper-buttons">
+                    <button pl-button class="toggle-button" [ngClass]="classes.toggle.weekly"
+                        (click)="toggleInterval('weekly')">Weekly</button>
+                    <button pl-button class="toggle-button" *ngIf="!fteInCalendarProps.inCalendarWeekView" [ngClass]="classes.toggle.monthly"
+                        (click)="toggleInterval('monthly')">Monthly</button>
+                </pl-button-group>
+                <div class="refresh-btn">
+                    <pl-icon class="blue-medium pointer" [svg]="'rotate'" title="Refresh" [scale]="1"
+                        (click)="refresh()"></pl-icon>
+                </div>
+            </div>
+
+            <div class="flexbox">
+                <div class="spacer">&nbsp;</div>
+                <div class="margin-center">
+                    <pl-icon *ngIf="!fteInCalendarProps.inCalendarWeekView" 
+                        class="blue-medium pointer go-prev" 
+                        [ngClass]="classes.prev"
+                        [svg]="'chevron-left'" 
+                        [scale]="0.6" 
+                        (click)="goPrev()">
+                    </pl-icon>
+                    
+                    <div class="font-h4 margin-lr header-date">
+                        {{ headerDateString }}
+                        <span *ngIf="view=='monthly'">
+                            <pl-icon class="blue-medium pointer" 
+                                [svg]="'info'" 
+                                [scale]="0.8" 
+                                [verticalAlign]="'-1px'"
+                                (click)="showInfoMonthly = !showInfoMonthly">
+                            </pl-icon>
+                        </span>
+                    </div>
+
+                    <pl-icon *ngIf="!fteInCalendarProps.inCalendarWeekView" 
+                        class="blue-medium pointer go-next" 
+                        [ngClass]="classes.next"
+                        [svg]="'chevron-right'" 
+                        [scale]="0.6" 
+                        (click)="goNext()">
+                    </pl-icon>
+                </div>
+                <pl-icon *ngIf="fteInCalendarProps.inCalendarWeekView"
+                        class="blue-medium pointer" title="Refresh"
+                        [svg]="'rotate'" 
+                        [scale]="1" 
+                        (click)="refresh()">
+                </pl-icon>
+                <div class="spacer">&nbsp;</div>
+            </div>
+
+            <div *ngIf="showInfoMonthly" class="padding info-tip">After submitting your invoice, the monthly MAX hours
+                for the invoiced month and next month may be adjusted due to a split week across these months.</div>
+
+            <div *ngFor="let school of schools; let index = index" class="school" [ngClass]="school.xClasses.wrapper">
+                <div [class.flexbox]="!fteInCalendarProps.inCalendarWeekView" [class.flex-column]="fteInCalendarProps.inCalendarWeekView">
+                    <!-- Header with Progress Bar -->
+                    <div [class.flex3]="!fteInCalendarProps.inCalendarWeekView">
+                        <div *ngIf="!fteInCalendarProps.inCalendarWeekView">
+                            <div *ngIf="school.xClasses.bar === 'percent0'" class="circle-icon percent0"
+                                [title]="school.xTitle">
+                                <pl-icon class="white" [svg]="'exclamation'" [scale]="0.6"></pl-icon>
+                            </div>
+                            <div *ngIf="school.xClasses.bar === 'percent90'" class="circle-icon percent90"
+                                [title]="school.xTitle">
+                                <pl-icon class="white" [svg]="'exclamation'" [scale]="0.6"></pl-icon>
+                            </div>
+                            <div *ngIf="school.xClasses.bar === 'percent100'" class="circle-icon percent100"
+                                [title]="school.xTitle">
+                                <pl-icon class="white" [svg]="'check'" [scale]="0.6"></pl-icon>
+                            </div>
+                            <div *ngIf="school.xClasses.bar === 'percent101'" class="circle-icon percent101"
+                                [title]="school.xTitle">
+                                <pl-icon class="white" [svg]="'minus'" [scale]="0.6"></pl-icon>
+                            </div>
+                        </div>
+
+                        <div class="font-h3">{{ school.name }}</div>
+
+                        <div>
+                            <div class="bar-wrapper">
+                                <div class="bar-background"></div>
+                                <div class="bar" [ngClass]="school.xClasses.bar" [ngStyle]="school.xStyles.bar"></div>
+                            </div>
+                            <div [innerHTML]="school.xHoursDisplay" class="hours"></div>
+                        </div>
+                    </div>
+
+                    <!-- Target / Max Hours -->
+                    <div *ngIf="index === 0" [class.flex1]="!fteInCalendarProps.inCalendarWeekView" [class.flexbox]="fteInCalendarProps.inCalendarWeekView">
+                        <div class="col-target">
+                            <span *ngIf="view=='weekly'">TARGET</span>
+                            <span *ngIf="view=='monthly'">MAX</span>
+                        </div>
+                        <div [innerHTML]="school.xTargetHoursDisplay" class="col-target"></div>
+                    </div>
+
+                    <!-- Status of Remaining Hours -->
+                    <div *ngIf="index === 0" class="col-status" [class.flex1]="!fteInCalendarProps.inCalendarWeekView"
+                        [class.flexbox]="fteInCalendarProps.inCalendarWeekView" [class.margin-nl-l]="fteInCalendarProps.inCalendarWeekView">
+                        STATUS
+                        <div class="col-status" [class.width-125px]="!fteInCalendarProps.inCalendarWeekView"
+                            [class.margin-large-l]="fteInCalendarProps.inCalendarWeekView" [ngClass]="school.xClasses.status"
+                            [innerHTML]="school.xStatusDisplay"></div>
+                    </div>
+
+                </div>
+                <div class="no-hours alert-section warning margin-nl-t" *ngIf="school.scheduledMinutes <= 0">
+                    <div>You have not scheduled any contract service hours. <span [hidden]="fteInCalendarProps.inCalendarWeekView">Please go
+                            to your calendar to schedule your blocks.</span></div>
+                </div>
+                <div class="overscheduled alert-section error margin-nl-t"
+                    *ngIf="school.scheduledMinutes > school.assignedMinutes">
+                    <div class="flexbox">
+                        <div class="flex1">
+                            <div *ngIf="view=='monthly'"><i>You have scheduled over your monthly max. Let us know
+                                    <button pl-button class="link inline"
+                                        (click)="school.xShowOverForm = !school.xShowOverForm">why you're
+                                        over.</button></i></div>
+                            <div *ngIf="view=='weekly'"><i>You have over scheduled for this <span
+                                        *ngIf="view=='weekly'">week</span><span *ngIf="view=='monthly'">month</span>.
+                                    Let us know <button pl-button class="link inline"
+                                        (click)="school.xShowOverForm = !school.xShowOverForm">why you're
+                                        over.</button></i></div>
+                        </div>
+                        <pl-icon *ngIf="school.xShowOverForm" class="blue-medium pointer" [svg]="'chevron-up'"
+                            [scale]="1" (click)="school.xShowOverForm = !school.xShowOverForm"></pl-icon>
+                        <pl-icon *ngIf="!school.xShowOverForm" class="blue-medium pointer" [svg]="'chevron-down'"
+                            [scale]="1" (click)="school.xShowOverForm = !school.xShowOverForm"></pl-icon>
+                    </div>
+                    <div [hidden]="!school.xShowOverForm" class="margin-t">
+                        <pl-fte-over-hours-survey [date]="date" [school]="school" [inCalendarWeekView]="fteInCalendarProps.inCalendarWeekView"
+                            (onDone)="surveyDone($event)">
+                        </pl-fte-over-hours-survey>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

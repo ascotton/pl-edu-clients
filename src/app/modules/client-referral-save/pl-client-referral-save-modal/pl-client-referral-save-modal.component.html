@@ -1,0 +1,13 @@
+<div class="pl-client-referral-save-modal" #plClientReferralModal>
+    <pl-modal-header-wrapper [headerText]="headerToDisplay">
+        <div>
+            <p class="margin-nl-b justify-text">
+                {{ messageToDisplay }}
+            </p>
+
+            <button pl-button class="primary" (click)="onReview();" [title]="'This action will redirect you to the student services tab'"> Review Existing Referrals </button>
+            <button pl-button class="warning" (click)="onContinue();"> Ignore Warning & Add </button>
+            <button pl-button (click)="onCancel();"> Cancel </button>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

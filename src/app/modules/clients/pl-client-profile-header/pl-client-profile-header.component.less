@@ -1,0 +1,76 @@
+@import 'core/colors.less';
+@import 'core/colors-classes.less';
+@import 'core/spacing.less';
+@import 'app/icons.less';
+
+.pl-client-profile-header {
+    color: @white;
+    position: relative;
+
+    .icon {
+        background-color: @blue-medium;
+        .margin-r;
+        .circled-icon;
+        .white;
+
+        pl-icon {
+            position: relative;
+            left: 3px;
+
+            &.virtual {
+                left: 0px;
+            }
+        }
+    }
+
+    .x-qa-header-client-basic-info {
+        list-style: none;
+
+        li {
+            display: inline-block;
+        }
+
+        li + li::before {
+            content: "|";
+            .margin-lr;
+        }
+    }
+
+    .remove-caseload-btn {
+        margin-top: -3px;
+
+        [pl-button] {
+            margin: 0;
+            color: @white;
+            border-color: @white;
+        }
+    }
+
+    .status-header {
+        display: inline;
+    }
+    .learn-more {
+        margin: 0px;
+        line-height: 0.5;
+        padding: 0px 1px 0px 1px;
+    }
+
+    .delete-client-btn {
+        margin-top: -3px;
+
+        [pl-button] {
+            margin: 0;
+            color: @white;
+            border-color: @white;
+        }
+    }
+
+    .change-location-link {
+        margin-left: 10px;
+    }
+
+    .buttons {
+        position: absolute;
+        right: 16px;
+    }
+}

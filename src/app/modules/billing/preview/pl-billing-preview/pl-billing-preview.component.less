@@ -1,0 +1,91 @@
+@import 'core/colors.less';
+
+.pl-billing-preview {
+    .header-blue {
+        color: white;
+        background-color: @slate-darkest;
+        line-height: 25px;
+    }
+    .unsubmitted-banner {
+        background-color: @yellow-light;
+        text-align: left;
+
+        pl-icon {
+            display: inline-block;
+            vertical-align: -3px;
+            width: 20px;
+            height: 20px;
+            border-radius: 20px;
+            padding-top: 2px;
+        }
+    }
+    .invoice-paper {
+        border: solid 1px @gray-lighter;
+        border-radius: 5px;
+        margin-bottom: 150px;      // for fixed footer
+
+        .invoice-top {
+            border-bottom: solid 1px @gray-lighter;
+
+            .invoice-top-right {
+                min-width: 350px;
+
+                .invoice-top-right-title {
+                    text-align: center;
+                }
+                .invoice-top-right-status {
+                    text-align: center;
+                    color: white;
+                    text-transform: uppercase;
+
+                    &.unsubmitted {
+                        background-color: @yellow;
+                    }
+                    &.submitted, &.processed, &.approved {
+                        background-color: @green-medium;
+                    }
+                    &.retracted {
+                        background-color: @red;
+                    }
+                }
+
+                .invoice-top-table >div {
+                    &:nth-child(odd) {
+                        background-color: @slate-lightest;
+                    }
+                }
+                .invoice-top-table-total {
+                    align-items: baseline;
+                    background-color: @slate-light;
+                }
+            }
+        }
+    }
+
+    // .footer {
+    //     bottom: 1em;
+    //     width: 100%;
+    //     position: fixed;
+    //     max-width: 97em;
+    // }
+
+    .sign-off {
+        display: flex;
+        align-items: center;
+        background-color: @yellow-light;
+
+        &.signed-off {
+            background-color: @green-light;
+        }
+    }
+
+    .header-submit {
+        background-color: @slate-lightest;
+    }
+
+    // .sign-off, .header-submit {
+    //     width: 100%;
+    //     position: fixed;
+    //     max-width: 1371px;
+    // }
+}

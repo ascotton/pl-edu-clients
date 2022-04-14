@@ -1,0 +1,35 @@
+<pl-modal-header-wrapper [headerText]="'Edit School Year Dates'" (click)="onClickModal($event);">
+    <div class="pl-account-school-year-dates-form">
+        <div class="inner">
+            <h3>School Year Dates</h3>
+            <div #inputDatePickers class="dates">
+                <pl-input-datepicker class="form-input" [label]="'Start Date'" [(model)]="dates.start.date"
+                    [placeholder]="'MM/DD/YYYY'" [closeDatePickerInModal]="closeDatePicker1"
+                    [scrollToYearByValue]="this.schoolYears[0]"
+                    (focusin)="onFocusInDatePicker($event, 1)"></pl-input-datepicker>
+
+                <pl-input-datepicker class="form-input" [label]="'End Date'" [(model)]="dates.end.date"
+                    [placeholder]="'MM/DD/YYYY'" [closeDatePickerInModal]="closeDatePicker2"
+                    [scrollToYearByValue]="this.schoolYears[1]"
+                    (focusin)="onFocusInDatePicker($event, 2)"></pl-input-datepicker>
+            </div>
+
+            <br />
+
+            <h3>ESY School Year Dates</h3>
+            <div #inputDatePickersESY class="dates">
+                <pl-input-datepicker class="form-input" [(model)]="dates.esyStart.date" [label]="'Start Date'"
+                    [placeholder]="'MM/DD/YYYY'" [closeDatePickerInModal]="closeDatePicker3"
+                    [scrollToYearByValue]="this.schoolYears[2]"
+                    (focusin)="onFocusInDatePicker($event, 3)"></pl-input-datepicker>
+
+                <pl-input-datepicker class="form-input" [label]="'End Date'" [(model)]="dates.esyEnd.date"
+                    [placeholder]="'MM/DD/YYYY'" [closeDatePickerInModal]="closeDatePicker4"
+                    [scrollToYearByValue]="this.schoolYears[3]"
+                    (focusin)="onFocusInDatePicker($event, 4)"></pl-input-datepicker>
+            </div>
+            <br />
+            <button pl-button class="success" (click)="onClickSave()">Save</button>
+        </div>
+    </div>
+</pl-modal-header-wrapper>

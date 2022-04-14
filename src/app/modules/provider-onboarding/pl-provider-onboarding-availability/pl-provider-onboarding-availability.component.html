@@ -1,0 +1,7 @@
+<div class="pl-provider-onboarding-availability padding-large">
+    <div class="margin-b"><h3>Time Zone</h3></div>
+    <div class="margin-xlarge-b">Your time zone is set to <b>{{ timezone }}</b>. If this is incorrect, please contact <a href="mailto:provider.success@presencelearning.com">provider.success@presencelearning.com</a>.</div>    
+    <div class="margin-large-t">
+        <pl-availability-view [showTips]="false" [saveConfirm]="false" [blockReload]="false" [fullPage]="false" (onSave)="onSave($event)"></pl-availability-view>
+    </div>
+</div>

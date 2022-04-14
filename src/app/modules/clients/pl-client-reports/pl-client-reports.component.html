@@ -1,0 +1,18 @@
+<div class="pl-client-reports">
+    <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+    <ng-container *ngIf="!loading">
+        <div class="section-body margin-large-b">
+            <h5 class="margin-b">Session Notes Reports</h5>
+            <div class="report-container">
+                <pl-report-dates (dates)="onReportDates($event)"></pl-report-dates>
+                 <pl-input-select class="report-options report-format" [(model)]="reportFormat" [options]="reportFormats"></pl-input-select>
+                <button pl-button class="x-qa-submit-report-button inline primary" (click)="generateReport()" [disabled]="generatingReport">Download Report</button>
+            </div>
+        </div>
+
+        <h4 class="section-header">Session Notes</h4>
+        <div class="margin-large-b">
+            <pl-client-records-list [client]="client"></pl-client-records-list>
+        </div>
+    </ng-container>
+</div>

@@ -1,0 +1,395 @@
+@import 'core/colors.less';
+
+@signed-color: @green-light;
+.pl-invoice-documentation-list {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: calc(~"100vh - 129px");
+  width: 250px;
+
+  .list-header {
+    border: 1px solid @gray;
+    border-bottom: 0;
+    border-radius: 5px 5px 0 0;
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    height: 20px;
+    background-color: @slate-lightest;
+
+    pl-icon {
+      margin-right: 5px;
+    }
+
+    &.unsigned-count {
+      display: flex;
+      .count {
+        flex: 1;
+        white-space: nowrap;
+        .unsigned-text {
+          color: @gray-darkest;
+          font-size: 15px;
+          font-weight: bold;
+          position: relative;
+          top: 1px;
+        }
+
+        .unsigned-number {
+          color: @gray-darker;
+          margin-left: 1px;
+          font-size: 15px;
+          position: relative;
+          top: 1px;
+        }
+      }
+      .toggle-show-all {
+        flex: 1;
+        text-align: right;
+      }
+    }
+  }
+
+  ul.list-data {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    border: 1px solid @gray;
+
+    div {
+      &.sticky-header {
+        position: sticky;
+        top: 0px;
+        z-index: 99;
+        background-color:rgba(255, 255, 255, 1);
+      }
+      .group-header {
+        border-bottom: 1px solid @gray-light;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        .group-header-symbol {
+          font-size: 12px;
+        }
+        .text {
+          display: inline-block;
+        }
+        .past {
+          border-right: 3px solid @blue-medium;
+          .text {
+            padding: 0 1px;
+          }
+          margin: 0px 5px;
+          color: @blue;
+        }
+        .today {
+          border-right: 3px solid @orange;
+          .text {
+            padding: 0 1px;
+          }
+          margin: 0px 5px;
+          color: @orange;
+        }
+        .future {
+          border-right: 3px solid @gray;
+          .text {
+            padding: 0 1px;
+          }
+          margin: 0px 5px;
+          color: @gray-darker;
+        }
+        .content {
+          font-family: Roboto;
+          padding: 1px;
+          font-size: 14px;
+          font-weight: bold;
+          text-align: center;
+        }
+      }
+    }
+    li {
+
+      &.list-item {
+        list-style-type: none;
+      }
+      .pl-row {
+        display: block;
+        border-bottom: 1px solid @slate-light;
+        opacity: 1;
+        background-color: @white;
+        padding: 8px 5px 8px 15px;
+        list-style-type: none;
+        position: relative;
+        color: @slate-darkest;
+        font-size: 13px;
+        font-weight: 500;
+
+        .signed {
+          font-weight: 400;
+        }
+        .signed-mark {
+          color: @green-light;
+          font-weight: 300;
+          font-size: 14px;
+          background-color: @slate-darker;
+          padding: 4px 2px;
+          border-radius: 3px;
+        }
+        .unsigned {
+          color: @slate-dark;
+        }
+
+        .row-left {
+          display: table-cell;
+          padding-right: 10px;
+          vertical-align: middle;
+        }
+        .row-right {
+          display: table-cell;
+        }
+
+        .dot-container {
+          display: table-cell;
+          vertical-align: middle;
+          height: 100%;
+          .dot {
+            display: inline-block;
+            height: 1px;
+            width: 1px;
+            padding: 2px;
+            border-radius: 50%;
+            &.group-past {
+              background-color: @blue-medium;
+              border: 1px solid @slate;
+            }
+            &.group-today {
+              background-color: @orange;
+              border: 1px solid silver;
+            }
+            &.group-future {
+              background-color: @white;
+              border: 1px solid @gray-light;
+            }
+          }
+        }
+
+        &:hover {
+          background-color: @slate-light;
+          color: @slate-darkest;
+          cursor: pointer;
+        }
+
+        &.selected {
+          background-color: @slate-darker;
+          color: @gray-lightest;
+          font-weight: 500;
+          padding-left: 12px;
+          border-bottom: none;
+          border-top: none;
+          .signed {
+            color: @signed-color;
+          }
+          .signed-mark {
+            font-weight: 300;
+            background-color: @slate-darker;
+          }
+          .unsigned {
+            color: @gray-lightest;
+          }
+
+          &.group-past {
+            border-left: 5px solid @blue-medium;
+          }
+          &.group-today {
+            border-left: 5px solid @orange;
+          }
+          &.group-future {
+            border-left: 5px solid @gray;
+          }
+        }
+
+        &.active-group-not-selected {
+          //border-right: 5px solid @blue-medium;
+          &.group-past {
+            border-left: 3px solid @blue-medium;
+          }
+          &.group-today {
+            border-left: 3px solid @orange;
+          }
+          &.group-future {
+            border-left: 3px solid @gray;
+          }
+          padding-left: 12px;
+          background-color: @gray-lightest;
+          border-bottom:none;
+          &:hover {
+            background-color: @slate-light;
+            color: @slate-darkest;
+            cursor: pointer;
+          }
+        }
+
+        &.active {
+          background-color: @slate-darkest;
+          color: @white;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        .flags-TYPE {
+          position: absolute;
+          top:1px; right:4px;
+          font-size: 14px;
+          color: @blue-medium;
+        }
+
+        .flags-ROW {
+          position: absolute;
+          bottom:1px; right:4px;
+          font-size: 14px;
+          color: @orange;
+        }
+        .flags-RECORD {
+          position: absolute;
+          top:0; right:0;
+          font-size: 10px;
+          color: white;
+          font-weight: bold;
+          background-color:@orange-dark;
+          height: 100%;
+          width: 2px;
+        }
+      }
+    }
+
+    .empty-list {
+      .unsigned-zero {
+        margin-top: 20px;
+        margin-bottom: 30px;
+        font: 16px Roboto;
+        text-align: center;
+        .header {
+          margin-bottom: 20px;
+        }
+        .message {
+          color: @gray;
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+
+  .percent-done {
+    border: 1px solid @gray;
+    background-color: @gray-really-light;
+    border-radius: 0 0 3px 3px;
+    border-top: none;
+    padding: 3px 5px 2px 5px;
+    ._container {
+      ._progress-bar-cell {
+        padding-top: 3px;
+        display: table-cell;
+        width: 100%;
+        .signed-progress-bar {
+          width: 100%;
+          white-space: nowrap;
+          background-color: @gray-really-light;
+          position: relative;
+          height: 9px;
+          border-radius: 5px;
+          border: 1px solid @gray-light;
+          .progress-bar {
+            &.zero-signed {
+              border: none;
+            }
+            background: @blue-medium;
+            height: 7px;
+            border-radius: 5px;
+            border: 1px solid @blue-light;
+          }
+        }
+      }
+      ._percentage-cell {
+        position: relative;
+        top: -1px;
+        padding-left: 9px;
+        padding-right: 1px;
+        display: table-cell;
+        font-size: 12px;
+        font-weight: bold;
+        color: @slate-darkest;
+      }
+    }
+  }
+
+  .sort-options, .search-options {
+    font-size: 13px;
+    text-align: center;
+    color: @gray-darkest;
+    padding: 8px 0 3px 0;
+    .option {
+      display: inline-block;
+      margin: 0 4px 2px 4px;
+      a {
+        color: @gray-darkest;
+        text-decoration: none;
+        &:hover {
+          color: @gray-darkest;
+        }
+      }
+      &.selected {
+        border-bottom: 2px solid @gray-darker;
+        font-weight: bold;
+        background-color: @gray-lightest;
+        padding: 1px 8px;
+      }
+    }
+  }
+
+  .search-options {
+    input {
+      width: 75px;
+    }
+  }
+
+  .signed-count {
+    background-color: @slate-lightest;
+    flex: 0 0 auto;
+    margin-top: 3px;
+    border: 1px solid @gray;
+    border-radius: 5px;
+    white-space: nowrap;
+    padding: 7px 10px;
+    display: flex;
+
+    .count {
+      flex: 1;
+
+      pl-icon {
+        margin-right: 5px;
+      }
+
+      .signed-text {
+        color: @gray-darkest;
+        font-size: 15px;
+        font-weight: bold;
+      }
+
+      .signed-number {
+        color: @gray-darker;
+        margin-left: 1px;
+        font-size: 15px;
+      }
+    }
+
+    .schedule {
+      flex: 1;
+      text-align: right;
+
+      a {
+        font-size: 14px;
+        position: relative;
+        top: 1px;
+      }
+    }
+  }
+}

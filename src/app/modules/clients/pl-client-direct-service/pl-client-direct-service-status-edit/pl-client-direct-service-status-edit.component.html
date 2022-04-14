@@ -1,0 +1,90 @@
+<div class="pl-client-direct-service-status-edit">
+    <pl-modal-header-wrapper [headerText]="modalHeaderText">
+        <div *ngIf="!validateClientStatus">
+        <form [formGroup]="directServiceFormGroup">
+            <div class="content">
+                <div class="inputs">
+                    <pl-input-select 
+                        class="form-input x-qa-status-select"
+                        [formCtrl]="status"
+                        [label]="'Status'"
+                        [options]="statusOptions"
+                        [placeholder]="'Select Status'"
+                        [required]="true"
+                        (onChange)="onStatusChoiceChange($event)"
+                        [(model)]="model.status">
+                    </pl-input-select>
+                </div>
+                <div class="explanation">
+                    <div class="explanation-text">{{ statusDescription }}</div>
+                </div>
+            </div>
+            <div [hidden]="!shouldShowReason()">
+                <div class="margin-large-b" [hidden]="!isStatusCompleted()">
+                    <pl-input-select 
+                        [disabled]="!isStatusCompleted()"
+                        [formCtrl]="directServiceFormGroup"
+                        [label]="'Reason'"
+                        [options]="completedReasonOptions"
+                        [placeholder]="'Select a reason'"
+                        [required]="isStatusCompleted()"
+                        [(model)]="model.reason">
+                    </pl-input-select>
+                </div>
+                <div class="margin-large-b" [hidden]="!isStatusCancelled()">
+                    <pl-input-select 
+                        [disabled]="!isStatusCancelled()"
+                        [formCtrl]="directServiceFormGroup"
+                        [label]="'Reason'"
+                        [options]="cancelledReasonOptions"
+                        [placeholder]="'Select a reason'"
+                        [required]="isStatusCancelled()"
+                        [(model)]="model.reason">
+                    </pl-input-select>
+                </div>
+                <div class="margin-large-b" [hidden]="!isReasonOther()">
+                    <pl-input-textarea
+                        [disabled]="!isReasonOther()"
+                        [formCtrl]="directServiceFormGroup"
+                        [height]="'120px'"
+                        [label]="'Notes'"
+                        [maxlength]="100"
+                        [required]="isReasonOther()"
+                        (onChange)="onNotesChange($event)"
+                        [(model)]="model.notes">
+                    </pl-input-textarea>
+                    <div class="character-count">
+                        <span *ngIf="!model.notes">100 character limit</span>
+                        <span *ngIf="!!model.notes">
+                            <strong>{{ 100 - model.notes?.length }}</strong> / 100 characters left
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button pl-button 
+                    class="success x-qa-delete-confirm-btn" 
+                    (click)="onToggleValidationStatus()"
+                    [disabled]="isSameStatus() || submitting || this.directServiceFormGroup.invalid">
+                    Submit
+                </button>
+                <button pl-button class="x-qa-delete-cancel-btn" (click)="cancel()">
+                    Cancel
+                </button>
+            </div>
+        </form>
+        </div>
+        <div *ngIf="validateClientStatus">
+            <div class="margin-large-b">
+                <p> Are you sure you want to {{ statusAlias }} this service? </p>
+            </div>
+            <div>
+                <pl-dot-loader *ngIf="submitting"></pl-dot-loader>
+                <button pl-button class="success x-qa-delete-confirm-btn" (click)="submit()" [disabled]="submitting">
+                    Yes </button>
+                <button pl-button class="x-qa-delete-cancel-btn" (click)="onToggleValidationStatus()"
+                    [disabled]="submitting"> No </button>
+            </div>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

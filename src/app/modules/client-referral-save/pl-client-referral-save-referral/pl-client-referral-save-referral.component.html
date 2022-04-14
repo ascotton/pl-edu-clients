@@ -1,0 +1,243 @@
+<div class="padding-large" *ngIf="providerTypeOpts.length === 0">
+    <pl-dot-loader></pl-dot-loader>
+</div>
+
+<div class="pl-client-referral-save-referral padding-large" *ngIf="providerTypeOpts.length > 0">
+    <div class="client-info margin-large-b padding-large rounded">
+        <div class="margin-large-b">
+            <span class="font-h2 margin-large-r">{{ client.firstName }} {{ client.lastName }}</span> <button *ngIf="!isEdit" pl-button class="link" (click)="changeClient()">Change <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display></button><a *ngIf="isEdit" target="_blank" [routerLink]="['/client', client.id]">View <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display> Profile</a>
+        </div>
+        <div>
+            <span class="margin-large-r"><b>Location:</b> <span *ngIf="client.locations">{{ client.locations[0].name }}</span></span>
+            <span class="margin-large-r"><b>Organization:</b> <span *ngIf="client.locations">{{ client.locations[0].parent.name }}</span></span>
+            <span class="margin-large-r"><b>ID:</b> <pl-client-id [externalId]="client.externalId" [internalId]="client.id"></pl-client-id></span>
+            <span class="margin-large-r"><b>Date of Birth:</b> {{ client.xBirthday }}</span>
+        </div>
+    </div>
+    <div class="section-body margin-large-b rounded">
+        <div class="flexbox">
+            <div class="flex1">
+                <form [formGroup]="referralForm">
+                    <div class="year-input">
+                        <pl-input-select
+                            class="form-input x-qa-year-select"
+                            [formCtrl]="referralForm"
+                            [label]="'School Year'"
+                            [(model)]="referral.schoolYear.code"
+                            [options]="schoolYearOpts"
+                            [required]="true"
+                            [highlightSelected]="true">
+                        </pl-input-select>
+                    </div>
+                    <pl-input-radio-group
+                        class="form-input x-qa-provider-type"
+                        [formCtrl]="referralForm"
+                        [label]="'Provider Type'"
+                        [(model)]="referral.providerType.code"
+                        [options]="providerTypeOpts"
+                        [required]="true"
+                        (modelChange)="updateReferralRadioGroup($event)">
+                    </pl-input-radio-group>
+                    <pl-input-radio-group
+                        class="form-input x-qa-product-type"
+                        [formCtrl]="referralForm"
+                        [label]="'Referral'"
+                        [(model)]="referral.productType.code"
+                        [options]="referralOpts"
+                        [optionWidth]="'30em'"
+                        [required]="true"
+                        (modelChange)="updateGroupingAndFrequencyWhenBmhType($event)">
+                    </pl-input-radio-group>
+
+                    <div [hidden]="!isDirectServiceOrSupervision() && !isBehaviorOrTraumaGroup()">
+                        <pl-input-select
+                            class="form-input grade-input"
+                            [formCtrl]="referralForm"
+                            [(model)]="referral.grade"
+                            [options]="gradeOptions"
+                            [label]="'Grade'"
+                            [placeholder]="'-'"
+                        ></pl-input-select>
+
+                        <div [hidden]="!isDirectServiceOrSupervision()">
+                            <div class="time-inputs">
+                                <pl-input-text
+                                class="form-input duration-input"
+                                [formCtrl]="referralForm"
+                                [(model)]="referral.duration"
+                                [type]="'number'"
+                                [min]="1"
+                                [label]="'Duration'"
+                                [wholeNumber]="true"
+                                >
+                                </pl-input-text>
+                                <span>minutes</span>
+
+                                <pl-input-text
+                                    class="form-input frequency-input"
+                                    [formCtrl]="referralForm"
+                                    [(model)]="referral.frequency"
+                                    [type]="'number'"
+                                    [min]="1"
+                                    [label]="'Frequency'"
+                                    [wholeNumber]="true"
+                                >
+                                </pl-input-text>
+
+                                <pl-input-select
+                                    class="form-input interval-input"
+                                    [filter]="false"
+                                    [formCtrl]="referralForm"
+                                    [(model)]="referral.interval"
+                                    [options]="intervalOptions"
+                                    [label]="'Interval'"
+                                    [placeholder]="'-'"
+                                >
+                                </pl-input-select>
+                            </div>
+                        </div>
+
+                        <!-- time-inputs for Behavioral and Trauma Produt -->
+                        <div [hidden]="!isBehaviorOrTraumaGroup()">
+                            <pl-input-radio-group
+                            class="form-input x-qa-product-type"
+                            [formCtrl]="referralForm"
+                            [label]="'Frequency'"
+                            [(model)]="frequencyTypeCode"
+                            [options]="frequencyOpts"
+                            [optionWidth]="'30em'"
+                            (modelChange)="updateFrequencyWhenBmhType($event)"
+                            >
+                            </pl-input-radio-group>
+                        </div>
+
+                        <pl-input-checkbox-group
+                            class="form-input input-width"
+                            [formCtrl]="referralForm"
+                            [(model)]="referralGrouping"
+                            (modelChange)="onChangeGrouping($event)"
+                            [options]="referralGroupingCheckboxOptions"
+                            [label]="grouping.label"
+                            [disabled]="grouping.disabled"
+                        >
+                        </pl-input-checkbox-group>
+
+                        <pl-input-checkbox-group
+                            class="form-input"
+                            [formCtrl]="referralForm"
+                            [(model)]="isShortTerm"
+                            (modelChange)="onChangeIsShortTerm($event)"
+                            [options]="[{ label: 'This referral is to cover the student\'s service provision for a short period of time', value: 'isShortTerm' }]"
+                            [optionWidth]="'30em'"
+                            [label]="'Short Term Coverage'"
+                        >
+                        </pl-input-checkbox-group>
+
+                        <pl-input-checkbox-group
+                            class="form-input"
+                            [formCtrl]="referralForm"
+                            [(model)]="esy"
+                            (modelChange)="onChangeEsy($event)"
+                            [options]="[{ label: 'This referral is for services to be provided during the extended school year', value: 'esy' }]"
+                            [optionWidth]="'30em'"
+                            [label]="'ESY'"
+                        >
+                        </pl-input-checkbox-group>
+                    </div>
+
+                    <div [hidden]="!isEvaluation()">
+                        <pl-input-datepicker
+                            class="form-input input-width x-qa-evaluation-due-date"
+                            [formCtrl]="referralForm"
+                            [label]="'Evaluation Due Date'"
+                            [dropdownContainerSelector]="'.pl-service-save'"
+                            [(model)]="referral.dueDate">
+                        </pl-input-datepicker>
+
+                        <pl-input-datepicker
+                            class="form-input input-width"
+                            [formCtrl]="referralForm"
+                            [label]="'Assessment Plan Signature Date'"
+                            [dropdownContainerSelector]="'.pl-service-save'"
+                            [(model)]="referral.assessmentPlanSignedOn">
+                        </pl-input-datepicker>
+
+                        <pl-input-datepicker
+                            class="form-input input-width"
+                            [formCtrl]="referralForm"
+                            [label]="'Meeting Date'"
+                            [dropdownContainerSelector]="'.pl-service-save'"
+                            [(model)]="referral.meetingDate">
+                        </pl-input-datepicker>
+                    </div>
+                    <div [hidden]="!isEvaluation()">
+                        <pl-input-checkbox-group
+                            class="form-input"
+                            [formCtrl]="referralForm"
+                            [(model)]="isShortTerm"
+                            (modelChange)="onChangeIsShortTerm($event)"
+                            [options]="[{ label: 'This referral is to cover the student\'s service provision for a short period of time', value: 'isShortTerm' }]"
+                            [optionWidth]="'30em'"
+                            [label]="'Short Term Coverage'"
+                        >
+                        </pl-input-checkbox-group>
+                    </div>
+
+                    <pl-input-select
+                        class="form-input input-width x-qa-primary-language"
+                        [formCtrl]="referralForm"
+                        [(model)]="referral.language.code"
+                        [options]="languagesOptsOther"
+                        [label]="'Service Language'"
+                        [placeholder]="'Select Service Language'">
+                    </pl-input-select>
+
+                    <div *ngIf="!isEdit">
+                        <div [hidden]="!matchingOpts.length">
+                            <pl-input-radio-group
+                                class="form-input x-qa-match"
+                                [formCtrl]="referralForm"
+                                [label]="'Matching Option'"
+                                [(model)]="referral.matching"
+                                [options]="matchingOpts"
+                                [optionWidth]="'30em'"
+                                [required]="!isEdit"
+                            ></pl-input-radio-group>
+                        </div>
+                        <div [hidden]="matchingOpts.length" class="margin-large-tb">
+                            This referral will be sent to PresenceLearning for matching.
+                        </div>
+                    </div>
+                    <div *ngIf="errorMessage" class="margin-large-tb red">{{ errorMessage }}</div>
+                </form>
+            </div>
+            <div class="flex1">
+                <b class="margin-r">Notes</b>
+                <pl-referral-notes
+                    *ngIf="referralLoaded"
+                    [currentUser]="currentUser"
+                    [referralId]="referral.id"
+                    [clientId]="client.id"
+                    [locationId]="client.location"
+                    (noteEditing)="onNoteEditing($event)"
+                    (noteChange)="onNoteChange($event)"
+                    >
+                </pl-referral-notes>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="footer-fixed-spacer">&nbsp;</div>
+    <div class="footer-fixed">
+        <div [hidden]="saving">
+            <button pl-button class="success x-qa-client-referral-referral-submit-btn" (click)="save()">Save Referral</button>
+            <button pl-button class="success x-qa-client-referral-referral-convert-btn" (click)="saveAndConvert()" [disabled]="referral.matching !== 'selfAssign'">Save & Convert to Service</button>
+            <button *ngIf="referral.permissions && referral.permissions.deleteReferral" pl-button class="danger x-qa-delete-btn" (click)="showDeleteConfirm()">Delete</button>
+            <button type="button" pl-button class="bare x-qa-client-referral-referral-cancel-btn" (click)="cancel()">Cancel</button>
+        </div>
+        <div *ngIf="saving" class="padding-large-t">
+            <pl-dot-loader [align]="'left'"></pl-dot-loader>
+        </div>
+    </div>
+</div>

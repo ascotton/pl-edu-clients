@@ -1,0 +1,74 @@
+<div class="pl-isa-handling">
+    <pl-modal-header-wrapper [headerText]="headerText">
+        <div class="banner flex-aligned-center" 
+            [ngClass]="{'sign-mode': modalMode === isaModalMode.sign, 'remove-mode': modalMode === isaModalMode.remove}">
+            <span class="material-icons icon"> info </span>
+            <p class="margin-l"> {{ bannerTextForUI }} </p>
+        </div>
+
+        <div *ngIf="modalMode === isaModalMode.sign" class="signing-text">
+            <p>
+                By typing your name and title below and clicking [“Sign ISAs”], you authorize us to affix your
+                electronic signature to an ISA for each of the students selected, for whom you agree that Services are
+                being provided and agree that your electronic signature will have the same force
+                and effect as a hand-written signature.
+            </p>
+        </div>
+
+        <!-- The table is activated only when removing ISAs -->
+        <div *ngIf="modalMode === isaModalMode.remove" class="removal-table"
+            [class.with-auto-scroll]="selectedISAs.length > 5">
+            <pl-isa-table
+                [tableMode]="tableMode"
+                [isasToRemove]="selectedISAs"
+                (tableDataEmitter)="onTableDataReceived($event);">
+            </pl-isa-table>
+        </div>
+
+        <!-- The inputs are activated only when signinging ISAs -->
+        <div *ngIf="modalMode === isaModalMode.sign" class="signing-boxes">
+            <div class="signing-name">
+                <div class="input-text">
+                    <pl-input-text
+                        [disabled]="isProcessingISAs"
+                        [label]="'Your Full Name'" 
+                        [(model)]="user.fullNameModel" 
+                        (onChange)="onSigningInputBoxesChange()">
+                    </pl-input-text>
+                </div>
+                <p class="margin-small-t"> Sign as "{{ user.fullNameLabel }}" </p>
+
+                <div *ngIf="user.fullNameLabel !== user.fullNameModel" class="flex-aligned-center margin-t red">
+                    <span class="material-icons icon"> info </span>
+                    <p class="margin-small-l"><small>Write your full name.</small></p>
+                </div>
+            </div>
+
+            <div div="signing-title">
+                <div class="margin-t input-text">
+                    <pl-input-text
+                        [disabled]="isProcessingISAs"
+                        [label]="'Title'" 
+                        [(model)]="user.titleModel" 
+                        (onChange)="onSigningInputBoxesChange()">
+                    </pl-input-text>    
+                </div>
+                <p class="margin-small-t"> Write your Title: e.g. Director of Special Education </p>
+
+                <div class="flex-aligned-center margin-t red" *ngIf="!user.titleModel">
+                    <span class="material-icons icon"> info </span>
+                    <p class="margin-small-l"><small>Write your title.</small></p>
+                </div>
+            </div>
+        </div>
+
+        <button pl-button *ngIf="!isProcessingISAs" 
+            [disabled]="isMainButtonDisabled" 
+            (click)="onMainButtonClick();"> 
+            {{ buttonTextForUI }} 
+        </button>
+        
+        <pl-dot-loader *ngIf="isProcessingISAs" [align]="'left'"></pl-dot-loader>
+
+    </pl-modal-header-wrapper>
+</div>

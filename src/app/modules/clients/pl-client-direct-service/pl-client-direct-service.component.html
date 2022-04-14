@@ -1,0 +1,105 @@
+<pl-client-services-expandable-row
+    [rowId]="service.id"
+    [queryParam]="'service_id'">
+    <div class="pl-client-direct-service" [ngClass]="classesContainer">
+        <div class="header flexbox">
+            <div class="expand-button" (click)="toggleExpand()" #expandButton>
+                <pl-icon *ngIf="!expanded" [svg]="'expand'" [scale]="0.75" [verticalAlign]="'-2px'"></pl-icon>
+                <pl-icon *ngIf="expanded" [svg]="'collapse'" [scale]="0.75" [verticalAlign]="'-2px'"></pl-icon>
+            </div>
+            <div class="flex2 service-type" (click)="toggleExpand()">
+                <b>{{ serviceFormatted.service.name }}</b>
+                <pl-icon *ngIf="hasNotes" class="margin-l" [svg]="'message-box'"></pl-icon>
+            </div>
+            <div class="flex1 created"><b>Service Creation Date:</b> {{ serviceFormatted.xCreated }}</div>
+            <div class="flex1 created"><b>School Year:</b> {{ serviceFormatted.referrals && serviceFormatted.referrals.schoolYear && serviceFormatted.referrals.schoolYear.name.replace(' School Year', '') }} </div>
+            <div class="flex1">
+                <pl-status-dot *ngIf="service && service.status" class="margin-r"
+                    [status]="'DirectService_' + service.status.toUpperCase()">
+                </pl-status-dot>
+                <span *ngIf="!mayEditService">{{serviceFormatted.statusDisplay}}</span>
+                <button *ngIf="mayEditService" pl-button class="link" (click)="showStatusEdit()"> {{serviceFormatted.statusDisplay}} </button>
+            </div>
+        </div>
+        <div [hidden]="!expanded" class="service-details margin-t">
+            <div class="section-header">
+                <b class='margin-r'>Service Plan</b> <a *ngIf="mayEditService" class="x-qa-edit-direct-service-plan" [routerLink]="['/service-save']" [queryParams]="{ client: client.id, service: service.id }">Edit</a>
+            </div>
+            <div class="service-field inline-block" *ngIf="mayViewMinutes">
+                <div class="flexbox">
+                    <div class="bold flex1">{{ serviceDisplay.minutesRequired.label }}</div>
+                    <div class="service-field-value x-qa-minutes-required-label">{{ serviceDisplay.minutesRequired.value }}</div>
+                </div>
+                <div class="flexbox">
+                    <div class="bold flex1">{{ serviceDisplay.minutesReceived.label }}</div>
+                    <div class="service-field-value">{{ serviceDisplay.minutesReceived.value }}</div>
+                </div>
+                <div class="flexbox minutes-remaining">
+                    <div class="bold flex1">{{ serviceDisplay.minutesRemaining.label }}</div>
+                    <div class="service-field-value">{{ serviceDisplay.minutesRemaining.value }}</div>
+                </div>
+            </div>
+            <div class="service-field inline-block">
+                <div class="flexbox">
+                    <div class="bold flex1">{{ serviceDisplay.duration.label }}</div>
+                    <div class="service-field-value">{{ serviceDisplay.duration.value | i18nPlural : durationPluralization }}</div>
+                </div>
+                <div class="flexbox">
+                    <div class="bold flex1">{{ serviceDisplay.frequency.label }}</div>
+                    <div class="service-field-value">{{ getFrequencyLabel(serviceDisplay.frequency.value) }}</div>
+                </div>
+                <div class="flexbox">
+                    <div class="bold flex1">{{ serviceDisplay.interval.label }}</div>
+                    <div class="service-field-value">{{ serviceDisplay.interval.value | plOptions : intervalOptions }}</div>
+                </div>
+            </div>
+            <div class="service-field inline-block">
+                <div class="flexbox">
+                    <div class="bold flex1">{{ serviceDisplay.start.label }}</div>
+                    <div class="service-field-value">{{ serviceDisplay.start.value }}</div>
+                </div>
+                <div class="flexbox">
+                    <div class="bold flex1">{{ serviceDisplay.end.label }}</div>
+                    <div class="service-field-value">{{ serviceDisplay.end.value }}</div>
+                </div>
+                <div class="flexbox" *ngIf="serviceFormatted.createdBy">
+                    <div class="bold flex1">Converted By</div>
+                    <div class="service-field-value">{{ serviceFormatted.createdBy.firstName }} {{ serviceFormatted.createdBy.lastName }}</div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <b class='margin-r'>Notes</b>
+            </div>
+            <div class="flexbox" *ngIf="expanded && service.referrals && service.referrals.length">
+                <div class="flex1 margin-tb">
+                    <pl-referral-notes
+                        [currentUser]="currentUser"
+                        [referralId]="service.referrals[0].id"
+                        [clientId]="client.id"
+                        [locationId]="locationId"
+                        [mayEditNotes]="mayEditService"
+                        (noteCreated)="handleNoteCreated($event)">
+                    </pl-referral-notes>
+                </div>
+            </div>
+
+            <div class="margin-b">
+                <pl-client-metrics *ngIf="expanded" [service]="service" [currentUser]="currentUser" [client]="client"></pl-client-metrics>
+            </div>
+            <!-- Hiding NOM section as it is not being used in the moment. But might be needed in a future (PL-3494)
+            <div class="margin-b">
+                <pl-client-noms [service]="service" [currentUser]="currentUser" [client]="client"></pl-client-noms>
+            </div> -->
+            <div class="margin-b" *ngIf="service?.referrals?.length > 0">
+                <pl-client-converted-referral-list
+                    [referrals]="service.referrals"
+                    [productType]="'Therapy'"
+                    [client]="client"
+                    [isDirectService]="true"
+                >
+                </pl-client-converted-referral-list>
+            </div>
+        </div>
+    </div>
+</pl-client-services-expandable-row>

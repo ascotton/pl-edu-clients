@@ -1,0 +1,17 @@
+<pl-notes-list
+    *ngIf="!loading"
+    [currentUser]="currentNoteUser"
+    [notes]="referralNotes"
+    [mentionableUsers]="mentionableUsers"
+    [isStandaloneEditor]="!referralId"
+    [viewMode]="!mayEditNotes"
+    [openInEditMode]="openInEditMode"
+    (noteDelete)="onNoteDelete($event)"
+    (noteSave)="onNoteSave($event)"
+    (noteEditing)="onNoteEditing($event)"
+    (noteChange)="onNoteChange($event)"
+></pl-notes-list>
+
+<div *ngIf="loading" class="padding-large">
+    <pl-dot-loader [align]="'left'"></pl-dot-loader>
+</div>

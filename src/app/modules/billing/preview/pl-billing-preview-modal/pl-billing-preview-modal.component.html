@@ -1,0 +1,9 @@
+<pl-modal-header-wrapper [headerText]="headerText">
+    <div class="padding-large">
+        <div class="margin-large-b">{{ messageText }}</div>
+        <div>
+            <button pl-button (click)="stay()" class="primary">Stay</button>
+            <button pl-button (click)="exit()">{{ exitButtonText }}</button>
+        </div>
+    </div>
+</pl-modal-header-wrapper>

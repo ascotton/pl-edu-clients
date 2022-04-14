@@ -1,0 +1,190 @@
+<div class="pl-weekly-time-grid">
+    <div class="container" *ngIf="state.pageInitialized">
+        <div class="main">
+            <div *ngIf="readOnly" class="time-block-controls readOnly"></div>
+            <div *ngIf="!readOnly" class="time-block-controls">
+                <div class="element select-day">
+                    <div class="select-day-content">
+                        <pl-input-select
+                            [options]="state.dayOptions"
+                            [bigFilter]="false"
+                            [styleInline]="{}"
+                            [(model)]="model.selectedDay"
+                            (onChange)="onChangeDay(model.selectedDay)"
+                        >
+                        </pl-input-select>
+                    </div>
+                </div>
+                <div class="element">
+                    <div class="select-content">
+                        <span>Start Time</span>
+                        <pl-input-select
+                            class="availability-start"
+                            [options]="state.startTimes"
+                            [(model)]="model.start"
+                            (onChange)="onChangeStartTime(model.start)"
+                            [placeholder]="'Select'"
+                            [bigFilter]="false"
+                            [filter]="false"
+                            (click)="scrollToSelectedOption('availability-start')"
+                        >
+                        </pl-input-select>
+                    </div>
+                </div>
+                <div class="element">
+                    <div class="select-content">
+                        <span>End Time</span>
+                        <pl-input-select
+                            class="availability-end"
+                            [options]="state.endTimes"
+                            [(model)]="model.end"
+                            (onChange)="onChangeEndTime(model.end)"
+                            [placeholder]="'Select'"
+                            [bigFilter]="false"
+                            [filter]="false"
+                            [disabled]="state.endTimes && !state.endTimes.length"
+                        >
+                        </pl-input-select>
+                    </div>
+                </div>
+                <div *ngIf="showWorkstations" class="element">
+                    <div class="select-content">
+                        <span>Computers</span>
+                        <pl-input-select
+                            [options]="state.workstations"
+                            [(model)]="model.workstations"
+                            [placeholder]="'Select'"
+                            [bigFilter]="false"
+                            [filter]="false"
+                        >
+                        </pl-input-select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visualization-grid">
+                <div class="header row week-names">
+                    <div class="header cell time timezone" [innerHTML]="getTimezoneHTML()"></div>
+                    <div                        
+                        *ngFor="let day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']; let lastItem = last; let idx = index"
+                        class="header cell weekday"
+                        [class.friday]="lastItem"
+                        [ngClass]="{ 'selected-day': model.selectedDay === '' + idx, 'weekdaySelectable': !this.readOnly }"
+                        (click)="onChangeDay('' + idx)"
+                    >
+                        <span class="dayname">{{ day }}</span>
+                    </div>
+                </div>
+                <div class="rows">
+                    <div
+                        *ngFor="let row of state.rows; let lastItem = last; let idx = index"
+                        class="row"
+                        [ngClass]="{ 'last-item': lastItem, 'penultimate-item': idx === state.rows.length - 2 }"
+                        [attr.id]="getFirstBusinessHourId(idx)"
+                    >
+                        <div class="cell time noselect" [class.row-odd]="(idx + 1) % 2">
+                            <span class="label" *ngIf="(row.slot + 1) % 2">{{ row.label }}</span>
+                        </div>
+                        <div
+                            class="cell data"
+                            [ngClass]="{ 'selected-column': model.selectedDay === '' + day }"
+                            [class.row-odd]="(idx + 1) % 2"
+                            [class.friday]="lastDay"
+                            *ngFor="let day of data.const.WEEKDAY_INDEX_ARRAY; let lastDay = last"
+                            (mousedown)="onCellMouseDown(row, day, $event)"
+                            (mouseover)="onCellMouseOver(row, day)"
+                            (mouseup)="onCellMouseUp()"
+                        ></div>
+                    </div>
+
+                    <div
+                        *ngIf="state.activeBlock.style && model.start"
+                        id="activeBlock"
+                        class="time-block mode-active"
+                        [style.top.px]="state.activeBlock.style.top"
+                        [style.left.px]="state.activeBlock.style.left"
+                        [style.width.px]="state.activeBlock.style.width"
+                        [style.height.px]="state.activeBlock.style.height"
+                        (mouseup)="onCellMouseUp()"
+                    >
+                        <div *ngIf="!readOnly" class="active-block-actions button-container">
+                            <button
+                                class="link cancel-button"
+                                (click)="onClickCancelActiveBlock(true)"
+                            >
+                                X
+                            </button>
+                            <button
+                                class="save-button"
+                                (click)="onClickSaveActiveBlock(true)"
+                                [style.top.px]="state.activeBlock.style.height / 2 - 8"
+                                [style.left.px]="state.activeBlock.style.width / 2 - 48"
+                            >
+                                OK
+                            </button>
+                            
+                        </div>
+                    </div>
+
+                    <div *ngFor="let block of state.blocks">
+                        <div
+                            *ngIf="!block.clone"
+                            class="time-block mode-locked"
+                            [class.expand]="block.hrs < 2 && !readOnly"
+                            [style.top.px]="block.style.top"
+                            [style.left.px]="block.style.left"
+                            [style.width.px]="block.style.width"
+                            [style.height.px]="block.style.height"
+                            (mouseenter)="block.hover = true"
+                            (mouseleave)="block.hover = false"
+                        >
+                            <span class="time-block-content" [style.top.px]="block.style.contentTop + 5">
+                                <span class="time-display" [style.opacity]="block.hover ? 0.5 : 1">
+                                    <span>{{ state.rows[block.start].label }} - {{ state.rows[block.end].label }}</span>
+                                    <span *ngIf="block.availableStations">({{ block.availableStations }})</span>
+                                </span>
+                            </span>
+                            <div
+                                *ngIf="!readOnly"
+                                class="block-action edit-button"
+                                title="Edit"
+                                (mouseenter)="block.hoverEdit = true"
+                                (mouseleave)="block.hoverEdit = false"
+                                [hidden]="!block.hover"
+                                (click)="onClickEditBlock($event, block); block.hoverEdit = false"
+                                [style.top.px]="block.style.contentTop - 11"
+                                [style.left.px]="35"
+                            >
+                                <pl-icon [svg]="'pencil'" scale="0.7" class="blue-lighter" [ngClass]="{ white: block.hoverEdit }"></pl-icon>
+                            </div>
+                            <div
+                                *ngIf="!readOnly"
+                                class="block-action delete-button"
+                                title="Delete"
+                                (mouseenter)="block.hoverTrash = true"
+                                (mouseleave)="block.hoverTrash = false"
+                                [hidden]="!block.hover"
+                                (click)="onClickDeleteBlock($event, block)"
+                                [style.top.px]="block.style.contentTop - 13"
+                                [style.left.px]="64"
+                            >
+                                <pl-icon [svg]="'trash'" scale="0.9" class="blue-lighter" [ngClass]="{ white: block.hoverTrash }"></pl-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer row">
+                    <div class="cell title"></div>
+                    <div 
+                        *ngFor="let hours of state.dailyHours; let lastItem = last; let idx = index"
+                        class="cell"
+                        (mouseOver)="onFooterCellMouseOver()"
+                        [class.friday]="lastItem"
+                    >
+                        <span class="hours-count">{{ hours }}</span> hour{{ hours === 1 ? "" : "s" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>

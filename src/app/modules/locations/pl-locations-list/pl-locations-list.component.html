@@ -1,0 +1,58 @@
+<pl-tabs *ngIf="showTabs" [tabs]="tabs"></pl-tabs>
+
+<div class="pl-locations-list">
+    <pl-table-wrapper
+        (onQuery)="onQuery($event)"
+        [orderKey]="'orderBy'"
+        [pageSizeKey]="'first'"
+        [stateName]="'l'"
+    >
+        <pl-table-filters-top
+            [filterSelectOpts]="filterSelectOpts"
+            [filtersFixed]="true"
+            [total]="filteredLocationsTotal"
+            (onSearch)="filtersSearch($event)"
+            (onSetModelOptions)="filtersSetModelOptions($event)"
+        ></pl-table-filters-top>
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'organization_name'" [orderDirection]="'ascending'">Organization</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'name'">Location</pl-table-header-cell>
+            <pl-table-header-cell>Clinical Account Manager</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="locations.length === 0 && !loading" class="center padding-xlarge-tb">
+            No matching results
+        </div>
+        <pl-table-row *ngFor="let location of locations">
+            <pl-table-cell>
+                <a *ngIf="showOrgLink(location)"
+                    [routerLink]="['/organization', location.organizationId]"
+                    [title]="location.organizationName + ' Overview'"
+                >
+                    {{ location.organizationName }}
+                </a>
+                <ng-container *ngIf="!showOrgLink(location)">
+                    <pl-icon
+                        *ngIf="location.isVirtual"
+                        class="blue-medium"
+                        [svg]="'virtual-school'"
+                        [width]="24">
+                    </pl-icon>
+                    {{ location.organizationName }}
+                </ng-container>
+            </pl-table-cell>
+            <pl-table-cell>
+                <a [routerLink]="['/location', location.id]" [title]="location.name + ' Overview'">{{ location.name }}</a>
+            </pl-table-cell>
+            <pl-table-cell>
+                {{ location.camName }}
+            </pl-table-cell>
+        </pl-table-row>
+
+        <pl-table-footer
+            [total]="filteredLocationsTotal"
+        ></pl-table-footer>
+    </pl-table-wrapper>
+</div>

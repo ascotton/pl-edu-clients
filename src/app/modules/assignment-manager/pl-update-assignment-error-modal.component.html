@@ -1,0 +1,15 @@
+<div class="pl-update-assignment-error-modal">
+    <pl-modal-header-wrapper headerText="Edit assignment">
+        <div class="modal-content">
+            <h2 class="margin-large-b nowrap">Save errors</h2>
+            <ul class="margin-large-l">
+                <li *ngFor="let error of formattedErrors">
+                    <b>{{ error.code }}</b>: {{ error.text }}
+                </li>
+            </ul>
+            <div class="margin-large-t">
+                <button pl-button class="pl-button primary" (click)="onClickBack()">Back</button>
+            </div>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

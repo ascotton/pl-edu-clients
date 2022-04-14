@@ -1,0 +1,8 @@
+{{ label }}
+<div class="legend" *ngFor="let legend of labels"
+    [class.margin-small-b]="vertical"
+    [class.margin-l]="!vertical">
+    <span class="legend-box" 
+        [style.backgroundColor]="legend.color"></span>
+    <span class="legend-label">{{ legend.label }}</span>
+</div>

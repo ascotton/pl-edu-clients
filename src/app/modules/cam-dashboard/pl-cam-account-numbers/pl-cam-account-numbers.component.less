@@ -1,0 +1,43 @@
+@import 'core/colors.less';
+@import 'core/decoration.less';
+@import 'core/spacing.less';
+@import 'core/typography.less';
+
+.pl-cam-account-numbers {
+    display: grid;
+    grid-gap: @spacing-large;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+
+    .box {
+        background-color: @slate-lightest;
+        box-shadow: @box-shadow-component;
+
+// TODO 764: remove when implemented
+        .not-yet-implemented {
+            background-color: pink;
+        }
+
+        .padding;
+
+        h2 {
+            color: @gray-darkest;
+            .font-h3;
+            .margin-b;
+        }
+
+        ul,
+        li {
+            list-style: none;
+            .margin-small-b;
+        }
+
+        .value {
+            font-weight: bold;
+        }
+
+        .label {
+            color: @text-color;
+        }
+    }
+}

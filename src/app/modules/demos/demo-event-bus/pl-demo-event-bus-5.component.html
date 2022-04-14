@@ -1,0 +1,15 @@
+<div class="pl-demo-event-bus-5"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  [style.background-color]="getColor()"
+  >
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} - {{_state.ID}}
+  </div>
+
+  <h1 class="title">Component 5</h1>
+
+  <button pl-button class="primary" (click)="onClickSendMessage({color: 'yellow'}, 'HOT_LAVA')">
+    Global Stream
+  </button>
+</div>

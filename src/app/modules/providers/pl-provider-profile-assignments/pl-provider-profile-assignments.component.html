@@ -1,0 +1,55 @@
+<div class="pl-provider-profile-assignments">
+    <pl-schoolyear-select
+        [simpleSelect]="true"
+        [(selectedSchoolYear)]="selectedSchoolYear"
+        (onYearSelected)="onYearSelected($event)">
+    </pl-schoolyear-select>
+
+    <pl-table-wrapper (onQuery)="onQuery($event)" [orderKey]="'orderBy'" [pageSizeKey]="'first'">
+        <pl-table-filters-top
+            [filterSelectOpts]="filterSelectOpts"
+            [total]="localTableService.dataRows.length"
+            (onQuery)="onFiltersChange($event)">
+        </pl-table-filters-top>
+
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'orgName'" [orderDirection]="'ascending'">Org. Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'serviceLines'">Service Line</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'status'">Status</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'estimatedHours'">Est. Hours</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'payRate'">Pay Rate</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'isESY'">ESY</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'isFTE'">FTE</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'startDate'">Start Date</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'endDate'">End Date</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'modified'">Modified</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!localTableService.dataRows.length && !loading" class="center padding-xlarge-tb">
+            No matching assignments.
+        </div>
+        <pl-table-row *ngFor="let assignment of localTableService.displayRows">
+            <pl-table-cell>{{ assignment.orgName }}</pl-table-cell>
+            <pl-table-cell>{{ getServiceLineDisplay(assignment.serviceLines) }}</pl-table-cell>
+            <pl-table-cell>
+                <span>{{ assignmentManagerService.getStatusLabel(assignment.status) }}</span>
+                <span class="status-date">&middot; {{ assignment.modified }}</span><br/>
+                <span class="assignment-status-detail">{{ assignment.statusDetail }}</span>
+            </pl-table-cell>
+            <pl-table-cell>{{ assignment.estimatedHours }}</pl-table-cell>
+            <pl-table-cell>${{ assignment.payRate }}</pl-table-cell>
+            <pl-table-cell>{{ assignment.isESY | plYesNoEmpty }}</pl-table-cell>
+            <pl-table-cell>{{ assignment.isFTE | plYesNoEmpty }}</pl-table-cell>
+            <pl-table-cell>{{ assignment.startDate }}</pl-table-cell>
+            <pl-table-cell>{{ assignment.endDate }}</pl-table-cell>
+            <pl-table-cell>{{ assignment.modified }}</pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer
+            [total]="localTableService.dataRows.length"
+            [currentPage]="localTableService.currentPage"
+            [pageSize]="localTableService.pageSize">
+        </pl-table-footer>
+    </pl-table-wrapper>
+</div>

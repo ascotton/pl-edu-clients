@@ -1,0 +1,14 @@
+<pl-modal-header-wrapper [headerText]="'Edit Notification Preferences'">
+    <div class="pl-provider-notification-preferences">
+        <div class="list">
+            <pl-input-checkbox
+                *ngFor="let opt of notificationPreferences"
+                [(model)]="opt.selected"
+                [label]="opt.label"
+                [disabled]="opt.disabled">
+            </pl-input-checkbox>
+        </div>
+        <hr />
+        <button pl-button class="success" (click)="onClickSave()">Save</button>
+    </div>
+</pl-modal-header-wrapper>

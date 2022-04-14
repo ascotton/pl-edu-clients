@@ -1,0 +1,26 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "skipLibCheck": true,
+    "types": [],
+  },
+  "angularCompilerOptions": {
+    "preserveWhitespaces": true,
+    "enableIvy": false,
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts",
+    "**/*.stub.ts",
+    "main-aot.ts"
+  ]
+}

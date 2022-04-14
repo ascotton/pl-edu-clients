@@ -1,0 +1,4 @@
+<div class="pl-status-dot">
+    <pl-icon *ngIf="shape==='clock'" [svg]="'alarm-clock'" [width]="12" [height]="12"></pl-icon>
+    <div *ngIf="shape!=='clock'" class="{{shape}}"></div>
+</div>

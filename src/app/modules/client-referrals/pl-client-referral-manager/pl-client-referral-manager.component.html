@@ -1,0 +1,157 @@
+<section class="pl-client-referral-manager">
+    <div class="schoolyear-container">
+        <pl-schoolyear-select
+            [simpleSelect]="true"
+            [selectedSchoolYear]="selectedSchoolYearCode"
+            (selectedSchoolYearChange)="handleSelectedSchoolYearChange($event)"
+        ></pl-schoolyear-select>
+    </div>
+    <pl-table-wrapper *ngIf="!loadingTableDependencies" class="x-qa-table flexbox" (onQuery)="onQuery($event)" [orderKey]="orderKey" [pageSizeKey]="pageSizeKey" [stateName]="tableStateName">
+        <div [hidden]="!filtersVisible" class="filters margin-r">
+            <pl-table-filters-side
+                [filters]="filters"
+                [filtersVisible]="filtersVisible"
+                (onCloseFilters)="toggleFilters($event)"
+                (onSearch)="filtersSearch($event)"
+                (onSetModelOptions)="filtersSetModelOptions($event)"
+            >
+            </pl-table-filters-side>
+        </div>
+        <div class="flex1">
+            <div class="sticky-header">
+                <div class="button-groups">
+                    <div class="buttons-start">
+                        <button *ngIf="filtersVisible" pl-button class="gray-outline" (click)="toggleFilters()">Hide Filters</button>
+                        <button *ngIf="!filtersVisible" pl-button class="gray-outline" (click)="toggleFilters()">Show Filters</button>
+                        <button
+                            *ngIf="showMoveToOpenButton()"
+                            pl-button
+                            class="gray-outline x-qa-move-to-open-btn"
+                            (click)="handleMoveReferralsToOpenClick()"
+                        >
+                            <pl-icon [svg]="'move'" [scale]="0.6"></pl-icon>
+                            Move to open referrals
+                        </button>
+                        <button
+                            *ngIf="showConfirmButton()"
+                            pl-button
+                            class="gray-outline"
+                            (click)="handleConfirmReferralMatchesClick()"
+                        >
+                            {{ confirmButtonLabel() }}
+                        </button>
+                    </div>
+                    <div class="buttons-end">
+                        <pl-popover [template]="reassignInstrucions" [disabled]="showReassign">
+                            <button
+                                pl-button class="gray-outline"
+                                [disabled]="!showReassign"
+                                (click)="handleReasingReferralsClick()">
+                                Assign/Reassign Referrals
+                            </button>
+                        </pl-popover>
+                        <ng-template #reassignInstrucions>
+                            To assign/reassign in bulk: 
+                            <ul class="pl-reassign-instrucions-list">
+                                <li>
+                                    All referrals selected must be from the same organization and for the same discipline. 
+                                </li>
+                                <li>
+                                    Completed and cancelled referrals cannot be reassigned.
+                                </li>
+                            </ul>
+                        </ng-template>
+                        <button pl-button (click)="handleProposeMatchesClick()" [disabled]="proposeMatchesButtonDisabled$ | async">
+                            Propose Matches for Organizations
+                        </button>
+                    </div>
+                </div>
+                <pl-table-header class="table-header">
+                    <pl-table-header-cell class="checkbox-cell">
+                        <pl-input-checkbox [(model)]="allChecked" [noPadding]="true" (onChange)="changeSelectAllPage($event)"></pl-input-checkbox>
+                    </pl-table-header-cell>
+                    <pl-table-header-cell [orderKey]="'clientLastName'" [orderDirection]="'ascending'">Last Name, First Name</pl-table-header-cell>
+                    <pl-table-header-cell [orderKey]="'created'">Created / Recycled</pl-table-header-cell>
+                    <pl-table-header-cell [orderKey]="'providerTypeCode'">Discipline</pl-table-header-cell>
+                    <pl-table-header-cell [orderKey]="'productTypeCode'">Referral</pl-table-header-cell>
+                    <pl-table-header-cell [orderKey]="'state'">Status</pl-table-header-cell>
+                    <pl-table-header-cell>Provider</pl-table-header-cell>
+                    <pl-table-header-cell *ngIf="showSeparatingColumn" [orderKey]="'providerSeparationDate'">
+                        Separation Date
+                    </pl-table-header-cell>
+                    <pl-table-header-cell [orderKey]="'clientLocationName'">Location / Organization</pl-table-header-cell>
+                </pl-table-header>
+            </div>
+            <div *ngIf="loading" class="padding-xlarge-tb">
+                <pl-dot-loader></pl-dot-loader>
+            </div>
+            
+            <div *ngIf="!referrals.length && !loading" class="center padding-xlarge-tb">
+                <span>No referrals found. Try changing your filter settings for better results.</span>
+                <span>There are no referrals for you to manage at this time. Please check again soon!</span>
+            </div>
+
+            <div *ngIf="!loading">
+                <pl-table-row *ngFor="let referral of referrals">
+                    <pl-table-cell class="checkbox-cell">
+                        <pl-input-checkbox [model]="isRowSelected(referral)" [noPadding]="true" (onChange)="changeSelectRow(referral)">
+                        </pl-input-checkbox>
+                    </pl-table-cell>
+                    <pl-table-cell (click)="clickReferral(referral)" [ngClass]="tableCellClasses(referral)">{{ referral.client.lastName
+                        }}, {{ referral.client.firstName }}</pl-table-cell>
+                    <pl-table-cell (click)="clickReferral(referral)" [ngClass]="tableCellClasses(referral)" class="table-cell-created">
+                        {{ referral.createdAtFromNow }},
+                        <br />
+                        <span *ngIf="referral.recycledCount === 0">
+                            {{ referral.recycledCount }} Cycles
+                        </span>
+                        <span *ngIf="referral.recycledCount > 0" (click)="openCyclesModal($event, referral)">
+                            <a class="cyclesInfo">
+                                {{ referral.recycledCount }} Cycle<span *ngIf="referral.recycledCount > 1">s</span>
+                            </a>
+                        </span>
+                    </pl-table-cell>
+                    <pl-table-cell (click)="clickReferral(referral)" [ngClass]="tableCellClasses(referral)">{{ referral.discipline }}
+                    </pl-table-cell>
+                    <pl-table-cell (click)="clickReferral(referral)" [ngClass]="tableCellClasses(referral)">{{ referral.productTypeName
+                        }}</pl-table-cell>
+                    <pl-table-cell (click)="clickReferral(referral)" [ngClass]="tableCellClasses(referral)">
+                        <div>
+                            {{ statusLabel(referral) }}
+                            <pl-icon *ngIf="referral.hasNotes" class="margin-l" [svg]="'message-box'"></pl-icon>
+                        </div>
+                    </pl-table-cell>
+                    <pl-table-cell>
+                        <div [innerHTML]="providerName(referral)"></div>
+                
+                        <button *ngIf="showMatchButton(referral)" pl-button class="x-qa-match-btn"
+                            (click)="handleEditReferralMatchClick(referral)">Match</button>
+                
+                        <button *ngIf="showUnmatchButton(referral)" pl-button (click)="openUnmatchingModal(referral, 'Unmatch')">
+                            Unmatch
+                        </button>
+                
+                        <ng-container *ngIf="showConfirmEditButtons(referral)">
+                            <button pl-button (click)="handleConfirmReferralMatchClick(referral)"> Confirm </button>
+                            <button pl-button (click)="undoProposedReferral(referral, 'Undo Proposal')"> Undo Proposal </button>
+                            <button pl-button (click)="handleEditReferralMatchClick(referral)"> Edit Provider </button>
+                        </ng-container>
+                    </pl-table-cell>
+                    <pl-table-cell *ngIf="showSeparatingColumn">
+                        {{ referral.provider?.providerprofile?.separationDate }}
+                    </pl-table-cell>
+                    <pl-table-cell (click)="clickReferral(referral)" [ngClass]="tableCellClasses(referral)">{{ referral.locationName }},
+                        {{ referral.organizationName }}</pl-table-cell>
+                </pl-table-row>
+            </div>
+
+            <pl-table-footer 
+                [total]="total" 
+                [pageSize]="pageSize" 
+                [currentPage]="currentPage" 
+                [selected]="countRowsSelected()">
+            </pl-table-footer>
+
+        </div>
+    </pl-table-wrapper>
+</section>

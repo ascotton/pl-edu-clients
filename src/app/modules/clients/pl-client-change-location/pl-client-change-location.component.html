@@ -1,0 +1,148 @@
+<div class="pl-client-change-location">
+    <pl-closable-page-header [headerText]="headerText" [closeCallback]="goBack">
+    </pl-closable-page-header>
+    <div *ngIf="!clientLoaded">
+        <div class="loading">
+            <pl-dot-loader [align]="'center'"></pl-dot-loader>
+        </div>
+    </div>
+    <div class="info-bar" *ngIf="statusMessage">
+        <pl-icon class="info-icon" [svg]="'info'"[scale]="1.1"></pl-icon>
+        <span>{{statusMessage}}</span>
+    </div>
+    <div class="change-location-body" *ngIf="clientLoaded">
+        <div class="client-info">
+            <div class="photo margin-large-r">
+                <pl-icon class="photo-icon white" [svg]="'clients'" [width]="35" [height]="35"></pl-icon>
+            </div>
+            <div class="client-data">
+                <div class="">
+                    <div class="margin-large-r margin-b client-name">
+                        {{ client.firstName }} {{ client.lastName }}
+                    </div>
+                </div>
+                <div class="">
+                    <pl-client-student-display [user]="currentUser" [capitalize]="true"></pl-client-student-display> ID: <pl-client-id [externalId]="client.externalId" [internalId]="client.id"></pl-client-id>
+                    <span class="margin-lr">|</span>Age: {{ client.age }}<span class="margin-lr">|</span>
+                    Grade: {{ client.gradeDisplay }}<span class="margin-lr">|</span>{{ client._language }}
+                </div>
+            </div>
+        </div>
+        <fieldset class="warning" *ngIf="hasOpenEvaluations && client.transferable">
+          <legend>WARNING</legend>
+          <div class="detail">
+            <div>{{client.firstName}} {{client.lastName}} has active evaluations.</div>
+            <div>Please double check with their provider(s) before completing the transfer</div>
+          </div>
+        </fieldset>
+        <fieldset class="warning" *ngIf="hasReferrals && client.transferable">
+          <legend>WARNING</legend>
+          <div class="detail">
+            <div>{{client.firstName}} {{client.lastName}} has referrals.</div>
+            <div>Please double check with their provider(s) before completing the transfer</div>
+          </div>
+        </fieldset>
+        <fieldset class="warning" *ngIf="!client.transferable">
+          <div class="detail">
+            <div>
+                {{ client.firstName }} {{ client.lastName }} has events that are part of invoices that have not been finalized by PresenceLearning. Retract invoices for all providers with invoices in the current period that have worked with {{ client.firstName }} before transferring.
+            </div>
+          </div>
+        </fieldset>
+        <div class="change-location-edit" *ngIf="editLocation && client.transferable">
+            <div class="change-from">
+                <div class="change-from-header">
+                    Change From
+                </div>
+                <div class="change-from-body">
+                    <div>
+                        <div class="bold">Location Name</div>
+                        <div>{{clientLocation}}</div>
+                    </div>
+                    <div>
+                        <div class="bold">Organization</div>
+                        <div>{{clientOrganization}}</div>
+                    </div>
+                    <div>
+                        <div class="bold">State</div>
+                        <div>{{clientLocationState}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="change-to">
+                <div class="change-to-header">
+                    Change To
+                </div>
+                <div class="change-to-body">
+                    <div class="location-select">
+                        <div class="location-loading" *ngIf="loadingLocations">
+                            <pl-dot-loader [align]="'left'"></pl-dot-loader>
+                            <div>Loading Locations</div>
+                        </div>
+                        <div *ngIf="!loadingLocations">
+                            <div class="location-input">
+                                <pl-input-select  class="form-input x-qa-organization-select" [formCtrl]="changeLocForm"
+                                [label]="'New Organization'" [(model)]="selectedOrganizationID" [options]="organizationOpts"
+                                [sortByLabel]="true"
+                                (onChange)="organizationSelected($event)"></pl-input-select>
+                                <button pl-button class="x-qa-organization-clear"
+                                        [disabled]="!selectedOrganizationID"
+                                        (click)="clearOrganization()">Clear</button>
+                            </div>
+                            <div class="location-input">
+                                <pl-input-select class="form-input x-qa-location-select" [formCtrl]="changeLocForm"
+                                [label]="'New Location'" [(model)]="selectedLocationID" [options]="locationOpts"
+                                [sortByLabel]="true"
+                                (onChange)="locationSelected($event)"></pl-input-select>
+                                <button pl-button class="x-qa-location-clear" [disabled]="!selectedLocationID"
+                                        (click)="clearLocation()">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <pl-input-radio-group class="form-input" [formCtrl]="changeLocationForm"
+                            [label]="'Reason For Change'" [(model)]="changeReason" [options]="changeReasonOptions"
+                            [required]="true"></pl-input-radio-group>
+                    </div>
+                </div>
+            </div>
+            <div class="submit-buttons">
+                <button pl-button class="primary x-qa-review-location-change" (click)="review()" [disabled]="!selectedLocationID">
+                    Review Changes
+                </button>
+                <button pl-button class="gray-outline" (click)="goBack()">Cancel</button>
+            </div>
+        </div>
+        <div class="change-location-review" *ngIf="reviewLocation">
+            <div class="change-location-review-body">
+                <h1>Please Review Your Changes</h1>
+                <div class="change-location-review-info">
+                    <div>
+                        <div class="bold">Location Name</div>
+                        <div>{{newClientLocationName}}</div>
+                    </div>
+                    <div>
+                        <div class="bold">Organization</div>
+                        <div>{{newClientOrganization}}</div>
+                    </div>
+                    <div>
+                        <div class="bold">State</div>
+                        <div>{{newClientLocationState}}</div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="submitting">
+                <div class="loading">
+                    <pl-dot-loader [align]="'center'"></pl-dot-loader>
+                </div>
+            </div>
+            <div class="submit-buttons" *ngIf="!(submitting || submitted)">
+                <button pl-button class="primary x-qa-update-location" (click)="submit()" [disabled]="!selectedLocationID">
+                    >> Update Location
+                </button>
+                <button pl-button class="gray-outline x-qa-edit-location-change" (click)="edit()">Edit</button>
+                <button pl-button class="gray-outline" (click)="goBack()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

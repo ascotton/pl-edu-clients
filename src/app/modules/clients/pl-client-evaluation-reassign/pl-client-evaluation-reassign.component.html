@@ -1,0 +1,54 @@
+<div class="pl-client-evaluation-reassign">
+    <pl-modal-header-wrapper [headerText]="'Reassign Evaluation'">
+        <div class="margin-b"><b>{{ client.firstName }} {{ client.lastName }} - {{ productTypeName() }}.</b></div>
+        <p *ngIf="showLanguageNote()" class="language-note margin-b">
+            This {{ clientStudentText }} is currently an ELL student with
+            {{ client.primaryLanguage.name }} as the primary language. For an
+            evaluation, you must select a provider who can speak the
+            {{ clientStudentText }}'s language and / or identify a translator.
+        </p>
+        <div *ngIf="!mayMatch">You are not authorized to match this referral</div>
+        <div *ngIf="mayMatch">
+            <div class="margin-b">
+                Select the Provider to reassign to this evaluation.
+            </div>
+            <div class="providers margin-large-b">
+                <div class="header-row padding flexbox">
+                    <div class="header-col name-col">Provider</div>
+                    <div class="header-col center">Caseload</div>
+                    <div class="header-col center">Estimated Remaining Hours</div>
+                </div>
+                <div class="rows">
+                    <pl-dot-loader *ngIf="loading" [align]="'center'"></pl-dot-loader>
+                    <div *ngIf="!loading && !providers.length" class="center padding-large">
+                        {{ evaluation.organizationName }} needs an assigned {{ evaluation.discipline }} Provider to serve this referral.
+                    </div>
+                    <div *ngFor="let provider of providers" class="provider-info body-row padding flexbox pointer">
+                        <div class="body-col name-col">
+                            <pl-input-radio [(model)]="selected.provider.user.id" [value]="provider.user.id" [label]="provider.xName" [name]="'providerRadio'"></pl-input-radio>
+                        </div>
+                        <div class="body-col center">{{ provider.caseloadCount }}</div>
+                        <div class="body-col center">{{ provider.remainingAvailableHours }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="margin-large-b">
+                <pl-input-textarea class="x-qa-match-notes" [(model)]="referralNotes" [label]="'Add Note'"></pl-input-textarea>
+            </div>
+            <div class="margin-b">Need another provider? <a href="{{ this.requestLink }}" target="_blank">Request Provider Assignment.</a></div>
+        </div>
+        <div [hidden]="submitting">
+            <button *ngIf="mayMatch" 
+                    pl-button 
+                    id="submitReassignButton"
+                    class="success x-qa-match-confirm-btn" 
+                    [disabled]="!this.selected.provider.user || !this.selected.provider.user.id"
+                    (click)="match()">
+                Reassign
+            </button>
+            <button pl-button class="x-qa-match-cancel-btn" (click)="cancel()">Cancel</button>
+        </div>
+        <pl-dot-loader *ngIf="submitting" [align]="'center'"></pl-dot-loader>
+        <div *ngIf="noneSelectedError">Whoops, you forgot to select a Provider.</div>
+    </pl-modal-header-wrapper>
+</div>

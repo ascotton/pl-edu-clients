@@ -1,0 +1,36 @@
+<div>
+    <div class="success-bar">
+        <pl-icon class="close-icon" [svg]="'check-circle'" [height]="18" [width]="18"></pl-icon>
+        <span>Hooray, your merge was successful! Mistakenly merged? Go to
+            <a href="https://presencelearning.slack.com/messages/G782HV8K1/">support-product_help</a>
+            channel in Slack.
+        </span>
+    </div>
+
+    <div class="client-summary">
+        <div class="row">
+            <div class="label">NAME</div>
+            <div>{{client.fullName}}</div>
+        </div>
+        <div class="row">
+            <div class="label">LOCATION (Site)</div>
+            <div>{{client.locationName}}</div>
+        </div>
+        <div class="row">
+            <div class="label">ID</div>
+            <div>{{client.externalId}}</div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <div>Where do you want to go next?</div>
+        <div>
+            <a [routerLink]="['/client', client.id]">
+                <button pl-button class="">View Client</button>
+            </a>
+            <a [routerLink]="['/client-merge']">
+                <button pl-button class="primary" (click)="resetData()">New Merge</button>
+            </a>
+        </div>
+    </div>
+</div>

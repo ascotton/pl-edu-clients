@@ -1,0 +1,29 @@
+<mat-nav-list *ngFor="let item of items">
+    <ng-container *ngIf="item.label !== 'divider'; else divider">
+        <a mat-list-item 
+            *ngIf="!item.target; else external"
+            [routerLink]="item.href" 
+            routerLinkActive="active"
+            (click)="itemClicked.emit(item)">
+            <mat-icon matListIcon>
+                {{ item.icon }}
+            </mat-icon>
+            <span matLine>
+                {{ item.label }}
+            </span>
+        </a>
+    </ng-container>
+    <ng-template #external>
+        <a mat-list-item [href]="item.href" [target]="item.target">
+            <mat-icon matListIcon>
+                {{ item.icon }}
+            </mat-icon>
+            <span matLine>
+                {{ item.label }}
+            </span>
+        </a>
+    </ng-template>
+    <ng-template #divider>
+        <mat-divider></mat-divider>
+    </ng-template>
+</mat-nav-list>

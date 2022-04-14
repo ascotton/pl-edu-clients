@@ -1,0 +1,55 @@
+<div class="pl-service-save-documentation">
+    <form [formGroup]="formCtrl">
+        <h4 class="section-header">Required Documentation</h4>
+        <div class="section-body">
+            <div [hidden]="!showDocs.schoolConsent">
+                <pl-input-file class="form-input" [formCtrl]="formCtrl" [label]="'School Assessment Plan'"
+                    [(model)]="serviceFormVals.documents.schoolConsentFiles" [multiple]="false" [mimeTypes]="'application/pdf'"
+                    [existingFiles]="serviceFormVals.documents.schoolConsentExistingFiles"></pl-input-file>
+                <pl-input-datepicker class="form-input" [formCtrl]="formCtrl" [label]="'School Assessment Plan Date of Signature'"
+                    [(model)]="serviceFormVals.assessmentPlanSignedOn" [dropdownContainerSelector]="'.pl-service-save'">
+                </pl-input-datepicker>
+            </div>
+
+            <div [hidden]="!showDocs.dueDate">
+                <pl-input-datepicker class="form-input x-qa-evaluation-due-date" [formCtrl]="formCtrl" [label]="'Evaluation Due Date'"
+                    [(model)]="serviceFormVals.dueDate" (onChange)="onChangeDueDate()"
+                    [dropdownContainerSelector]="'.pl-service-save'" [required]="true"></pl-input-datepicker>
+            </div>
+
+            <div [hidden]="!showDocs.meetingDate">
+                <pl-input-datepicker class="form-input" [formCtrl]="formCtrl" [label]="'Meeting Date'"
+                    [(model)]="serviceFormVals.meetingDate" (onChange)="onChangeMeetingDate()"
+                    [dropdownContainerSelector]="'.pl-service-save'" [required]="false"></pl-input-datepicker>
+            </div>
+
+            <div [hidden]="!showDocs.evaluationStage">
+                <pl-input-select
+                    class="form-input"
+                    [formCtrl]="formCtrl"
+                    [label]="'Stage'"
+                    [(model)]="serviceFormVals.evaluationStage"
+                    [options]="serviceStageOpts"
+                    [dropdownContainerSelector]="'.pl-service-save'"
+                    [required]="false"
+                ></pl-input-select>
+            </div>
+
+            <div [hidden]="!showDocs.recordingConsent && false">
+                <h3>Recording Permission</h3>
+                <div>
+                    <div>If permission was obtained to record this student, please upload a signed copy of the recording permission document.</div>
+                    <div>
+                        <a target="_blank" href="https://presencelearning.helpjuice.com/record-the-room">Click here to learn more about recording permission.</a>
+                    </div>
+                </div>
+                <pl-input-file class="form-input" [formCtrl]="formCtrl"
+                    [(model)]="serviceFormVals.documents.recordingConsentFiles" [multiple]="false" [mimeTypes]="'application/pdf'"
+                    [existingFiles]="serviceFormVals.documents.recordingConsentExistingFiles"></pl-input-file>
+                <pl-input-radio-group class="form-input" [formCtrl]="formCtrl"
+                    [(model)]="serviceFormVals.client.recordingAllowed" [options]="recordingObtainedOpts"
+                    [optionWidth]="400"></pl-input-radio-group>
+            </div>
+        </div>
+    </form>
+</div>

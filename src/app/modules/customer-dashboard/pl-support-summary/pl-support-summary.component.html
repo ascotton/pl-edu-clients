@@ -1,0 +1,72 @@
+<section class="pl-support-summary" *ngIf="_state.initialized" [ngClass]="{'debug-show-div': util.showDivs(_state)}">
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+    <div class="training-faq">
+    </div>
+    <div class="contact-idea flexbox">
+        <div class="flex1 padding-xlarge-r" *ngIf="canDisplayCsm() || canDisplayCqm()">
+            <div class="margin-large-b border-bottom" *ngIf="canDisplayCsm()">
+                <div class="margin-b">Your Customer Success Manager</div>
+                <div class="flexbox">
+                    <div class="icon csm">
+                        <pl-icon [svg]="'user-outline'" class="gray-dark margin-l" [verticalAlign]="'-8px'"></pl-icon>
+                    </div>
+                    <div class="nowrap blue-medium flex-start flex1">
+                        {{_state.model.csm.name}}
+                        <br />
+                        {{_state.model.csm.email}}
+                        <br />
+                        {{_state.model.csm.phone}}
+                    </div>
+                </div>
+            </div>
+            <div class="margin-large-b" *ngIf="canDisplayCqm()">
+                <div class="margin-b">Your Clinical Quality Manager</div>
+                <div class="flexbox">
+                    <div class="icon cqm">
+                        <pl-icon [svg]="'providers'" class="gray-dark margin-l" [verticalAlign]="'-8px'"></pl-icon>
+                    </div>
+                    <div class="nowrap blue-medium flex-start flex1">
+                        {{_state.model.cqm.name}}
+                        <br />
+                        {{_state.model.cqm.email}}
+                        <br />
+                        {{_state.model.cqm.phone}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex1 padding-xlarge-r">
+            <div class="margin-large-b border-bottom">
+                <div class="margin-b">Learn</div>
+                <div class="flexbox">
+                    <div class="icon">
+                        <pl-icon [svg]="'head-light-bulb'" class="gray-dark margin-l" [verticalAlign]="'-8px'"></pl-icon>
+                    </div>
+                    <div class="nowrap blue-medium flex-start flex1">
+                        <a href="https://www.presencelearning.com/welcome-to-the-presencelearning-environment/" target="_blank">View all training videos and FAQ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="margin-large-b">
+                <div class="margin-b">Contact</div>
+                <div class="flexbox">
+                    <div class="icon">
+                        <pl-icon [svg]="'email-outline'" class="gray-dark margin-l" [verticalAlign]="'-8px'"></pl-icon>
+                    </div>
+                    <div class="nowrap blue-medium flex-start flex1">
+                        <a href="mailto:asksupport@presencelearning.com">asksupport@presencelearning.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex2 margin-large-l">
+            <div class="margin-b">Have an idea? Tell us about it!</div>
+            <pl-input-select class="form-input input-select" [label]="'Topic Idea'" [(model)]="_state.idea.summary" [options]="_state.summaryOpts"></pl-input-select>
+            <pl-input-textarea [(model)]="_state.idea.description"></pl-input-textarea>
+            <button pl-button class="primary" [disabled]="!_state.idea.summary || !_state.idea.description" (click)="submitIdea($event)">Submit</button>
+        </div>
+    </div>
+</section>

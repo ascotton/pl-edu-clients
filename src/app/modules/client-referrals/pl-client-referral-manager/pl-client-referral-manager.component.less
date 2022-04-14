@@ -1,0 +1,46 @@
+.pl-client-referral-manager {
+    .schoolyear-container {
+        margin: 4px 0px 8px 0px;
+    }
+
+    .sticky-header {
+        background-color: white;
+        position: sticky;
+        top: 44px; // based on height of navigation bar
+        z-index: 101; // table footer select button has z-index: 100
+
+        .button-groups {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .checkbox-cell {
+        max-width: 50px;
+        box-sizing: border-box;
+    }
+
+    .cyclesInfo {
+        color: black;
+        text-decoration: underline;
+
+        &:hover {
+            color: #46b1e1;
+            text-decoration: none;
+        }
+    }
+
+    .filters {
+        width: 250px;
+    }
+
+    .table-cell-created {
+        text-transform: capitalize;
+    }
+}
+
+::ng-deep {
+    .pl-reassign-instrucions-list {
+        padding: 15px;
+    }
+}

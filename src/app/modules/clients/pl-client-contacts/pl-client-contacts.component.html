@@ -1,0 +1,75 @@
+<div class="pl-client-contacts">
+    <pl-dot-loader *ngIf="loading"></pl-dot-loader>
+
+    <div *ngIf="contactSave && saveContactVisible">
+        <pl-client-contact-save [client]="client" [contact]="contactSave" [contactTypes]="contactTypes" [languages]="languages" (onCancel)="toggleSaveContactVisible()" (onSave)="onSaveContact()" (onDelete)="onSaveContact()"></pl-client-contact-save>
+    </div>
+
+    <div [hidden]="saveContactVisible">
+        <div class="card-section-header"><pl-icon class="blue-medium" [svg]="'user-outline'"></pl-icon> Contacts
+        <button *ngIf="mayAddContact" [hidden]="saveContactVisible" pl-button class="margin-large-l gray-outline x-qa-add-contact-button" (click)="addContact()">
+            <pl-icon [svg]="'plus'" [scale]="0.6" [verticalAlign]="'-1px'"></pl-icon> Add Contact
+        </button>
+        </div>
+        <div *ngIf="contacts.length === 0">No Contact Information Available.</div>
+        <div class="card-section">
+            <div class="card" *ngFor="let contact of contacts">
+                <div class="card-body">
+                    <button *ngIf="mayEditContact" pl-button class="link top-right" (click)="onContactClick(contact)">
+                        Edit
+                    </button>
+                    <div class="contact-type-header">{{ getContactTypesDisplay(contact) }}</div>
+                    <div class="label-fields">
+                        <div class="label">Name</div><div class="value">
+                            <pl-is-available [condition]="contact.first_name && contact.last_name">{{ contact.first_name }} {{ contact.last_name }}</pl-is-available>
+                        </div>
+                        <div class="label">Relationship</div><div class="value">
+                            <pl-is-available [condition]="contact.contact_type">{{ plContactTypes.getNameFromKey('uuid', contact.contact_type) }}</pl-is-available>
+                        </div>
+                        <div class="label">Primary Language</div><div class="value">
+                            <pl-is-available [condition]="contact.primary_language">{{ plLanguages.getNameFromKey('code', contact.primary_language) }}</pl-is-available>
+                        </div>
+                        <div class="label">Address</div><div class="value">
+                            <pl-is-available [condition]="contact.street && contact.city">{{ contact.street }}, {{contact.city}}, {{contact.state}} {{contact.postal_code}}</pl-is-available>
+                        </div>
+                        <div class="label">Email</div><div class="value">
+                            <pl-is-available [condition]="contact.email">
+                                <a class="link-underline" href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                            </pl-is-available>
+                        </div>
+                        <div class="label">Phone</div><div class="value">
+                            <pl-is-available [condition]="contact.phone">{{ contact.phone | plPhone }}</pl-is-available>
+                        </div>
+                        <div class="label">Preferred Contact</div><div class="value">
+                            <pl-is-available [condition]="contact.contact_preference">{{ contact.contact_preference | titlecase }}</pl-is-available>
+                        </div>
+                        <div *ngIf="contact.phone" class="label">SMS Reminders</div><div *ngIf="contact.phone" class="value">
+                            <span *ngIf="!isValidPhoneNumber(contact.phone)">
+                                <pl-icon [svg]="'alert'" [scale]="0.7"></pl-icon>
+                                A 10-digit US phone number is required to receive SMS messages<br />
+                            </span>
+                            <span *ngIf="contact.is_sms_enabled">
+                                Enabled on {{ contact.sms_enabled_on }}
+                            </span>
+                            <span *ngIf="!contact.is_sms_enabled">
+                                <span *ngIf="isValidPhoneNumber(contact.phone)">Not enabled</span><br />
+                                <span *ngIf="contact.sms_requested_on"><i>Requested on: {{ contact.sms_requested_on }}</i></span>
+                                <button *ngIf="isValidPhoneNumber(contact.phone) && mayAddContact" pl-button (click)="onClickSendSMSEnableEmail(contact)">Send SMS Consent Request</button>
+                            </span>
+                        </div>
+                        <div *ngIf="contact.email && isHomeworkAppEnabled" class="label">PL App Access</div><div *ngIf="contact.email && isHomeworkAppEnabled" class="value">
+                            <span *ngIf="contact.login_enabled_on">
+                                Enabled on {{ contact.login_enabled_on }}
+                            </span>
+                            <span *ngIf="!contact.login_enabled_on">
+                                <span>Not enabled</span><br />
+                                <span *ngIf="contact.login_requested_on"><i>Requested on: {{ contact.login_requested_on }}</i></span>
+                                <button *ngIf="!contact.login_enabled_on && mayAddContact" pl-button (click)="onClickSendLoginEnableEmail(contact)">Send PL App Access Request</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

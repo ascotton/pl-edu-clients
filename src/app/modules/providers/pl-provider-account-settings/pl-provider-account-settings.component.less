@@ -1,0 +1,67 @@
+@import 'core/colors.less';
+@import 'core/spacing.less';
+@import 'core/flexbox.less';
+@import 'core/typography.less';
+
+.top-buttons {
+    margin-left: -3px; // grr, our buttons have 3px margin
+    &>div {
+        display: inline-block;
+        .margin-r;
+    }
+    .margin-large-b;
+}
+
+.card {
+    .margin-xlarge-t;
+    // display: inline-block;
+    // vertical-align: top;
+    // min-width: 300px;
+
+    &.card-contact {
+        @media (min-width: 1000px) {
+            .margin-xlarge-l;
+        }
+    }
+
+    .card-multi-column {
+        > div {
+            // width: 300px;
+            .padding-xlarge;
+
+            &:not(:first-child) {
+                border-left: solid 1px @gray;
+            }
+        }
+    }
+}
+
+.cards-top {
+    .card {
+        margin-top: 0;
+    }
+}
+
+a {
+    text-decoration: underline;
+}
+
+.tip {
+    .margin-tb;
+    background-color: @white;
+    .padding;
+    .font-h5;
+}
+
+@media (min-width: 1000px) {
+    .cards-top {
+        .flexbox;
+
+        .card-details {
+            .flex2;
+        }
+        .card-contact {
+            .flex1;
+        }
+    }
+}

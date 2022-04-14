@@ -1,0 +1,51 @@
+<pl-tabs [tabs]="tabs"></pl-tabs>
+<div class="pl-cam-locations-scheduling-status">
+    <pl-schoolyear-select
+        (selectedSchoolYearChange)="handleSelectedSchoolYearChange($event)"
+        [(selectedSchoolYear)]="selectedSchoolYearCode"
+        [simpleSelect]="true"
+    >
+    </pl-schoolyear-select>
+    <pl-table-wrapper
+        (onQuery)="onQuery($event)"
+        [pageSizeKey]="'first'"
+        [stateName]="'l'"
+    >
+        <pl-table-header>
+            <pl-table-header-cell>Organization</pl-table-header-cell>
+            <pl-table-header-cell>Location</pl-table-header-cell>
+            <pl-table-header-cell>Clinical Account Manager</pl-table-header-cell>
+            <pl-table-header-cell>Scheduling Progress</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="locations.length === 0 && !loading" class="center padding-xlarge-tb">
+            No matching results
+        </div>
+        <div *ngIf="locations.length > 0 && !loading">
+            <pl-table-row *ngFor="let location of locations">
+                <pl-table-cell>{{ location.orgName }}</pl-table-cell>
+                <pl-table-cell>
+                    <a [routerLink]="['/location', location.uuid, 'scheduler']" [title]="location.name + ' Overview'">{{ location.name }}</a>
+                </pl-table-cell>
+                <pl-table-cell>
+                    {{ location.camFirstName }} {{ location.camLastName }}
+                </pl-table-cell>
+                <pl-table-cell>
+                    <pl-simple-meter
+                        [isFullWidth]="true"
+                        [text]="getText(location)"
+                        [value]="getWidth(location)"
+                        [color]="getBackgroundColor(location)"
+                        [bgColor]="white"
+                    ></pl-simple-meter>
+                </pl-table-cell>
+            </pl-table-row>
+        </div>
+        <pl-table-footer
+            [total]="totalCount"
+            [totalLabel]="'Locations'"
+        ></pl-table-footer>
+    </pl-table-wrapper>
+</div>

@@ -1,0 +1,18 @@
+<div class="pl-location-availability">
+    <div *ngIf="isVirtual()">Location availability is not available for Virtual schools.</div>
+    <div *ngIf="!isVirtual()">
+        <pl-schoolyear-select
+            [(selectedSchoolYear)]="selectedSchoolYear"
+            (onYearSelected)="onYearSelected($event.model)"
+            [simpleSelect]="true"
+        >
+        </pl-schoolyear-select>
+
+        <pl-account-availability
+            *ngIf="location && selectedSchoolYear"
+            [location]="location"
+            [schoolYear]="selectedSchoolYear"
+            (isDirtyChanged)="onIsDirtyChanged($event)"
+        ></pl-account-availability>
+    </div>
+</div>

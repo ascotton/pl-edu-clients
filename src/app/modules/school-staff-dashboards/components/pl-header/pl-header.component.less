@@ -1,0 +1,60 @@
+
+@import 'core/colors.less';
+
+.mat-toolbar {
+    border-bottom: solid 1px @gray;
+}
+.global-nav {
+    &-right {
+        margin-left: auto;
+    }
+    &-menu {
+        height: 100%;
+        display: flex;
+        &-item {
+            text-align: center;
+            text-decoration: none;
+            &-label {
+                font-size: 14px;
+                line-height: 16px;
+                color: @gray-darkest;
+            }
+            &-icon {
+                line-height: 16px;
+                fill: @blue-medium;
+                color: @blue-medium;
+            }
+            &.active {
+                background: @gray-darkest;
+                .global-nav-menu-item  {
+                    &-icon, &-label {
+                        color: @white;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.pl {
+    &-user {
+        cursor: pointer;
+        &-name {
+            font-size: 14px;
+        }
+        &-icon {
+            background-color: @gray;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            color: @white;
+            fill: @white;
+        }
+        &-menu {
+            color: @gray;
+            a {
+                text-decoration: none;
+            }
+        }
+    }
+}

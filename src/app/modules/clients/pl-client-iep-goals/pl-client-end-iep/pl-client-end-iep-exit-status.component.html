@@ -1,0 +1,56 @@
+<div class="pl-client-end-iep-exit-status"
+  [ngClass]="{'debug-show-div': util.showDivs(_state)}"
+  *ngIf="_state.initialized"
+  [@enterAnimation]
+  >
+
+  <div class="debug-component-name" *ngIf="util.showDivs(_state)">
+    {{_state.componentName}} {{_state.ID}}
+  </div>
+
+  <!-- client profile header (exitable) -->
+  <pl-closable-page-header [headerText]="_state.model.clientName"  [closeCallback]="onClickClose()">
+  </pl-closable-page-header>
+
+  <div class="content">
+    <!-- period header -->
+    <h1 *ngIf="_state.model.iepYear">End {{service.getTypeDisplayName(iep)}} &nbsp;<b>·</b>&nbsp; {{_state.model.iepYear.start}} - {{_state.model.iepYear.end}}</h1>
+    <div class="divider-line"></div>
+
+    <!-- stepper: step1: Goal Status-->
+    <div class="stepper">
+      <pl-steps [steps]="_state.model.steps"></pl-steps>
+    </div>
+
+    <h2 class="instructions margin-large-tb">
+      Final Settings to End this {{service.getTypeDisplayName(iep)}} for {{_state.model.serviceTypeInfo.label}}
+    </h2>
+    <div>
+      Please confirm all your responses are correct before clicking <b>Done</b>. You will not be able to reopen this portion of the {{service.getTypeDisplayName(iep)}} once it is marked as ended.
+    </div>
+
+    <!-- form section 1-->
+    <div class="form" *ngIf="service.isTypeIep(iep)">
+      <div class="section section-1">
+        <div class="heading">
+          Was this student exited from <b>{{_state.model.serviceTypeInfo.label}}</b>?
+        </div>
+        <div class="form-elements">
+          <pl-input-radio [(model)]="serviceArea.clientExited" [value]="true" [name]="'clientExited'" [label]="'Yes'"></pl-input-radio>
+          <pl-input-radio [(model)]="serviceArea.clientExited" [value]="false" [name]="'clientExited'" [label]="'No'"></pl-input-radio>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <div class="divider-line" style="margin-bottom: 0"></div>
+    <div class="actions">
+      <button pl-button class="secondary back" (click)="onClickBack()">&lt; &nbsp; Previous</button>
+      <button pl-button class="primary next margin-small-l" (click)="onClickDone()" [disabled]="!canContinue()">Done</button>
+      <button pl-button class="bare cancel margin-small-l" (click)="onClickCancel()">Cancel</button>
+    </div>
+    <div class="divider-line" style="margin-top: 0"></div>
+  </div>
+
+</div>

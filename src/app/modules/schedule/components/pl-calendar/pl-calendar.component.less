@@ -1,0 +1,296 @@
+@import '@fullcalendar/core/main.css';
+@import '@fullcalendar/daygrid/main.css';
+@import '@fullcalendar/timegrid/main.css';
+@import '@fullcalendar/list/main.css';
+@import 'core/colors.less';
+
+pl-calendar {
+    display: block;
+    .record-billing-code {
+        color: white;
+        padding: 2px;
+
+        &.clients {
+            background-color: fade(@green, 80%);
+            border-color: @green;
+        }
+        &.student_absence {
+            background-color: fade(@yellow, 80%);
+            border-color: @yellow;
+        }
+        &.cancellation {
+            background-color: fade(@red, 80%);
+            border-color: @red;
+        }
+        &.documentation_planning {
+            background-color: fade(@blue, 80%);
+            border-color: @blue;
+        }
+        &.other {
+            background-color: fade(@blue-medium, 80%);
+            border-color: @blue-medium;
+        }
+        &.personal {
+            background-color: fade(@purple, 80%);
+            border-color: @purple;
+        }
+        &.fte_contract_services {
+            background-color: fade(@blue-lighter, 80%);
+            border-color: @blue-lighter;
+        }
+        &.pl-debug-event {
+            border: 2px solid @black;
+        }
+    }
+
+    .pl-event {
+        &-visibility-hidden {
+            visibility: hidden;     
+        }
+    }
+
+    .pl-billing-indicator-container {
+        display: inline-block;
+        margin-right: 5px;
+        margin-bottom: 3px;
+        height: 0;
+        .pl-event-billing-indicator {
+            display: inline-block;
+            text-align: center;
+            position: relative;
+
+            &.unsigned-count {
+                height: 13px;
+                width: 25px;
+                padding-top: 2px;
+                border-radius: 3px;
+                background-color: @white;
+                color: @slate-dark;
+                font-size: 12px;
+                font-weight: bold;
+                line-height: 13px;
+            }
+            &.signed {
+                line-height: 14px;
+                vertical-align: 4px;
+                height: 14px;
+                width: 14px;
+                border-radius: 50%;
+                background-color: @white;
+                .pl-icon-content {
+                    vertical-align: -2px;
+                    svg {
+                        height: 12px;
+                        width: 11px;
+                        fill: @green;
+                    }
+                }
+            }
+            &.blackout-day {
+                border-radius: 50%;
+                padding-left: 2px;
+
+                .pl-icon-content {
+                    vertical-align: -2px;
+                    svg {
+                        vertical-align: 3px;
+                        //border-radius: 50%;
+                        height: 14px;
+                        width: 14px;
+                    }
+                }
+            }
+        }
+    }
+
+    .fc {
+        &-axis {
+            width: 37px !important;
+        }
+        &-list {
+            &-table {
+                table-layout: auto !important;
+                td {
+                    border-style: none;
+                    padding: 8px 14px;
+                }
+            }
+            &-heading {
+
+            }
+            &-item {
+                &.disabled {
+                    opacity: .3;
+                }
+                &-time {
+                    width: 150px;
+                }
+                &-marker {
+                    width: 25px;
+                }
+                &:hover {
+                    td {
+                        background-color: @blue-lightest !important;
+                    }
+                }
+                td {
+                    line-height: 25px;
+                }
+                &.clients {
+                    .fc-event-dot {
+                        background-color: @green;
+                    }
+                }
+                &.student_absence {
+                    .fc-event-dot {
+                        background-color: @yellow;
+                    }
+                }
+                &.cancellation {
+                    .fc-event-dot {
+                        background-color: @red;
+                    }
+                }
+                &.documentation_planning {
+                    .fc-event-dot {
+                        background-color: #3e8ed0;
+                    }
+                }
+                &.other {
+                    .fc-event-dot {
+                        background-color: #42BCA0;
+                    }
+                }
+                &.personal {
+                    .fc-event-dot {
+                        background-color: #A06EC0;
+                    }
+                }
+                &.fte_contract_services {
+                    .fc-event-dot {
+                        background-color: #85D4F7;
+                    }
+                }
+            }
+        }
+        &-view {
+            overflow: hidden;
+        }
+        &-content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        &-event {
+            &.fc-time-grid-event {
+                .fc-title {
+                    font-size: 0.85em;
+                }
+            }
+            &.fc-day-grid-event {
+                .fc-time {
+                    font-weight: 300;
+                    margin-right: 4px;
+                }
+            }
+            &.fc-short, &.fc-day-grid-event {
+                .fc-content {
+                    flex-wrap: nowrap;
+                    .fc-title {
+                        max-width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+            &.disabled {
+                opacity: .3;
+            }
+            &-dot {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 5px;
+            }
+        }
+        &-toolbar.fc-header-toolbar {
+            margin: 0;
+            padding: 10px 0;
+            .fc-button-group {
+                .fc-button {
+                    color: #4A4A4A;
+                    background: white;
+
+                    padding-left: 8px;
+                    padding-right: 8px;
+
+                    &:focus{
+                        outline: none; // allows to adjust with the buttons shape.
+                        box-shadow: @gray 0px 0px 0px 3px;
+                        border-color: @blue-medium !important;
+                    }
+                    &:hover{
+                        border-color: @blue-medium;
+                        color: @blue-medium;
+                    }
+                    &:first-child {
+                        border-top-left-radius: 100px;
+                        border-bottom-left-radius: 100px;
+                    }
+                    &:last-child {
+                        border-top-right-radius: 100px;
+                        border-bottom-right-radius: 100px;
+                    }
+                }
+                .fc-button-active{
+                    border: none;
+                    color: white;
+                    background: @blue-medium;
+
+                    &:hover{
+                        color: white;
+                        background: @blue;
+                    }
+                }
+            }
+
+            .fc-addEvent-button {
+                padding-left: 8px;
+                padding-right: 8px;
+                border-style: none;
+                background-color: @orange;
+
+                &:focus{
+                    outline: none; // allows to adjust with the buttons shape.
+                    box-shadow: @gray 0px 0px 0px 3px;
+                    border-color: @blue-medium !important;
+                }
+            }
+
+            .fc-today-button {
+                border-style: none;
+            }
+
+            .fc-bulkUpdate-button {
+                display: none;
+            }
+
+            h2 {
+                font-size: 18px;
+                display: inline-block;
+            }
+        }
+        &-week {
+            // height: 100px;
+        }
+        &-day {
+            &.selected {
+                background-color: @blue-lightest;
+            }
+        }
+        &-scroller {
+            // &.fc-time-grid-container {
+            height: calc(100vh - 207px) !important;
+            // }
+        }
+    }
+}

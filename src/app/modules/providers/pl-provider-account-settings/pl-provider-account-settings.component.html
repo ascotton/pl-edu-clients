@@ -1,0 +1,319 @@
+<div class="pl-provider-account-settings" *ngIf="provider.user">
+    <div class="top-buttons">
+        <div *ngIf="isAdmin">
+            <a href="https://plearn.lightning.force.com/lightning/r/Contact/{{ provider.salesforceId }}/view" target="_blank">
+                <button pl-button>View Salesforce Record</button>
+            </a>
+        </div>
+        <!-- <div *ngIf="isAdmin">
+            <button pl-button (click)="assumeUser()">Assume User Account</button>
+        </div> -->
+        <div *ngIf="mayObserve">
+            <a href="{{ urls.room }}/observe/{{ provider.user.username }}" target="_blank">
+                <button pl-button>View Room in Observation Mode</button>
+            </a>
+        </div>
+        <!-- <div *ngIf="mayResetWhiteboard" class="x-qa-reset-whiteboard-btn">
+            <button pl-button (click)="resetWhiteboard()">Reset Whiteboard</button>
+            <span><pl-dot-loader [hidden]="!loading.resetWhiteboard" [align]="'left'"></pl-dot-loader></span>
+        </div> -->
+        <!-- <div *ngIf="mayGenerateRoom">
+            <button *ngIf="!newRoomConfirmVisible"
+                pl-button
+                class="x-qa-provider-new-room"
+                (click)="toggleNewRoomConfirm()"
+            >
+                Generate New Room
+            </button>
+            <div *ngIf="newRoomConfirmVisible && !loading.newRoom">
+                <p>Warning: Reseting of rooms is intended as a last resort. All room state including whiteboard and queues will be deleted permanently. All users must log out and log back in.</p>
+                <button pl-button type="button" class="danger x-qa-new-room-button" (click)="newRoom()">Reset Room</button>
+                <button type="button" pl-button class="gray-outline x-qa-cancel-new-room-button" (click)="toggleNewRoomConfirm()">Cancel</button>
+            </div>
+            <pl-dot-loader [hidden]="!loading.newRoom" [align]="'left'"></pl-dot-loader>
+        </div> -->
+    </div>
+
+    <div class="cards-top">
+        <div class="card card-details">
+            <div class="card-header">Provider Details</div>
+            <div class="card-body">
+                <div class="flexbox card-multi-column">
+                    <div class="flex1">
+                        <div class="label-value">
+                            <div class="label">Provider Type</div>
+                            <div class="value">{{ provider.title }}</div>
+                        </div>
+                        <div *ngIf="mayViewProvider">
+                            <!-- <div class="label-value">
+                                <div class="label">NPI Number</div>
+                                <div class="value">{{ provider.npi_number }}</div>
+                            </div> -->
+                            <!-- <div class="label-value">
+                                <div class="label">Status</div>
+                                <div class="value">{{ provider.status }}</div>
+                            </div> -->
+                            <div class="label-value">
+                                <div class="label">Sub-status</div>
+                                <div class="value">{{ provider.providerSubStatus }}</div>
+                            </div>
+                        </div>
+                        <div class="label-value">
+                            <div class="label">Username</div>
+                            <div class="value">{{ provider.user.username }}</div>
+                        </div>
+                        <div *ngIf="mayViewRoom" class="label-value">
+                            <div class="label">Room URL</div>
+                            <div class="value">{{ urls.room }}/{{ provider.user.username }}</div>
+                        </div>
+                        <div>
+                            <div class="label-value">
+                                <div class="label">Contact Owner</div>
+                                <div class="value" *ngIf="provider.accountOwner">{{ provider.accountOwner.firstName }} {{ provider.accountOwner.lastName }}</div>
+                            </div>
+                            <div class="label-value">
+                                <div class="label">Contact Owner Email</div>
+                                <div class="value x-qa-provider-email" *ngIf="provider.accountOwner">
+                                    <a
+                                        href="mailto:{{ provider.accountOwner.email }}"
+                                    >
+                                        {{ provider.accountOwner.email }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="mayViewProvider && (mayViewPersonnel || isSelfProvider)">
+                            <!-- <div class="label-value">
+                                <div class="label">Start Date</div>
+                                <div class="value">{{ provider.readyForPlacementDate }}</div>
+                            </div> -->
+                            <div *ngIf="(provider.adjustedHourlyRate || provider.hourlyRate)" class="label-value">
+                                <div class="label">Base Rate</div>
+                                <div class="value">{{ provider.adjustedHourlyRate || provider.hourlyRate | plCurrency }}</div>
+                            </div>
+                            <div *ngIf="(provider.adjustedHourlyRateTier1 || provider.hourlyRateTier1)" class="label-value">
+                                <div class="label">Tier 1 Rate</div>
+                                <div class="value">{{ provider.adjustedHourlyRateTier1 || provider.hourlyRateTier1 | plCurrency }}</div>
+                            </div>
+                            <div *ngIf="(provider.adjustedHourlyRateTier2 || provider.hourlyRateTier2)" class="label-value">
+                                <div class="label">Tier 2 Rate</div>
+                                <div class="value">{{ provider.adjustedHourlyRateTier2 || provider.hourlyRateTier2 | plCurrency }}</div>
+                            </div>
+                            <div *ngIf="rateLabelDisplay" class="label-value">
+                                <div class="label"></div>
+                                <div class="value"><i>{{ rateLabelDisplay }}</i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex1">
+                        <div class="label-value">
+                            <div class="label">Available for Bilingual Services</div>
+                            <div class="value">
+                                <pl-is-available [condition]="provider.isBilingual">{{ provider.isBilingual }}</pl-is-available>
+                            </div>
+                        </div>
+                        <div class="label-value">
+                            <div class="label">Languages Spoken</div>
+                            <div class="value">
+                                <ul *ngIf="provider.languages.length > 0">
+                                    <li *ngFor="let language of provider.languages">
+                                        &middot; {{ language.name }}
+                                    </li>
+                                </ul>
+                                <div *ngIf="provider.languages.length === 0">
+                                    <i>None</i><br />
+                                </div>
+                                <div *ngIf="isAdmin || isSelfProvider">
+                                    <br />
+                                    <a [routerLink]="" (click)="onEditLanguages()">Update Languages</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="label-value" *ngIf="provider.areasOfSpecialty">
+                            <div class="label">Areas of Specialty</div>
+                            <div class="value">
+                                <ul *ngIf="provider.areasOfSpecialty.length > 0">
+                                    <li *ngFor="let area of provider.areasOfSpecialty">
+                                        &middot; {{ area.name }}
+                                    </li>
+                                </ul>
+                                <div *ngIf="provider.areasOfSpecialty.length === 0">
+                                    <i>None</i><br />
+                                </div>
+                                <div *ngIf="isAdmin || isSelfProvider">
+                                    <br />
+                                    <a [routerLink]="" (click)="onEditAreasOfSpecialty()">Update Areas of Specialty</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="label-value" *ngIf="provider.notificationPreference">
+                            <div class="label">Notification Preferences</div>
+                            <div class="value">
+                                <ul *ngIf="provider.notificationPreference.join('').length > 0">
+                                    <li *ngFor="let notificationType of provider.notificationPreference">
+                                        &middot; {{ getNotificationPreferencesText(notificationType) }}
+                                    </li>
+                                </ul>
+                                <div *ngIf="provider.notificationPreference.join('').length === 0">
+                                    <i>None</i><br />
+                                </div>
+                                <div *ngIf="isAdmin || isSelfProvider">
+                                    <br />
+                                    <a [routerLink]="" (click)="onEditNotificationPreferences()">Update Notification Preferences</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="label">Areas of Specialty</div>
+                        <div class="value">{{ provider.areas_of_specialty }}</div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card card-contact" *ngIf="mayViewProvider">
+            <div class="card-header">Contact Information</div>
+            <div class="card-body">
+                <div class="label-value">
+                    <div class="label">Full Name</div>
+                    <div class="value">{{ provider.user.firstName }} {{ provider.user.lastName }}</div>
+                </div>
+                <div class="label-value">
+                    <div class="label">Mailing Address</div>
+                    <div class="value">{{ provider.xMailing }}</div>
+                </div>
+                <div class="label-value">
+                    <div class="label">Phone</div>
+                    <div class="value">{{ provider.phone | plPhone }}</div>
+                </div>
+                <div class="label-value">
+                    <div class="label">Email</div>
+                    <div class="value">
+                        <a href="mailto:{{ provider.email }}">
+                            {{ provider.email }}
+                        </a>
+                    </div>
+                </div>
+                <div class="label-value">
+                    <div class="label">Alternate Email</div>
+                    <div class="value">
+                        <a href="mailto:{{ provider.email2 }}">
+                            {{ provider.email2 }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isSelfProvider && mayViewProvider">
+        <div class="card card-status">
+            <div class="card-header">
+                <div>
+                    Status
+                    <pl-icon class="blue-medium pointer" [svg]="'info'" [height]="18" [width]="18" [verticalAlign]="'-1px'" (click)="toggleShowTips('status')"></pl-icon>
+                </div>
+                <div [hidden]="!showTips.status" class="tip">Providers go through many different sub-statuses during their life cycle with PresenceLearning. While this information is updated within their Salesforce record, here is some helpful information for the provider’s current sub-status.</div>
+            </div>
+            <div class="card-body">
+                <div class="flexbox card-multi-column">
+                    <div class="flex1">
+                        <div class="label-value">
+                            <div class="label">Sub-Status</div>
+                            <div class="value">{{ provider.providerSubStatus }}</div>
+                        </div>
+                        <div *ngIf="provider.providerSubStatus === 'Onboarding'">
+                            <div>
+                                This provider is currently going through the onboarding process. If you are the assigning provider onboarding manager for this provider, please be sure to complete the following milestones:
+                            </div>
+                            <div>- Orientation</div>
+                            <div>- Check-In Call</div>
+                            <div>- Active Credential Validation</div>
+                            <div>- Document Checklist</div>
+                            <div>- TI Completion</div>
+                        </div>
+                        <div *ngIf="provider.providerSubStatus === 'Providing Services'">
+                            This provider is currently providing services.
+                        </div>
+                        <div *ngIf="provider.providerSubStatus === 'Ready for Placement'">
+                            This provider has completed their assignment readiness check and is ready for placement.
+                        </div>
+                        <div *ngIf="provider.providerSubStatus === 'Pending Readiness Check'">
+                            This provider has completed onboarding and is ready for their assignment readiness check.
+                        </div>
+                    </div>
+                    <div class="flex1">
+                        <div *ngIf="provider.providerSubStatus === 'Onboarding'">
+                            <div class="margin-b"><b>Provider's Onboarding Progress</b></div>
+                            <div *ngFor="let task of onboardingTasks" class="margin-b">
+                                <pl-icon *ngIf="task.xIsComplete" class="green margin-r" [svg]="'check-circle'" [scale]="1"></pl-icon>
+                                <pl-icon *ngIf="!task.xIsComplete" class="gray margin-r" [svg]="'check-circle'" [scale]="1"></pl-icon>
+                                {{ task.xName }}
+                            </div>
+                        </div>
+                        <div *ngIf="provider.providerSubStatus !== 'Onboarding'">
+                            <div *ngIf="mayViewPersonnel" class="label-value">
+                                <div class="label">Ready for Placement</div>
+                                <div class="value">
+                                    <pl-is-available [condition]="provider.x.readyForPlacementDate">{{ provider.x.readyForPlacementDate }}</pl-is-available>
+                                </div>
+                            </div>
+                            <div *ngIf="mayViewPersonnel" class="label-value">
+                                <div class="label">First Session</div>
+                                <div class="value">
+                                    <pl-is-available [condition]="provider.x.firstSession">{{ provider.x.firstSession }}</pl-is-available>
+                                </div>
+                            </div>
+                            <div *ngIf="mayViewPersonnel" class="label-value">
+                                <div class="label">Last Session</div>
+                                <div class="value">
+                                    <pl-is-available [condition]="provider.x.lastSession">{{ provider.x.lastSession }}</pl-is-available>
+                                </div>
+                            </div>
+                            <div class="label-value">
+                                <div class="label">Tech Check Status</div>
+                                <div class="value">
+                                    <pl-is-available [condition]="provider.techCheckStatus">{{ provider.techCheckStatus }}</pl-is-available>
+                                </div>
+                            </div>
+                            <div class="label-value">
+                                <div class="label">Tech Check Completion Date</div>
+                                <div class="value">
+                                    <pl-is-available [condition]="provider.x.techCheckCompletionDate">{{ provider.x.techCheckCompletionDate }}</pl-is-available>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="mayViewProvider && showAgreements">
+        <div class="card agreements">
+            <div class="card-header">Signed Agreements</div>
+            <div class="card-body">
+                <!-- <div>
+                    <b>Outstanding Agreements</b>
+                </div> -->
+                <div>
+                    <pl-table-header>
+                        <pl-table-header-cell>Agreed On</pl-table-header-cell>
+                        <pl-table-header-cell>Title</pl-table-header-cell>
+                        <pl-table-header-cell>Effective Date</pl-table-header-cell>
+                        <pl-table-header-cell>PDF Version</pl-table-header-cell>
+                    </pl-table-header>
+                    <pl-table-row *ngFor="let row of agreements">
+                        <pl-table-cell>{{ row.x.agreed_on }}</pl-table-cell>
+                        <pl-table-cell>{{ row.code }}</pl-table-cell>
+                        <pl-table-cell>{{ row.x.as_of_date }}</pl-table-cell>
+                        <pl-table-cell>
+                            <a [href]="row.document_url" download target="_blank">
+                                <pl-icon class="black" [svg]="'download'" [scale]="0.8"></pl-icon> Download Agreement
+                            </a>
+                        </pl-table-cell>
+                    </pl-table-row>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,26 @@
+<div class="pl-organization" *ngIf="state.initialized">
+    <div *ngIf="!mayViewOrg" class="padding-large">
+        <pl-permissions-denied [code]="404"></pl-permissions-denied>
+    </div>
+    <div *ngIf="mayViewOrg">
+        <div class="outer-container">
+            <div class="header-container">
+                <div class="profile-container">
+                    <div class="profile-wrapper">
+                        <pl-organization-profile-header [organization]="org" class="header"></pl-organization-profile-header>
+                    </div>
+                </div>
+                <div class="tabs-container">
+                    <div class="tabs-wrapper">
+                        <pl-tabs [tabs]="tabs" *ngIf="!util.isFullScreenRoute()" [updatePageTabTitleBasedOnActiveLink]="true"></pl-tabs>
+                    </div>
+                </div>
+            </div>
+            <div class="organization-content-container"  [ngClass]="{'is-fullscreen-route': util.isFullScreenRoute()}">
+                <div class="inner">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

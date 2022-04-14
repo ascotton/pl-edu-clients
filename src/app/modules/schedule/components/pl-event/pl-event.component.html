@@ -1,0 +1,173 @@
+<h4 class="header-blue padding-large" mat-dialog-title>
+    <div class="flexbox">
+        <div class="flex1">
+            {{ isNew() ? 'Add' : 'Update' }} Event
+            <ng-container *ngIf="isLeadClinician">
+                (CAM Billable)
+            </ng-container>
+        </div>
+        <pl-icon mat-dialog-close svg="close-inverted" class="pointer white margin-l"></pl-icon>
+    </div>
+</h4>
+<div *ngIf="data$ | async as dataInfo" mat-dialog-content class="flex1" [style.minHeight.px]="minHeight">
+    <!--
+    <pl-dot-loader *ngIf="loading; else content"></pl-dot-loader>
+    -->
+    <form name="eventServiceForm" class="event-service-form">
+        <!-- TIME -->
+        <div class="time-selection margin-large-b">
+            <pl-date-time-range
+                [timezone]="dataInfo.timezone"
+                [startWidth]="400"
+                [value]="{ start: workingEvent.start, end: workingEvent.end }"
+                (valueChange)="changeRange($event)">
+            </pl-date-time-range>
+            <!-- TODO: Could these error messages be part of date-time-range component? -->
+            <div class="h6 red" *ngIf="errors?.endBefore">
+                End must be after start.
+            </div>
+            <div class="h6 red" *ngIf="errors?.apptDuration">
+                Please select duration less than 24 hours.
+            </div>
+        </div>
+        <!-- PENDING EVALUATIONS -->
+        <div *ngIf="isNew() && dataInfo.pendingServices.length"
+            class="margin-large-b">
+            <div class="pl-event-tabs-header padding-large-lr padding-t">
+                <div *ngFor="let opt of dataInfo.pendingOpts"
+                    class="pl-event-tabs-item margin-large-r padding-b padding-lr"
+                    [class.active]="opt.value === selectedPending"
+                    (click)="changePendingOpt(opt.value)">
+                    {{ opt.label }}
+                </div>
+            </div>
+            <pl-pending-service-select
+                *ngIf="selectedPending === 'pending'"
+                [pendingServices]="dataInfo.pendingServices"
+                [selectedService]="selectedPendingService"
+                (selectedServiceChange)="changePendingService($event, dataInfo.pendingServices, dataInfo.billingCodes, dataInfo.clients)">
+            </pl-pending-service-select>
+        </div>
+        <!-- --------------------------- -->
+        <div class="flexbox">
+            <!-- BILLING INFO -->
+            <div *ngIf="editingDatetime" class="event-details margin-r">
+                <div class="event-details-field margin-large-b">
+                    <pl-input-radio-group
+                        cdkFocusInitial
+                        label="Category"
+                        [model]="selectedBillingCategory"
+                        [options]="billingCodesCategoryOpts"
+                        [disabled]="!allowBillingCodeUpdate || billingCategoryDisabled(isNew(), dataInfo.billingCodes)"
+                        (modelChange)="changeBillingCategory($event)">
+                    </pl-input-radio-group>
+                </div>
+                <div *ngIf="selectedBillingCategory" class="event-details-field margin-large-b">
+                    <pl-input-select
+                        [dropdownMinWidth]="300"
+                        label="Billing Code"
+                        placeholder="Select a billing code"
+                        [sortByLabel]="true"
+                        [disabled]="!allowBillingCodeUpdate"
+                        [filter]="billingCodesOpts.length > 5"
+                        [model]="workingEvent.billing_code"
+                        [options]="billingCodesOpts"
+                        (modelChange)="changeBillingCode($event, dataInfo.billingCodes, dataInfo.clients)">
+                    </pl-input-select>
+                    <div class="h6 red" *ngIf="errors?.billingCodeRequired">
+                        Please select a billing code.
+                    </div>
+                </div>
+                <div *ngIf="showClients" class="event-details-field margin-large-b">
+                    <pl-input-search-below placeholder="Select a client" label="Clients"
+                        [disabled]="clientIDs && maxClients <= clientIDs.length"
+                        [allowRemove]="allowClientsUpdate"
+                        [options]="dataInfo.clientsOpts"
+                        [value]="clientIDs"
+                        (valueChange)="changeClients($event, dataInfo.clients)"
+                        [max]="maxClients"></pl-input-search-below>
+                    <div class="h6 red" *ngIf="errors?.clientsRequired">
+                        Please select a client.
+                    </div>
+                </div>
+                <div *ngIf="showLocations" class="event-details-field margin-large-b">
+                    <pl-input-select
+                        label="Location"
+                        placeholder="Select a location"
+                        [options]="dataInfo.locationOpts"
+                        [sortByLabel]="true"
+                        [filter]="dataInfo.locationOpts.length > 5"
+                        [model]="locationID"
+                        (modelChange)="changeLocations($event, dataInfo.locations)">
+                    </pl-input-select>
+                    <div class="h6 red" *ngIf="errors?.locationRequired">
+                        Please select a location.
+                    </div>
+                </div>
+            </div>
+            <!-- REPEATING -->
+            <div>
+                <pl-repeat-rule *ngIf="canRepeat && selectedPending !== 'pending'"
+                    [start]="workingEvent.start"
+                    [end]="workingEvent.end"
+                    [timezone]="dataInfo.timezone"
+                    [value]="workingEvent.event"
+                    (valid)="repeatingRuleValid($event)"
+                    (valueChange)="changeRepeatingRule($event)">
+                </pl-repeat-rule>
+                <div class="h6 red" *ngIf="errors?.repeatingRules">
+                    Settings for repeating events are incomplete. <br/>
+                    No repeating event will be created. <br/>
+                    Please review the settings.
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<hr class="margin-xlarge-lr"/>
+<div mat-dialog-actions>
+    <ng-container *ngIf="!confirmingDelete; else confirmingDeleteButtons">
+        <button pl-button class="primary" *ngIf="!workingEvent.event.repeating || singleAppointment"
+            (click)="save(true)"
+            [disabled]="invalid || (loading$ | async)">
+            Save & Document
+        </button>
+        <button pl-button class="info"
+            *ngIf="!isAmendable"
+            (click)="save()"
+            [disabled]="invalid || (loading$ | async)">
+            Save & Exit
+        </button>
+        <button pl-button class="gray-outline"
+            *ngIf="!isAmendable"
+            (click)="save(false, true)"
+            [disabled]="invalid || (loading$ | async)">
+            Save
+        </button>
+        <button pl-button mat-dialog-close class="bare"
+            [disabled]="loading$ | async">
+            Cancel
+        </button>
+        <!-- TODO: Is not working -->
+        <button pl-button *ngIf="!isNew() && !workingEvent.event.repeating || singleAppointment" class="delete-button danger"
+            (click)="confirmingDelete = true"
+            [disabled]="loading$ | async">
+            Delete
+        </button>
+    </ng-container>
+    <ng-template #confirmingDeleteButtons>
+        <button pl-button class="danger"
+            (click)="delete()"
+            [disabled]="loading$ | async">
+            Confirm Delete
+        </button>
+        <button pl-button class="bare"
+            (click)="confirmingDelete = false"
+            [disabled]="loading$ | async">
+            Cancel
+        </button>
+    </ng-template>
+    <div *ngIf="loading$ | async">
+        <pl-dot-loader [align]="'left'"></pl-dot-loader>
+    </div>
+</div>

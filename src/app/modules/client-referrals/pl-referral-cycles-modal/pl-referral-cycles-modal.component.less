@@ -1,0 +1,54 @@
+@import 'core/colors.less';
+@import 'core/flexbox.less';
+
+.pl-referral-cycles-modal {
+    max-width: 40rem;
+
+    // Always show scrollbar.
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 3px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(0, 0, 0, .5);
+        -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    }
+
+    .body-row:nth-child(odd) {
+        background-color: lighten(@gray-lightest, 5%);
+    }
+
+    .errMsg{
+        color: red;
+        font-weight: bold;
+    }
+
+    .footer {
+        text-align: center;
+    }
+
+    .providers {
+        border: solid 1px @gray;
+    }
+
+    .header-col, .body-col {
+        .flex1;
+        min-width: 110px;
+    }
+
+    .header-col {
+        font-weight: bold;
+    }
+
+    .rows {
+        max-height: 250px;
+        overflow: auto;
+    }
+
+    .verticalScroll {
+        max-height: 20rem;
+        overflow-y: scroll;
+    }
+    
+}

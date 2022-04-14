@@ -1,0 +1,23 @@
+<div class="pl-help-support">
+    <div class="margin-b"><h2>Support</h2></div>
+    <div>The provider onboarding team is here to help you have a great experience. Reach out at anytime.</div>
+    <div class="margin-large-b">
+        <a href="mailto:provider.success@presencelearning.com">provider.success@presencelearning.com</a>
+    </div>
+    <div *ngIf="links.length">
+        <div>Learn more about:</div>
+        <div *ngFor="let link of links">
+            <a [href]="link.href" target="_blank">{{ link.label }}</a>
+        </div>
+    </div>
+    <!-- <div class="margin-large-b">
+        <div class="margin-b"><h3>Provider Success Manager</h3></div>
+        <div><h4>{{ contact.name }}</h4></div>
+        <div><a [href]="'mailto:' + contact.email ">{{ contact.email }}</a></div>
+    </div>
+    <div class="margin-large-b">
+        <div><h3>Support Services</h3></div>
+        <div><a [href]="'mailto:' + support.email ">{{ support.email }}</a></div>
+        <div>{{ support.phone }}</div>
+    </div> -->
+</div>

@@ -1,0 +1,15 @@
+<table #plHandbookContents>
+    <thead id="pl-toc-header">
+        <th class="padding"> Table of Contents </th>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let content of contents; let i = index">
+            <td class="pl-toc-content" (click)="loadContent(content, i+1)">
+                <div class="padding"> 
+                    <span> {{ i + 1 }}. {{ content.section_type.name }}  </span>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

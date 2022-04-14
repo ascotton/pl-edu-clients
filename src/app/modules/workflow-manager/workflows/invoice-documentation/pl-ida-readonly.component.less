@@ -1,0 +1,123 @@
+@import 'core/colors.less';
+
+@signed-color: @green-light;
+.pl-invoice-documentation-readonly {
+  background-color: @white;
+  box-sizing: border-box;
+  border: 4px solid @slate-darkest;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+
+  color: @slate-darker;
+  .no-data {
+      font-style: italic;
+      font-size: 0.9em;
+  }
+
+  // iDA-specific height
+  height: calc(~"100vh - 129px");
+
+  // calendar popup height
+  &.standalone {
+    height: calc(~"100vh - 34px");
+  }
+
+  #invoice-header {
+    background-color: @slate-darkest;
+    padding: 10px 10px 15px 20px;
+    display: flex;
+    flex-flow: row;
+    flex: 0 0 auto;
+    position: relative;
+
+    .details {
+      display: table-cell;
+      width: 100%;
+    }
+
+    .close-button {
+      display: table-cell;
+      position: relative;
+      top: 5px;
+    }
+
+    .signed {
+      color: @signed-color;
+      &.signed-mark {
+        font-weight: 400;
+        font-size: 16px;
+        margin-right: 5px;
+      }
+    }
+
+    .name,
+    .location,
+    .datetime {
+      color: @gray-lightest;
+    }
+
+    .name,
+    .datetime {
+      margin-left: 15px;
+      margin-right: 10px;
+      &.standalone-appointment {
+        margin-left: 0;
+      }
+    }
+
+    .name {
+      margin-bottom: 5px;
+      .location {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .blackout-day-banner {
+    background-color: @slate-light;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    color: @slate-darkest;
+    .header-text {
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+
+  .detail-container {
+    padding: 0 10px 50px 10px;
+    flex: 1 1 auto;
+    overflow: auto;
+
+    .header {
+      display: flex;
+      padding: 20px 0 0 13px;
+      background-color: @white;
+      font-weight: bold;
+
+      .header-title {
+        font-size: 18px;
+        width: 100%;
+      }
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    fieldset {
+      border-color: @gray-lighter;
+    }
+
+    .indent {
+      padding-left: 30px;
+    }
+
+    .label {
+      display: inline-block;
+      width: 120px;
+    }
+  }
+}

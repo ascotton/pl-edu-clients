@@ -1,0 +1,41 @@
+<div #plHandbookModal>
+    <pl-modal-header-wrapper [headerText]="headerText" (keydown)="onKeyDown($event)">
+        <div *ngIf="automaticTimeout">
+            <div *ngIf="isIntervalRunning">
+                <p class="margin-nl-b pl-handbook-modal-header-text">
+                    Are you still working?
+                </p>
+                <p class="margin-nl-b">
+                    Changes will be lost unless you return to edit in {{ timeoutTimer }} seconds
+                </p>
+
+                <button pl-button class="primary" (click)="returnToEdit();">
+                    Return to Edit
+                </button>
+                <button pl-button (click)="closeAndDontSave();">
+                    Close and Don't Save
+                </button>
+            </div>
+
+            <div *ngIf="!isIntervalRunning">
+                <p class="pl-handbook-modal-header-text">
+                    You have been checked out
+                </p>
+                <p class="margin-nl-tb">
+                    Your checkout has been cancelled due to 15 minutes of inactivity.
+                </p>
+
+                <button pl-button (click)="close();"> Close </button>
+            </div>
+        </div>
+
+        <div *ngIf="!automaticTimeout">
+            <p class="margin-nl-b">
+                Do you want to save changes to your work before leaving?
+            </p>
+
+            <button pl-button class="primary" (click)="save();"> Yes </button>
+            <button pl-button (click)="closeAndDontSave(true);"> No </button>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

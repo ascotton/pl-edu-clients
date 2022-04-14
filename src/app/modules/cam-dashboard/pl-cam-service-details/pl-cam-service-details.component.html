@@ -1,0 +1,33 @@
+<div class="chart-wrapper">
+    <div class="heading-wrapper">
+        <h2>{{ total() }} <span class="service-name">{{ serviceName }}</span></h2>
+    </div>
+    <div class="chart-canvas">
+        <canvas baseChart
+            [chartType]="chartType"
+            [datasets]="chartData"
+            [colors]="chartColors"
+            [labels]="chartLabels"
+            [options]="chartOptions"
+        ></canvas>
+    </div>
+</div>
+<div class="status-legend">
+    <div class="status-legend-item in-service">
+        {{ inServiceCount }} {{ SERVICE_STATUS.IN_SERVICE.name }}
+    </div>
+    <div class="status-legend-item onboarding">
+        {{ inOnboardingCount }} {{ SERVICE_STATUS.ONBOARDING.name }}
+    </div>
+    <div class="status-legend-item not-in-service">
+        {{ notInServiceCount }} {{ SERVICE_STATUS.NOT_IN_SERVICE.name }}
+    </div>
+</div>
+<ul class="status-legend">
+    <li>
+        <div class="status-legend-item"><b>{{ assignedHours }}</b> Assigned Hours</div>
+    </li>
+    <li>
+        <div class="status-legend-item"><b>{{ contractedHours }}</b> Contracted Hours</div>
+    </li>
+</ul>

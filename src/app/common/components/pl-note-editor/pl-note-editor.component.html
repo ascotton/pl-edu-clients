@@ -1,0 +1,7 @@
+<editor
+    [apiKey]="TINY_MCE_KEY"
+    [(ngModel)]="editor.text"
+    [init]="tinyConfiguration"
+    (onInit)="onEditorInit($event)"
+    (onChange)="onEditorChange($event)">
+</editor>

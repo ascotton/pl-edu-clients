@@ -1,0 +1,86 @@
+<div class="therapy-session-editor">
+    <pl-modal-header-wrapper [headerText]="title">
+        <h4 class="margin-b">
+            Participants
+        </h4>
+        <div class="row-field margin-large-b">
+            <div class="field margin-large-r">
+                <b> 
+                    Student(s) 
+                </b>
+                <!-- TODO: Able to Add and Delete Referrals-->
+                <div class="students-item" *ngFor="let referral of appointment.referrals">
+                    <pl-icon *ngIf="canEditReferrals" class="remove gray pointer" [scale]="0.55" verticalAlign="2px" svg="cross" 
+                        title="Remove referral"
+                        (click)="removeReferral(referral)"></pl-icon>
+                    {{ referral.client.firstName }} {{ referral.client.lastName }}
+                </div>
+            </div>
+            <div class="field">
+                <b> 
+                    Provider 
+                </b>
+                <div>
+                    {{ provider?.user.firstName }}
+                    {{ provider?.user.lastName }}
+                    -
+                    {{ provider?.providerTypes[0].shortName }}
+                </div>
+            </div>
+        </div>
+        <h4 class="margin-b">
+            Session Day and Time
+        </h4>
+        <div class="row-field margin-large-b">
+            <div class="field margin-r">
+                <b> 
+                    Day
+                </b>
+                <div>
+                    {{ selectedDay }}
+                </div>
+            </div>
+            <div class="field" *ngIf="appointment.referrals.length === 1">
+                <b>
+                    Frequency
+                </b>
+                <div>
+                    {{ appointment.referrals[0].frequency }} / {{ appointment.referrals[0].interval }}
+                </div>
+            </div>
+        </div>
+        <div class="row-field">
+            <pl-input-time-double
+                label="Start Time"
+                class="field margin-r"
+                [disabled]="!isNew"
+                [model]="appointment.start"
+                (modelChange)="timeChanged($event, true)">
+            </pl-input-time-double>
+            
+            <pl-input-time-double
+                label="End Time"
+                class="field"
+                [disabled]="!isNew"
+                [model]="appointment.end"
+                (modelChange)="timeChanged($event, false)">
+            </pl-input-time-double>
+        </div>
+        <div class="red margin-tb">
+            {{ timeErrors }}
+        </div>
+        <div class="button-container">
+            <button [disabled]="!!timeErrors" pl-button class="primary" *ngIf="isNew; else delete" (click)="onSave()">
+                Save
+            </button>
+            <ng-template #delete>
+                <button pl-button class="danger" (click)="onDelete()">
+                    Delete
+                </button>
+            </ng-template>
+            <button pl-button (click)="close()">
+                Cancel
+            </button>
+        </div>
+    </pl-modal-header-wrapper>
+</div>

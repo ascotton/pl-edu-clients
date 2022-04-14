@@ -1,0 +1,41 @@
+<div class="pl-organization-providers">
+    <pl-table-wrapper (onQuery)="onQuery($event)" [orderKey]="orderKey" [pageSizeKey]="pageSizeKey">
+        <pl-table-filters-top [filterSelectOpts]="filterSelectOpts" [total]="total" [filtersFixed]="true"></pl-table-filters-top>
+        <pl-table-header>
+            <pl-table-header-cell [orderKey]="'lastName'" [orderDirection]="'ascending'">Last Name</pl-table-header-cell>
+            <pl-table-header-cell [orderKey]="'firstName'">First Name</pl-table-header-cell>
+            <pl-table-header-cell *ngIf="isScheduleColumnVisible()">Schedule</pl-table-header-cell>
+            <pl-table-header-cell>Email</pl-table-header-cell>
+            <pl-table-header-cell *ngIf="isPhoneColumnVisible()">Phone</pl-table-header-cell>
+            <pl-table-header-cell>Provider Type</pl-table-header-cell>
+            <pl-table-header-cell>Room URL</pl-table-header-cell>
+        </pl-table-header>
+        <div *ngIf="loading" class="padding-xlarge-tb">
+            <pl-dot-loader></pl-dot-loader>
+        </div>
+        <div *ngIf="!providers.length && !loading" class="center padding-xlarge-tb">
+            No matching providers.
+        </div>
+        <pl-table-row *ngFor="let provider of providers" class="pointer">
+            <pl-table-cell (click)="clickRow(provider)">{{ provider.user.lastName }}</pl-table-cell>
+            <pl-table-cell (click)="clickRow(provider)">{{ provider.user.firstName }}</pl-table-cell>
+            <pl-table-cell *ngIf="isScheduleColumnVisible()" class="link-cell">
+                <a
+                    *ngIf="mayViewScheduleFor(provider)"
+                    [href]="scheduleUrl(provider)"
+                    target="_blank"
+                    title="Schedule for {{ provider.user.firstName }}"
+                >
+                    Schedule
+                </a>
+            </pl-table-cell>
+            <pl-table-cell><a target [href]="'mailto:' + provider.email">{{
+                    provider.email
+                }}</a></pl-table-cell>
+            <pl-table-cell *ngIf="isPhoneColumnVisible()" (click)="clickRow(provider)">{{ provider.phone | plPhone }}</pl-table-cell>
+            <pl-table-cell (click)="clickRow(provider)">{{ listProviderTypes(provider) }}</pl-table-cell>
+            <pl-table-cell *ngIf="mayViewRoom"><a target="_blank" href="{{urls.room}}/{{provider.user.username}}">{{ urls.room }}/{{ provider.user.username }}</a></pl-table-cell>
+        </pl-table-row>
+        <pl-table-footer [total]="total" [pageSize]="pageSize"></pl-table-footer>
+    </pl-table-wrapper>
+</div>
